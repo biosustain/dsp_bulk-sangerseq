@@ -1,1 +1,1 @@
-### Sanger sequencing tool for bulk analysis
+# Sanger sequencing tool for bulk analysis
