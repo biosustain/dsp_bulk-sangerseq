@@ -1,0 +1,6 @@
+#data dirs
+data/nanopore_seq/*
+data/sanger_seq/*
+
+# outdirs
+outdir/sanger_seq/*

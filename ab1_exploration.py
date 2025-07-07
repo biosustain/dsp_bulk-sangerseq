@@ -1,0 +1,1 @@
+# script to explore the content of an ab1 file
