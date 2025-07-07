@@ -33,7 +33,7 @@ for file_path in file_paths:
     docker_cmd = [
         'docker', 'run',
         '--rm',                                  # Remove the container
-        '-v', f'{folder_path}/data:/home/sanger_seq/data', # Mount data volume
+        '-v', f'{folder_path}/data:/home/sanger_seq/data:ro', # Mount data volume
         '-v', f'{folder_path}/results:/home/sanger_seq/results' # Mount results volume
         '--name', container_name,                # Optional: name the container
         '--platform', 'linux/amd64',             # platform (precede image!)
