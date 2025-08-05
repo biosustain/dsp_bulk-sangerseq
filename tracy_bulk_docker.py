@@ -21,11 +21,10 @@ outfile_path = 'results/variant_trim'
 trim_left = 50
 trim_right= 200
 
-# %%
-# Download Docker image
-
-# image version
+# Docker image version
 image_version = 'latest'
+
+# %% download Docker image
 
 #pull docker image to local machine
 try:
@@ -35,7 +34,7 @@ except subprocess.CalledProcessError as e:
         print(f'Error pulling image geargenomics/tracy:{image_version}: {e}')
 
 # specify name of local docker image to be used
-docker_image = 'geargenomics/tracy:latest'
+docker_image = f'geargenomics/tracy:{image_version}'
 
 #%%
 # Create list of file paths and loop over each path name and run a container for each
