@@ -13,11 +13,15 @@ data_path = '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/san
 
 outdir_path = '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/outdir/sanger_seq'
 
+# Docker container mount paths
+data_path_docker = '/home/sanger_seq/data'
+outdir_path_docker = '/home/sanger_seq/outdir'
+
 # reference to align to
 ref_name = 'reference.fa'
 
-# outfile path -- Double-check with docker command
-outfile_path = 'results/bulk_test'
+# outfile name
+outfile_name = 'bulk_test'
 
 # trimming options
 trim_left = 50
@@ -45,19 +49,26 @@ print(file_paths)
 
 #%%
 for file_path in file_paths:
-    container_name = f'container_{file_path.split('/')[-1]}'
+    container_name = f'{file_path.split('/')[-1]}'
     docker_cmd = [
         'docker', 'run',
         #'--rm',                                  # Remove the container
         '-v', f'{data_path}:/home/sanger_seq/data', # Mount data volume
         '-v', f'{outdir_path}:/home/sanger_seq/outdir', # Mount outdir volume
         '--name', container_name, 
-        '-i', #-i lets the conainer actively run
+        '-i',                               #-i lets the conainer actively run
         '--platform', 'linux/amd64',             # platform (precede image!)
         docker_image,
-        'tracy', '--help'
-        #f'tracy decompose -v -r reference.fa -o test_6Aug --trimLeft {trim_left} --trimRight {trim_right} ' # command to run inside the docker container
+        'tracy', 'decompose', '-v',         #tracy decompose cmd variant calling
+        '-r', '/home/sanger_seq/data/reference.fa', #reference to align to
+        '-o', '/home/sanger_seq/outdir/test_6Aug_new',     #outdirectory and outfile name
+        '/home/sanger_seq/data/EF73244592_EF73244592.ab1'   #.ab1 file to use
+     
     ]
+#'tracy', '--help'  #this works --> each string need to be separate
+#'tracy decompose -v -r /home/sanger_seq/data/reference.fa -o /home/sanger_seq/outdir/test_6Aug /home/sanger_seq/data/EF73244592_EF73244592.ab1' #this command works in the docker container generated from within this script but not when the bash command is executed here
+
+#f'tracy decompose -v -r {data_path_docker}/{ref_name} -o {outdir_path_docker}/{outfile_name} --trimLeft {trim_left} --trimRight {trim_right} {data_path_docker}/{container_name}' # command to run inside the docker container,
 
     print('Running:', ' '.join(docker_cmd))
     
