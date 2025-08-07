@@ -53,7 +53,7 @@ for file_path in file_paths:
     docker_cmd = [
         'docker', 'run',
         #'--rm',                                  # Remove the container
-        '-v', f'{data_path}:/home/sanger_seq/data', # Mount data volume
+        '-v', f'{data_path}:/home/sanger_seq/data:ro', # Mount data volume
         '-v', f'{outdir_path}:/home/sanger_seq/outdir', # Mount outdir volume
         '--name', container_name, 
         '-i',                               #-i lets the conainer actively run
