@@ -49,7 +49,7 @@ print(file_paths)
 
 #%%
 for file_path in file_paths:
-    container_name = f'{file_path.split('/')[-1]}'
+    container_name = file_path.split('/')[-1]
     docker_cmd = [
         'docker', 'run',
         #'--rm',                                  # Remove the container
