@@ -11,8 +11,6 @@ import yaml
 with open('./config.yaml', 'r') as file:
      cfg = yaml.safe_load(file)
 
-print(cfg['paths']['outdir_host'])
-
 
 # %% download Docker image
 
@@ -26,10 +24,12 @@ except subprocess.CalledProcessError as e:
 # specify name of local docker image to be used
 docker_image = f'{cfg['docker']['image']}:{cfg['docker']['version']}'
 
+
 #%%
 # Create list of file paths and loop over each path name and run a container for each
 file_paths = [file_path for file_path in glob.glob(os.path.join(cfg['paths']['data_host'], '*.ab1'))]
 print(file_paths)
+
 
 #%%
 for file_path in file_paths:
@@ -47,12 +47,7 @@ for file_path in file_paths:
         '-r', '/home/sanger_seq/data/reference.fa', #reference to align to
         '-o', '/home/sanger_seq/outdir/test_6Aug_new',     #outdirectory and outfile name
         '/home/sanger_seq/data/EF73244592_EF73244592.ab1'   #.ab1 file to use
-     
     ]
-#'tracy', '--help'  #this works --> each string need to be separate
-#'tracy decompose -v -r /home/sanger_seq/data/reference.fa -o /home/sanger_seq/outdir/test_6Aug /home/sanger_seq/data/EF73244592_EF73244592.ab1' #this command works in the docker container generated from within this script but not when the bash command is executed here
-
-#f'tracy decompose -v -r {data_path_docker}/{ref_name} -o {outdir_path_docker}/{outfile_name} --trimLeft {trim_left} --trimRight {trim_right} {data_path_docker}/{container_name}' # command to run inside the docker container,
 
     print('Running:', ' '.join(docker_cmd))
     
@@ -61,5 +56,3 @@ for file_path in file_paths:
     
     except subprocess.CalledProcessError as e:
         print(f'Error running container for {file_path}: {e}')
-
-# %%
