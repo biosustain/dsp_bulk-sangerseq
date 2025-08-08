@@ -1,6 +1,6 @@
 ## Path configuration: absolute paths to data (.ab1 files) and output directory on host machine and in mounted Docker container
 paths:
-  #paths on host machine
+  #folder paths on host machine
   data_host: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq'
   outdir_host: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/outdir/sanger_seq'
 
