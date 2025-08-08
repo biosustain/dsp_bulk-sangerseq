@@ -36,7 +36,7 @@ for file_path in file_paths:
         'docker', 'run',
         # Remove the container
         '--rm',                                  
-        # Mount data volume
+        # Mount data volume (ro: read-only)
         '-v', f'{cfg['paths']['data_host']}:{cfg['paths']['data_docker']}:ro',
         # Mount outdir volume
         '-v', f'{cfg['paths']['outdir_host']}:{cfg['paths']['outdir_docker']}', 
@@ -49,16 +49,16 @@ for file_path in file_paths:
         # docker image and version to use
         f'{cfg['docker']['image']}:{cfg['docker']['version']}',
         
-        #tracy decompose command for variant calling
+        # tracy decompose command for variant calling
         'tracy', 'decompose', '-v',
-        #reference to align to
+        # reference to align to
         '-r', f'{cfg['paths']['data_docker']}/{cfg['tracy']['ref_name']}',
-        #outdirectory and outfile name
+        # outdirectory and outfile name
         '-o', f'{cfg['paths']['outdir_docker']}/{container_name}',
         # sequence trimming options
         '--trimLeft', f'{cfg['tracy']['trim_left']}',
         '--trimRight', f'{cfg['tracy']['trim_right']}', 
-        #.ab1 file to use
+        # .ab1 file to use
         f'{cfg['paths']['data_docker']}/{file_name}'
     ]
 
@@ -70,4 +70,3 @@ for file_path in file_paths:
     except subprocess.CalledProcessError as e:
         print(f'Error running container for {file_path}: {e}')
 
-# %%
