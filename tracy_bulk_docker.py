@@ -31,7 +31,9 @@ docker_image = f'{cfg['docker']['image']}:{cfg['docker']['version']}'
 
 # run analysis (one container per sequencing analysis)
 for file_path in file_paths:
-    container_name = file_path.split('/')[-1]
+    file_name = file_path.split('/')[-1]
+    container_name = file_name.split('.')[0]
+
     docker_cmd = [
         'docker', 'run',
         #'--rm',                                  # Remove the container
@@ -42,11 +44,11 @@ for file_path in file_paths:
         '--platform', 'linux/amd64',             # platform (precede image!)
         docker_image,
         'tracy', 'decompose', '-v',         #tracy decompose cmd variant calling
-        '-r', '/home/sanger_seq/data/reference.fa', #reference to align to
-        '-o', '/home/sanger_seq/outdir/test_6Aug_new',     #outdirectory and outfile name
+        '-r', f'{cfg['paths']['data_docker']}/{cfg['tracy']['ref_name']}', #reference to align to
+        '-o', f'{cfg['paths']['outdir_docker']}/{container_name}',     #outdirectory and outfile name
         '--trimLeft', f'{cfg['tracy']['trim_left']}',
         '--trimRight', f'{cfg['tracy']['trim_right']}', 
-        '/home/sanger_seq/data/EF73244592_EF73244592.ab1'   #.ab1 file to use
+        f'{cfg['paths']['data_docker']}/{file_name}'   #.ab1 file to use
     ]
 
     print('Running:', ' '.join(docker_cmd))
@@ -56,3 +58,5 @@ for file_path in file_paths:
     
     except subprocess.CalledProcessError as e:
         print(f'Error running container for {file_path}: {e}')
+
+# %%
