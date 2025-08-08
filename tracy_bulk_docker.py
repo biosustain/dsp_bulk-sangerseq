@@ -4,47 +4,31 @@
 import subprocess
 import os
 import glob
+import yaml
 
 
-# %% USER SETTINGS
+# %% read yaml configuration file
+with open('./config.yaml', 'r') as file:
+     cfg = yaml.safe_load(file)
 
-# Folder path where data is saved (.ab1 files) and outfiles will be saved
-data_path = '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq'
+print(cfg['paths']['outdir_path'])
 
-outdir_path = '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/outdir/sanger_seq'
-
-# Docker container mount paths
-data_path_docker = '/home/sanger_seq/data'
-outdir_path_docker = '/home/sanger_seq/outdir'
-
-# reference to align to
-ref_name = 'reference.fa'
-
-# outfile name
-outfile_name = 'bulk_test'
-
-# trimming options
-trim_left = 50
-trim_right= 200
-
-# Docker image version
-image_version = 'latest'
 
 # %% download Docker image
 
 #pull docker image to local machine
 try:
-    subprocess.run(['docker', 'pull', f'geargenomics/tracy:{image_version}'], check=True)
+    subprocess.run(['docker', 'pull', f'geargenomics/tracy:{cfg['image_version']}'], check=True)
     
 except subprocess.CalledProcessError as e:
-        print(f'Error pulling image geargenomics/tracy:{image_version}: {e}')
+        print(f'Error pulling image geargenomics/tracy:{cfg['image_version']}: {e}')
 
 # specify name of local docker image to be used
-docker_image = f'geargenomics/tracy:{image_version}'
+docker_image = f'geargenomics/tracy:{cfg['image_version']}'
 
 #%%
 # Create list of file paths and loop over each path name and run a container for each
-file_paths = [file_path for file_path in glob.glob(os.path.join(data_path, '*.ab1'))]
+file_paths = [file_path for file_path in glob.glob(os.path.join(cfg['paths']['data_path'], '*.ab1'))]
 print(file_paths)
 
 #%%
@@ -53,8 +37,8 @@ for file_path in file_paths:
     docker_cmd = [
         'docker', 'run',
         #'--rm',                                  # Remove the container
-        '-v', f'{data_path}:/home/sanger_seq/data:ro', # Mount data volume
-        '-v', f'{outdir_path}:/home/sanger_seq/outdir', # Mount outdir volume
+        '-v', f'{cfg['paths']['data_path']}:{cfg['docker_paths']['data_path_docker']}:ro', # Mount data volume
+        '-v', f'{cfg['paths']['outdir_path']}:{cfg['docker_paths']['outdir_path_docker']}', # Mount outdir volume
         '--name', container_name, 
         '-i',                               #-i lets the conainer actively run
         '--platform', 'linux/amd64',             # platform (precede image!)
