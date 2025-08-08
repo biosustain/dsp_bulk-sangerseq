@@ -36,7 +36,7 @@ for file_path in file_paths:
 
     docker_cmd = [
         'docker', 'run',
-        #'--rm',                                  # Remove the container
+        '--rm',                                  # Remove the container
         '-v', f'{cfg['paths']['data_host']}:{cfg['paths']['data_docker']}:ro', # Mount data volume
         '-v', f'{cfg['paths']['outdir_host']}:{cfg['paths']['outdir_docker']}', # Mount outdir volume
         '--name', container_name, 
@@ -58,5 +58,3 @@ for file_path in file_paths:
     
     except subprocess.CalledProcessError as e:
         print(f'Error running container for {file_path}: {e}')
-
-# %%
