@@ -7,31 +7,29 @@ import glob
 import yaml
 
 
-# %% read yaml configuration file
+# %% Read yaml configuration file
 with open('./config.yaml', 'r') as file:
      cfg = yaml.safe_load(file)
 
 
-# %% download Docker image
-
-#pull docker image to local machine
+# %% Download Docker image
 try:
     subprocess.run(['docker', 'pull', f'{cfg['docker']['image']}:{cfg['docker']['version']}'], check=True)
     
 except subprocess.CalledProcessError as e:
         print(f'Error pulling image {cfg['docker']['image']}:{cfg['docker']['version']}: {e}')
 
-# specify name of local docker image to be used
-docker_image = f'{cfg['docker']['image']}:{cfg['docker']['version']}'
 
+# %% Perform sequencing analysis
 
-#%%
 # Create list of file paths and loop over each path name and run a container for each
 file_paths = [file_path for file_path in glob.glob(os.path.join(cfg['paths']['data_host'], '*.ab1'))]
 print(file_paths)
 
+# specify name of local docker image to be used
+docker_image = f'{cfg['docker']['image']}:{cfg['docker']['version']}'
 
-#%%
+# run analysis (one container per sequencing analysis)
 for file_path in file_paths:
     container_name = file_path.split('/')[-1]
     docker_cmd = [
