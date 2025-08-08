@@ -46,6 +46,8 @@ for file_path in file_paths:
         'tracy', 'decompose', '-v',         #tracy decompose cmd variant calling
         '-r', '/home/sanger_seq/data/reference.fa', #reference to align to
         '-o', '/home/sanger_seq/outdir/test_6Aug_new',     #outdirectory and outfile name
+        '--trimLeft', f'{cfg['tracy']['trim_left']}',
+        '--trimRight', f'{cfg['tracy']['trim_right']}', 
         '/home/sanger_seq/data/EF73244592_EF73244592.ab1'   #.ab1 file to use
     ]
 
