@@ -11,7 +11,7 @@ import yaml
 with open('./config.yaml', 'r') as file:
      cfg = yaml.safe_load(file)
 
-print(cfg['paths']['outdir_path'])
+print(cfg['paths']['outdir_host'])
 
 
 # %% download Docker image
@@ -28,7 +28,7 @@ docker_image = f'geargenomics/tracy:{cfg['image_version']}'
 
 #%%
 # Create list of file paths and loop over each path name and run a container for each
-file_paths = [file_path for file_path in glob.glob(os.path.join(cfg['paths']['data_path'], '*.ab1'))]
+file_paths = [file_path for file_path in glob.glob(os.path.join(cfg['paths']['data_host'], '*.ab1'))]
 print(file_paths)
 
 #%%
@@ -37,8 +37,8 @@ for file_path in file_paths:
     docker_cmd = [
         'docker', 'run',
         #'--rm',                                  # Remove the container
-        '-v', f'{cfg['paths']['data_path']}:{cfg['docker_paths']['data_path_docker']}:ro', # Mount data volume
-        '-v', f'{cfg['paths']['outdir_path']}:{cfg['docker_paths']['outdir_path_docker']}', # Mount outdir volume
+        '-v', f'{cfg['paths']['data_host']}:{cfg['paths']['data_docker']}:ro', # Mount data volume
+        '-v', f'{cfg['paths']['outdir_host']}:{cfg['paths']['outdir_docker']}', # Mount outdir volume
         '--name', container_name, 
         '-i',                               #-i lets the conainer actively run
         '--platform', 'linux/amd64',             # platform (precede image!)
