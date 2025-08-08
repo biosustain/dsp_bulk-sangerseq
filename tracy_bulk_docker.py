@@ -18,13 +18,13 @@ print(cfg['paths']['outdir_host'])
 
 #pull docker image to local machine
 try:
-    subprocess.run(['docker', 'pull', f'geargenomics/tracy:{cfg['image_version']}'], check=True)
+    subprocess.run(['docker', 'pull', f'{cfg['docker']['image']}:{cfg['docker']['version']}'], check=True)
     
 except subprocess.CalledProcessError as e:
-        print(f'Error pulling image geargenomics/tracy:{cfg['image_version']}: {e}')
+        print(f'Error pulling image {cfg['docker']['image']}:{cfg['docker']['version']}: {e}')
 
 # specify name of local docker image to be used
-docker_image = f'geargenomics/tracy:{cfg['image_version']}'
+docker_image = f'{cfg['docker']['image']}:{cfg['docker']['version']}'
 
 #%%
 # Create list of file paths and loop over each path name and run a container for each

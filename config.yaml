@@ -10,7 +10,9 @@ paths:
 
 
 ## Docker configuration
-image_version: 'latest'
+docker:
+  image: 'geargenomics/tracy'
+  version: 'latest'
 
 
 ## Tracy software configuration
