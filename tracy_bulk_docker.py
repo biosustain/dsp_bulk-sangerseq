@@ -26,29 +26,40 @@ except subprocess.CalledProcessError as e:
 file_paths = [file_path for file_path in glob.glob(os.path.join(cfg['paths']['data_host'], '*.ab1'))]
 print(file_paths)
 
-# specify name of local docker image to be used
-docker_image = f'{cfg['docker']['image']}:{cfg['docker']['version']}'
-
 # run analysis (one container per sequencing analysis)
 for file_path in file_paths:
+    
     file_name = file_path.split('/')[-1]
     container_name = file_name.split('.')[0]
 
     docker_cmd = [
         'docker', 'run',
-        '--rm',                                  # Remove the container
-        '-v', f'{cfg['paths']['data_host']}:{cfg['paths']['data_docker']}:ro', # Mount data volume
-        '-v', f'{cfg['paths']['outdir_host']}:{cfg['paths']['outdir_docker']}', # Mount outdir volume
+        # Remove the container
+        '--rm',                                  
+        # Mount data volume
+        '-v', f'{cfg['paths']['data_host']}:{cfg['paths']['data_docker']}:ro',
+        # Mount outdir volume
+        '-v', f'{cfg['paths']['outdir_host']}:{cfg['paths']['outdir_docker']}', 
+        # container name
         '--name', container_name, 
-        '-i',                               #-i lets the conainer actively run
-        '--platform', 'linux/amd64',             # platform (precede image!)
-        docker_image,
-        'tracy', 'decompose', '-v',         #tracy decompose cmd variant calling
-        '-r', f'{cfg['paths']['data_docker']}/{cfg['tracy']['ref_name']}', #reference to align to
-        '-o', f'{cfg['paths']['outdir_docker']}/{container_name}',     #outdirectory and outfile name
+        # -i option lets the conainer actively run
+        '-i',                               
+        # platform (precede image!)
+        '--platform', 'linux/amd64',             
+        # docker image and version to use
+        f'{cfg['docker']['image']}:{cfg['docker']['version']}',
+        
+        #tracy decompose command for variant calling
+        'tracy', 'decompose', '-v',
+        #reference to align to
+        '-r', f'{cfg['paths']['data_docker']}/{cfg['tracy']['ref_name']}',
+        #outdirectory and outfile name
+        '-o', f'{cfg['paths']['outdir_docker']}/{container_name}',
+        # sequence trimming options
         '--trimLeft', f'{cfg['tracy']['trim_left']}',
         '--trimRight', f'{cfg['tracy']['trim_right']}', 
-        f'{cfg['paths']['data_docker']}/{file_name}'   #.ab1 file to use
+        #.ab1 file to use
+        f'{cfg['paths']['data_docker']}/{file_name}'
     ]
 
     print('Running:', ' '.join(docker_cmd))
@@ -58,3 +69,5 @@ for file_path in file_paths:
     
     except subprocess.CalledProcessError as e:
         print(f'Error running container for {file_path}: {e}')
+
+# %%
