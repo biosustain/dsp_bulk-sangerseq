@@ -21,9 +21,29 @@ print(file_paths)
 
 
 # %% extract data from each json file
+result_df_dict = {}
 for file_path in file_paths:
     with open(file_path, 'r') as json_file:
         data = json.load(json_file)
-        print(data)
-        
+        #print(data['meta']['arguments']['input'])
+        #print(data['variants']['columns'])
+        #print(data['variants']['rows'])
+
+        # generate sample name
+        sample_name = data['meta']['arguments']['input'].split('.')[0]
+        #print(sample_name)
+
+        # generate dataframe with results
+        result_df = pd.DataFrame(data['variants']['rows'], columns=data['variants']['columns'])
+
+        # add each df to a dictionary
+        result_df_dict[sample_name] = result_df
+
+print(result_df_dict['EF73244610_EF73244610'])
+
+#%%
+# export each df of the dictionary
+for sample_name, result_df in result_df_dict.items():
+    result_df.to_csv(f'{cfg['paths']['outdir_host']}/{sample_name}.csv')
+
 # %%
