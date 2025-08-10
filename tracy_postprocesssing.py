@@ -4,6 +4,12 @@
 # %%
 import json
 import pandas as pd
+import yaml
+
+
+# %% Read yaml configuration file
+with open('./config.yaml', 'r') as file:
+     cfg = yaml.safe_load(file)
 
 
 # %% read all json files
