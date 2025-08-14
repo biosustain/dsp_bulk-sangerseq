@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 # and the reference therein: http://www.appliedbiosystem.com/support/software_community/ABIF_File_Format.pdf 
 # possible alternative: https://github.com/ponnhide/sangerseq_viewer
 # geargenomics teal is another viewer: https://github.com/gear-genomics/teal
+# another alterntive: https://github.com/labsquare/CutePeaks
+
 record = SeqIO.read(f'{cfg['paths']['data_host']}/EF73244592_EF73244592.ab1', 'abi')
 
 print(list(record.annotations.keys()))
