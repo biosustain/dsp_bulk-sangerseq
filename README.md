@@ -27,16 +27,16 @@ Installing Visual Studio (VS) code is not a requirement but it facilitates while
 
 ## Installation of dsp_bulk_sangerseq
 ***Add details here incl. env creation***
-1. Clone the repo using ```git clone https://github.com/biosustain/dsp_bulk-sangerseq.git```
-2. Activate the environment
-3. Install all dependencies from the Piplock file. All dependencies will be automatically installed from the Pip lock file using
-```pipenv sync```
+Open the terminal and perform the following steps consecutively:
+1. Change to the desired directory using ```cd </absolute/path/to/project/folder>```.
+2. Clone the github repository using ```git clone https://github.com/biosustain/dsp_bulk-sangerseq.git```.
+3. Change to the project directory using ```cd </dsp_bulk-sangerseq>```.
+4. Install all dependencies from the Pipfile.lock using ```pipenv sync```.
 
 ## Usage
 
 **Data preparation**
-Input data requirements:
-The tool uses only .ab1 files.
+Input data requirements: .ab1 sdequencing and reference .fasta files.
 Copy all .ab1 files into the folder **data**
 
 **Modify the configuration file (config.yaml)**
@@ -49,6 +49,6 @@ In general, the use of absolute paths is recommmended but relative paths can be 
 - On Linux: command goes here
 
 **Run scripts of dsp_sangerseq consecutively**  
-- Activate the virtual environment by.... 
-- Perform Sanger sequencing analysis using tracy: In the terminal, run command ```python tracy_bulk_docker.py```
-- Once finished, perform post-processing of results. In the terminal, run command ```python tracy_postprocessing.py```
+1. In the project directory, activate the environment using ```pipenv shell```. ALternatively, activate the environment from within the code editor, e.g. VS code.
+2. Perform Sanger sequencing analysis using tracy by running command ```python tracy_bulk_docker.py```.
+3. Once finished, perform post-processing of results by running command ```python tracy_postprocessing.py```.
