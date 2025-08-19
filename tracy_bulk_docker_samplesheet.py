@@ -6,11 +6,30 @@ import subprocess
 import os
 import glob
 import yaml
+import pandas as pd
 
 
 # %% Read yaml configuration file
 with open('./config.yaml', 'r') as file:
      cfg = yaml.safe_load(file)
+
+
+# %% Create sample-reference pairs
+
+#read samplesheet
+samplesheet = pd.read_csv(cfg['paths']['samplesheet'])
+print(samplesheet)
+
+#create sample-reference pairs as a list of tuples
+sample_ref_df = samplesheet[['ab1_1', 'reference']]
+print(sample_ref_df)
+
+sample_ref_pairs = list(sample_ref_df.itertuples(index=False))
+print(sample_ref_pairs)
+
+print(sample_ref_pairs[0].ab1_1)
+print(sample_ref_pairs[0].reference)
+
 
 
 # %% Download Docker image
