@@ -14,24 +14,6 @@ with open('./config.yaml', 'r') as file:
      cfg = yaml.safe_load(file)
 
 
-# %% Create sample-reference pairs
-
-#read samplesheet
-samplesheet = pd.read_csv(cfg['paths']['samplesheet'])
-print(samplesheet)
-
-#create sample-reference pairs as a list of tuples
-sample_ref_df = samplesheet[['ab1_1', 'reference']]
-print(sample_ref_df)
-
-sample_ref_pairs = list(sample_ref_df.itertuples(index=False))
-print(sample_ref_pairs)
-
-print(sample_ref_pairs[0].ab1_1)
-print(sample_ref_pairs[0].reference)
-
-
-
 # %% Download Docker image
 try:
     subprocess.run(['docker', 'pull', f'{cfg['docker']['image']}:{cfg['docker']['version']}'], check=True)
@@ -42,15 +24,28 @@ except subprocess.CalledProcessError as e:
 
 # %% Perform sequencing analysis
 
-# Create list of file paths and loop over each path name and run a container for each
-file_paths = [file_path for file_path in glob.glob(os.path.join(cfg['paths']['data_host'], '*.ab1'))]
-print(file_paths)
+#create sample-reference pairs
 
+#read samplesheet
+samplesheet = pd.read_csv(cfg['paths']['samplesheet'])
+print(samplesheet)
+
+#create sample-reference pairs as a list of tuples
+sample_ref_df = samplesheet[['sample_id', 'ab1_1', 'reference']]
+print(sample_ref_df)
+
+sample_ref_pairs = list(sample_ref_df.itertuples(index=False))
+print(sample_ref_pairs)
+
+print(sample_ref_pairs[0].ab1_1)
+print(sample_ref_pairs[0].reference)
+
+#%%
 # run analysis (one container per sequencing analysis)
-for file_path in file_paths:
+for sample_ref_pair in sample_ref_pairs:
     
-    file_name = file_path.split('/')[-1]
-    container_name = file_name.split('.')[0]
+    file_name = sample_ref_pair.ab1_1.split('/')[-1]
+    sample_id = sample_ref_pair.sample_id
 
     docker_cmd = [
         'docker', 'run',
@@ -61,7 +56,7 @@ for file_path in file_paths:
         # Mount outdir volume
         '-v', f'{cfg['paths']['outdir_host']}:{cfg['paths']['outdir_docker']}', 
         # container name
-        '--name', container_name, 
+        '--name', sample_id, 
         # -i option lets the conainer actively run
         '-i',                               
         # platform (precede image!)
@@ -74,7 +69,7 @@ for file_path in file_paths:
         # reference to align to
         '-r', f'{cfg['paths']['data_docker']}/{cfg['tracy']['ref_name']}',
         # outdirectory and outfile name
-        '-o', f'{cfg['paths']['outdir_docker']}/{container_name}',
+        '-o', f'{cfg['paths']['outdir_docker']}/{sample_id}',
         # sequence trimming options
         '--trimLeft', f'{cfg['tracy']['trim_left']}',
         '--trimRight', f'{cfg['tracy']['trim_right']}', 
@@ -88,5 +83,4 @@ for file_path in file_paths:
         subprocess.run(docker_cmd, check=True)
     
     except subprocess.CalledProcessError as e:
-        print(f'Error running container for {file_path}: {e}')
-
+        print(f'Error running container for {sample_ref_pair.ab1_1}: {e}')
