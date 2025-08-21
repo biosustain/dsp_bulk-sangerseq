@@ -18,9 +18,6 @@ docker:
 
 ## Tracy software configuration
 tracy:
-  # name of reference fasta file to align to --> only for single sample testing needed
-  ref_name: 'reference.fa'
-
   # trimming length: number nucleotides at 5' (left) and 3' (right) to be removed
   trim_left: 50
   trim_right: 200

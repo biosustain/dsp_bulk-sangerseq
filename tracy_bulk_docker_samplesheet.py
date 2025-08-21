@@ -46,6 +46,7 @@ for sample_ref_pair in sample_ref_pairs:
     
     file_name = sample_ref_pair.ab1_1.split('/')[-1]
     sample_id = sample_ref_pair.sample_id
+    reference_name = sample_ref_pair.reference.split('/')[-1]
 
     docker_cmd = [
         'docker', 'run',
@@ -67,7 +68,7 @@ for sample_ref_pair in sample_ref_pairs:
         # tracy decompose command for variant calling
         'tracy', 'decompose', '-v',
         # reference to align to
-        '-r', f'{cfg['paths']['data_docker']}/{cfg['tracy']['ref_name']}',
+        '-r', f'{cfg['paths']['data_docker']}/{reference_name}',
         # outdirectory and outfile name
         '-o', f'{cfg['paths']['outdir_docker']}/{sample_id}',
         # sequence trimming options
