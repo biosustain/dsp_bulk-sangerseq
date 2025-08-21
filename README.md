@@ -41,19 +41,29 @@ Open the terminal and perform the following steps consecutively:
 ## Usage
 
 **Data preparation**
-Input data requirements: .ab1 sdequencing and reference .fasta files.
+Input data requirements: .ab1 sdequencing and reference .fa files.
 Copy all .ab1 files into the folder **data**
 
-**Modify the configuration file (config.yaml)**
-Change the data_host variable to become the absolute path to the data directory on your computer.
-Change the outdir_host variable to become the absolute path to the outdir directory on your computer.
+**Prepare a samplesheet**  
+Prepare a samplesheet according to the template below and save it as .csv file. It is recommended to deposit the samplesheet.csv in the **data** folder where you can also find the template as .csv file. The tool will read this file automatically.  
+**Note**: Currently, the tool only analyses samples that were sequenced in one direction (e.g. forward). If a sample was sequenced in forward direction, paste the path to the .ab1 file in column "ab1_1" and leave the column "ab1_2" blank. Fill in the sequencing direction in column "seq_direction" (forward). Fill in the paths where the reference fasta files are saved. Using absolute paths is recommended but relative paths will work too.
+
+|sample_id     |ab1_1                      |ab1_2                      |seq_direction  | reference        |
+|--------------|---------------------------|---------------------------|---------------|------------------|
+|sample_name   |path/to/file_1.ab1         |                           |forward        |path/to/ref_1.fa  |
+|sample_name   |path/to/file_2.ab1         |                           |forward        |path/to/ref_2.fa  |
+|sample_name   |path/to/file_3.ab1         |                           |forward        |path/to/ref_3.fa  |
+
+**Modify the configuration file (config.yaml)**  
+Change the ```data_host``` variable to become the absolute path to the data directory on your computer.
+Change the ```outdir_host``` variable to become the absolute path to the outdir directory on your computer.
 In general, the use of absolute paths is recommmended but relative paths can be used too.
 
-**Start the Docker engine**
+**Start the Docker engine**  
 - On MacOS and Windows, start Docker desktop.
 - On Linux: command goes here
 
 **Run scripts of dsp_sangerseq consecutively**  
-1. In the project directory, activate the environment using ```pipenv shell```. ALternatively, activate the environment from within the code editor, e.g. VS code.
+1. In the project directory, activate the environment using ```pipenv shell```. Alternatively, activate the environment from within the code editor, e.g. VS code.
 2. Perform Sanger sequencing analysis using tracy by running command ```python tracy_bulk_docker.py```.
 3. Once finished, perform post-processing of results by running command ```python tracy_postprocessing.py```.
