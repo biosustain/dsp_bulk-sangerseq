@@ -57,32 +57,40 @@ for sample_name, result_df in result_df_dict.items():
 # see Biopython documentation: https://biopython.org/wiki/ABI_traces
 # and the reference therein: http://www.appliedbiosystem.com/support/software_community/ABIF_File_Format.pdf 
 
-record = SeqIO.read(f'{cfg['paths']['data_host']}/EF73244592_EF73244592.ab1', 'abi')
 
-print(list(record.annotations.keys()))
-print(list(record.annotations['abif_raw'].keys()))
+# Create list of file paths
+ab1_paths = [ab1_path for ab1_path in glob.glob(os.path.join(cfg['paths']['data_host'], '*.ab1'))]
+print(ab1_paths)
 
+#%%
+# Loop over each path name to plot the Sanger sequencing trace
+for ab1_path in ab1_paths:
+    file_name_ab1 = ab1_path.split('/')[-1]
+    sample_name_ab1 = file_name_ab1.split('.')[0]
+      
+    record = SeqIO.read(ab1_path, 'abi')
+    print(record)
+    print(list(record.annotations.keys()))
+    print(list(record.annotations['abif_raw'].keys()))
 
-channels = ['DATA9', 'DATA10', 'DATA11', 'DATA12']
-trace = defaultdict(list)
-for c in channels:
-    trace[c] = record.annotations['abif_raw'][c]
+    channels = ['DATA9', 'DATA10', 'DATA11', 'DATA12']
+    trace = defaultdict(list)
+    for c in channels:
+        trace[c] = record.annotations['abif_raw'][c]
 
-print(trace['DATA9'])
+    print(trace['DATA9'])
 
-# plot data 
-plt.plot(trace['DATA9'], color='blue')
-plt.plot(trace['DATA10'], color='red')
-plt.plot(trace['DATA11'], color='green')
-plt.plot(trace['DATA12'], color='yellow')
-plt.show()
+    #plot Sanger traces with matplotlib
+    plt.plot(trace['DATA9'], color='blue')
+    plt.plot(trace['DATA10'], color='red')
+    plt.plot(trace['DATA11'], color='green')    
+    plt.plot(trace['DATA12'], color='yellow')
+    plt.show()
 
+    # plot Sanger traces with plotly-express
+    fig = px.line(y=[trace['DATA9'], trace['DATA10'], trace['DATA11'], trace['DATA12']], title=sample_name_ab1)
 
-# %%
-
-fig = px.line(y=[trace['DATA9'], trace['DATA10'], trace['DATA11'], trace['DATA12']], title='Testing')
-
-fig.write_html(f'{cfg['paths']['outdir_host']}/testing.html')
-fig.show()
+    fig.write_html(f'{cfg['paths']['outdir_host']}/{sample_name_ab1}.html')
+    fig.show()
 
 # %%
