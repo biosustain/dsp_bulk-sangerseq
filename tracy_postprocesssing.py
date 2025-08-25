@@ -88,7 +88,24 @@ for ab1_path in ab1_paths:
     plt.show()
 
     # plot Sanger traces with plotly-express
-    fig = px.line(y=[trace['DATA9'], trace['DATA10'], trace['DATA11'], trace['DATA12']], title=sample_name_ab1)
+    #information of which channel belongs to which DNA base is parse but found source: https://github.com/ponnhide/PySanger/blob/ca97fd590227610f22d6a51705da6fa3645469f1/pysanger.py
+    #G = DATA9  --> black
+    #A = DATA10 --> green
+    #T = DATA11 --> red
+    #C = DATA12 --> blue
+    
+    fig = px.line(
+        y=[trace['DATA9'], trace['DATA10'], trace['DATA11'], trace['DATA12']], 
+        title=sample_name_ab1,
+        color_discrete_map={
+            'wide_variable_0': 'black',
+            'wide_variable_1': 'green',
+            'wide_variable_2': 'red',
+            'wide_variable_3': 'blue'
+            }
+        )
+    
+    fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
 
     fig.write_html(f'{cfg['paths']['outdir_host']}/{sample_name_ab1}.html')
     fig.show()
