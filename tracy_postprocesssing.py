@@ -44,7 +44,7 @@ for file_path in file_paths:
         # add each df to a dictionary
         result_df_dict[sample_name] = result_df
 
-print(result_df_dict['EF73244610_EF73244610'])
+print(result_df_dict['EF73244592_EF73244592'])
 
 #%%
 # export each df of the dictionary
