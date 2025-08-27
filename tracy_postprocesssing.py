@@ -47,9 +47,28 @@ for file_path in file_paths:
 print(result_df_dict['EF73244592_EF73244592'])
 
 #%%
-# export each df of the dictionary
+# write sample name (dictionary key to a new column and export each resulting dfs of the dictionary
 for sample_name, result_df in result_df_dict.items():
-    result_df.to_csv(f'{cfg['paths']['outdir_host']}/{sample_name}.csv')
+    
+    #write sample name (dict key) to new column
+    result_df['sample_name'] = sample_name
+    
+    #order df columns
+    result_df = result_df[['sample_name', 'chr', 'pos', 'id', 'ref', 'alt', 'qual', 'filter', 'type', 'genotype', 'basepos', 'signalpos']]
+    
+    #export df
+    result_df.to_csv(f'{cfg['paths']['outdir_host']}/{sample_name}.csv', index=False)
 
+# %% combine all result dfs into a single table and export
 
+#concatenate all result dfs
+combined_result_df = pd.concat(list(result_df_dict.values()))
+
+#order df columns of concatenated df
+combined_result_df = combined_result_df[['sample_name', 'chr', 'pos', 'id', 'ref', 'alt', 'qual', 'filter', 'type', 'genotype', 'basepos', 'signalpos']]
+
+#export combined results df
+combined_result_df.to_csv(f'{cfg['paths']['outdir_host']}/results_combined.csv', index=False)
+
+print(combined_result_df)
 # %%
