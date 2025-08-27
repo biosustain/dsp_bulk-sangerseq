@@ -51,6 +51,7 @@ print(result_df_dict['EF73244592_EF73244592'])
 for sample_name, result_df in result_df_dict.items():
     
     #write sample name (dict key) to new column
+    #IMPORTANT for debugging: if no mutations are detected, this results in an empty dataframe and then writing the sample name to that empty df does NOT work (to  be fixed as it affects also the geenration of a combined result df (see further down)
     result_df['sample_name'] = sample_name
     
     #order df columns
