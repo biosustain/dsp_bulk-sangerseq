@@ -11,6 +11,7 @@ import os
 from Bio import SeqIO
 from collections import defaultdict
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 
 
@@ -45,6 +46,7 @@ for file_path in file_paths:
         result_df_dict[sample_name] = result_df
 
 print(result_df_dict['EF73244592_EF73244592'])
+print(result_df_dict['EF73244592_EF73244592'])
 
 #%%
 # write sample name (dictionary key to a new column and export each resulting dfs of the dictionary
@@ -72,4 +74,62 @@ combined_result_df = combined_result_df[['sample_name', 'chr', 'pos', 'id', 'ref
 combined_result_df.to_csv(f'{cfg['paths']['outdir_host']}/results_combined.csv', index=False)
 
 print(combined_result_df)
+
+# %% Plot electropherogram traces
+# see Biopython documentation: https://biopython.org/wiki/ABI_traces
+# and the reference therein: http://www.appliedbiosystem.com/support/software_community/ABIF_File_Format.pdf 
+
+
+# Create list of file paths
+ab1_paths = [ab1_path for ab1_path in glob.glob(os.path.join(cfg['paths']['data_host'], '*.ab1'))]
+print(ab1_paths)
+
+#%%
+# Loop over each path name to plot the Sanger sequencing trace
+for ab1_path in ab1_paths:
+    file_name_ab1 = ab1_path.split('/')[-1]
+    sample_name_ab1 = file_name_ab1.split('.')[0]
+      
+    record = SeqIO.read(ab1_path, 'abi')
+    print(record)
+    print(list(record.annotations.keys()))
+    print(list(record.annotations['abif_raw'].keys()))
+
+    channels = ['DATA9', 'DATA10', 'DATA11', 'DATA12']
+    trace = defaultdict(list)
+    for c in channels:
+        trace[c] = record.annotations['abif_raw'][c]
+
+    print(trace['DATA9'])
+
+    #plot Sanger traces with matplotlib
+    plt.plot(trace['DATA9'], color='blue')
+    plt.plot(trace['DATA10'], color='red')
+    plt.plot(trace['DATA11'], color='green')    
+    plt.plot(trace['DATA12'], color='yellow')
+    plt.show()
+
+    # plot Sanger traces with plotly-express
+    #information of which channel belongs to which DNA base is parse but found source: https://github.com/ponnhide/PySanger/blob/ca97fd590227610f22d6a51705da6fa3645469f1/pysanger.py
+    #G = DATA9  --> black
+    #A = DATA10 --> green
+    #T = DATA11 --> red
+    #C = DATA12 --> blue
+    
+    fig = px.line(
+        y=[trace['DATA9'], trace['DATA10'], trace['DATA11'], trace['DATA12']], 
+        title=sample_name_ab1,
+        color_discrete_map={
+            'wide_variable_0': 'black',
+            'wide_variable_1': 'green',
+            'wide_variable_2': 'red',
+            'wide_variable_3': 'blue'
+            }
+        )
+    
+    fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
+
+    fig.write_html(f'{cfg['paths']['outdir_host']}/{sample_name_ab1}.html')
+    fig.show()
+
 # %%
