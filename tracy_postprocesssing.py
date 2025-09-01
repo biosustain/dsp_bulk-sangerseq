@@ -100,14 +100,14 @@ for ab1_path in ab1_paths:
     for c in channels:
         trace[c] = record.annotations['abif_raw'][c]
 
-    print(trace['DATA9'])
+    #print(trace['DATA9'])
 
     #plot Sanger traces with matplotlib
-    plt.plot(trace['DATA9'], color='blue')
-    plt.plot(trace['DATA10'], color='red')
-    plt.plot(trace['DATA11'], color='green')    
-    plt.plot(trace['DATA12'], color='yellow')
-    plt.show()
+    #plt.plot(trace['DATA9'], color='blue')
+    #plt.plot(trace['DATA10'], color='red')
+    #plt.plot(trace['DATA11'], color='green')    
+    #plt.plot(trace['DATA12'], color='yellow')
+    #plt.show()
 
     # plot Sanger traces with plotly-express
     #information of which channel belongs to which DNA base is parse but found source: https://github.com/ponnhide/PySanger/blob/ca97fd590227610f22d6a51705da6fa3645469f1/pysanger.py
@@ -130,6 +130,6 @@ for ab1_path in ab1_paths:
     fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
 
     fig.write_html(f'{cfg['paths']['outdir_host']}/{sample_name_ab1}.html')
-    fig.show()
+    #fig.show()
 
 # %%
