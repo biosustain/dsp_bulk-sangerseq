@@ -64,7 +64,7 @@ for sample_name, result_df in result_df_dict.items():
     result_df = result_df[['sample_name', 'chr', 'pos', 'id', 'ref', 'alt', 'qual', 'filter', 'type', 'genotype', 'basepos', 'signalpos']]
     
     #export df
-    result_df.to_csv(f'{cfg['paths']['outdir_host']}/{sample_name}.csv', index=False)
+    result_df.to_csv(f'{cfg['paths']['outdir_host']}/vuegen_viz/01_result_tables/{sample_name}.csv', index=False)
 
 # %% combine all result dfs into a single table and export
 
@@ -75,7 +75,7 @@ combined_result_df = pd.concat(list(result_df_dict.values()))
 combined_result_df = combined_result_df[['sample_name', 'chr', 'pos', 'id', 'ref', 'alt', 'qual', 'filter', 'type', 'genotype', 'basepos', 'signalpos']]
 
 #export combined results df
-combined_result_df.to_csv(f'{cfg['paths']['outdir_host']}/results_combined.csv', index=False)
+combined_result_df.to_csv(f'{cfg['paths']['outdir_host']}/vuegen_viz/01_result_tables/results_combined.csv', index=False)
 
 print(combined_result_df)
 
@@ -133,7 +133,7 @@ for ab1_path in ab1_paths:
     
     fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
 
-    fig.write_html(f'{cfg['paths']['outdir_host']}/{sample_name_ab1}.html')
+    fig.write_html(f'{cfg['paths']['outdir_host']}/vuegen_viz/03_trace_visualization/{sample_name_ab1}.html')
     #fig.show()
 
 # %%
