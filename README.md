@@ -1,8 +1,8 @@
 # Sanger sequencing tool for bulk analysis
 
 ## Background
-Sanger sequencing ([Sanger et al., 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the substantial increase of throughput in biological experimentation like microbial strain engineering by genome editing techniques, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.  
-This bulk Sanger Sequencing Tool was developed to reduce this time investment while keeping a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [tracy](https://github.com/gear-genomics/tracy) is used for the analysis of Sanger sequencing data ([Rausch et al, 2020](https://doi.org/10.1186/s12864-020-6635-8)).
+Sanger sequencing ([Sanger et al., 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the substantial increase of throughput in biological experimentation like microbial genome engineering campaigns in industrial biotechnology, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.  
+This **Bulk Sanger Sequencing Tool** was developed to reduce this time investment while maintaining a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [tracy](https://github.com/gear-genomics/tracy) is used for the analysis of Sanger sequencing data ([Rausch et al, 2020](https://doi.org/10.1186/s12864-020-6635-8)).
 
 ## Applicability
 Currently, Sanger sequencing results with one sequencing file can be analysed. Evaluation of sequencing data from each end of a DNA fragment (forward and reverse sequencing) is currently not possible, albeit tracy offers this functionality. A summary of all tracy's functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
