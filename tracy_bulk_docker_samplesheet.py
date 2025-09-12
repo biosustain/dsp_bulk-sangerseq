@@ -57,7 +57,7 @@ for sample_ref_pair in sample_ref_pairs:
         # Mount outdir volume
         '-v', f'{cfg['paths']['outdir_host']}:{cfg['paths']['outdir_docker']}', 
         # container name
-        '--name', sample_id, 
+        '--name', f'decompose_{sample_id}', 
         # -i option lets the conainer actively run
         '-i',                               
         # platform (precede image!)
@@ -78,7 +78,45 @@ for sample_ref_pair in sample_ref_pairs:
         f'{cfg['paths']['data_docker']}/{file_name}'
     ]
 
-    print('Running:', ' '.join(docker_cmd))
+    print('Running decompose:', ' '.join(docker_cmd))
+    
+    try:
+        subprocess.run(docker_cmd, check=True)
+    
+    except subprocess.CalledProcessError as e:
+        print(f'Error running container for {sample_ref_pair.ab1_1}: {e}')
+
+    docker_cmd = [
+        'docker', 'run',
+        # Remove the container
+        '--rm',                                  
+        # Mount data volume (ro: read-only)
+        '-v', f'{cfg['paths']['data_host']}:{cfg['paths']['data_docker']}:ro',
+        # Mount outdir volume
+        '-v', f'{cfg['paths']['outdir_host']}/align:{cfg['paths']['outdir_docker']}', 
+        # container name
+        '--name', f'align_{sample_id}', 
+        # -i option lets the conainer actively run
+        '-i',                               
+        # platform (precede image!)
+        '--platform', 'linux/amd64',             
+        # docker image and version to use
+        f'{cfg['docker']['image']}:{cfg['docker']['version']}',
+        
+        # tracy align command for variant calling
+        'tracy', 'align',
+        # reference to align to
+        '-r', f'{cfg['paths']['data_docker']}/{reference_name}',
+        # outdirectory and outfile name
+        '-o', f'{cfg['paths']['outdir_docker']}/{sample_id}',
+        # sequence trimming options
+        '--trimLeft', f'{cfg['tracy']['trim_left']}',
+        '--trimRight', f'{cfg['tracy']['trim_right']}', 
+        # .ab1 file to use
+        f'{cfg['paths']['data_docker']}/{file_name}'
+    ]
+
+    print('Running align:', ' '.join(docker_cmd))
     
     try:
         subprocess.run(docker_cmd, check=True)
