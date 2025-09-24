@@ -65,6 +65,8 @@ In general, the use of absolute paths is recommmended but relative paths can be 
 - On Linux: command goes here
 
 ### Run scripts of dsp_bulk_sangerseq consecutively    
+Perfrom all the following steps consecutively.
 1. In the project directory, activate the environment using ```pipenv shell```. Alternatively, activate the environment from within the code editor, e.g. VS code.
 2. Perform Sanger sequencing analysis using tracy by running command ```python tracy_bulk_docker_samplesheet.py```.
-3. Once finished, perform post-processing of results by running command ```python tracy_postprocessing.py```.
+3. Perform post-processing of results by running command ```python tracy_postprocessing.py```.
+4. Generate Sanger trace images (interactive html files) by running ```python tracy_render_align.py```.
