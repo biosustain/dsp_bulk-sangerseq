@@ -1,25 +1,12 @@
 ## Path configuration: absolute paths to data (.ab1 files) and output directory on host machine and in mounted Docker container
 paths:
   #folder paths on host machine
-  data_host: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq'
-  outdir_host: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/outdir/sanger_seq'
-  samplesheet: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq/samplesheet.csv'
-
-  #paths in docker container
-  data_docker: '/home/sanger_seq/data'
-  outdir_docker: '/home/sanger_seq/outdir'
-
-
-## Docker configuration
-docker:
-  image: 'geargenomics/tracy'
-  version: 'latest'
-
+  data_host: 'data/sanger_seq'
+  outdir_host: 'outdir/sanger_seq'
+  samplesheet: 'data/sanger_seq/samplesheet.csv'
 
 ## Tracy software configuration
 tracy:
   # trimming length: number nucleotides at 5' (left) and 3' (right) to be removed
   trim_left: 50
   trim_right: 200
-
-
