@@ -1,12 +1,12 @@
 # Sanger sequencing tool for bulk analysis
 
 ## Background
-Sanger sequencing ([Sanger et al., 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the substantial increase of throughput in biological experimentation like in microbial genome engineering campaigns in industrial biotechnology, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.  
-This **Bulk Sanger Sequencing Tool** was developed to reduce this time investment while maintaining a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [tracy](https://github.com/gear-genomics/tracy) and [SAGE](https://www.gear-genomics.com/sage/) are used for the analysis and visualisation of Sanger sequencing data ([Rausch et al, 2020](https://doi.org/10.1186/s12864-020-6635-8)).
+Sanger sequencing ([Sanger *et al.*, 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the substantial increase of throughput in biological experimentation like in microbial genome engineering campaigns in industrial biotechnology, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.  
+This **Bulk Sanger Sequencing Tool** was developed to reduce this time investment while maintaining a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [Tracy](https://www.gear-genomics.com/) ([GitHub](https://github.com/gear-genomics/tracy)) and [Sage](https://www.gear-genomics.com/) ([GitHub](https://github.com/gear-genomics/sage)) are used for the analysis and visualisation of Sanger sequencing data ([Rausch *et al.*, 2020](https://doi.org/10.1186/s12864-020-6635-8)).
 
 ## Applicability
 Currently, Sanger sequencing results with one sequencing file can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the refernece sequence indicates it it was used in forward direction or reverse-complemented for the alignment).  
-Combined analyses by assembling forward and reverse sequencing results is currently not possible, albeit tracy offers this functionality (to be implemented soon). A summary of all tracy's functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
+Combined analyses by assembling forward and reverse sequencing results is currently not possible, albeit tracy offers this functionality (to be implemented soon). A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
 
 ## Prerequisites
 
