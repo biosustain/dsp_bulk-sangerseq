@@ -5,3 +5,7 @@ data/*
 # outdirs
 outdir/*
 outdir/.gitkeep
+
+# nextflow
+.nextflow*
+work/*

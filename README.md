@@ -153,3 +153,30 @@ python3 tracy_postprocessing.py
 ```
 python3 tracy_render_align.py
 ```
+
+### Run the workflow with Nextflow
+The repository also contains a Nextflow pipeline that mirrors the current samplesheet-driven Tracy workflow. The default parameters in `nextflow.config` target the bundled `data/test_data_1` dataset and can be overridden on the command line.
+
+Install Nextflow and run the pipeline from the repository root:
+
+```
+nextflow run . -profile docker
+```
+
+Common parameter overrides:
+
+```
+nextflow run . -profile docker \
+  --data_dir data/test_data_1 \
+  --samplesheet data/test_data_1/samplesheet_test_data_1_multi_ref_grouping.csv \
+  --reference_fasta data/test_data_1/references.fa \
+  --outdir outdir
+```
+
+The pipeline performs three Tracy stages based on the current samplesheet format:
+
+1. `decompose` for each sample.
+2. `align` for each sample.
+3. `assemble` for each non-empty `assembly_group`.
+
+Interactive HTML viewers for alignment JSON output are written into the alignment output directory together with `traceView.js`.
