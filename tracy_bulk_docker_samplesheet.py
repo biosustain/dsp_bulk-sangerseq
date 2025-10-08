@@ -16,7 +16,7 @@ with open('./config.yaml', 'r') as file:
 
 # %% Download Docker image
 try:
-    subprocess.run(['docker', 'pull', f'{cfg['docker']['image']}:{cfg['docker']['version']}'], check=True)
+    subprocess.run(['docker', 'pull', '--platform', f'{cfg['docker']['platform']}', f'{cfg['docker']['image']}:{cfg['docker']['version']}'], check=True)
     
 except subprocess.CalledProcessError as e:
         print(f'Error pulling image {cfg['docker']['image']}:{cfg['docker']['version']}: {e}')
@@ -61,7 +61,7 @@ for sample_ref_pair in sample_ref_pairs:
         # -i option lets the conainer actively run
         '-i',                               
         # platform (precede image!)
-        '--platform', 'linux/amd64',             
+        '--platform', cfg['docker']['platform'],             
         # docker image and version to use
         f'{cfg['docker']['image']}:{cfg['docker']['version']}',
         
@@ -99,7 +99,7 @@ for sample_ref_pair in sample_ref_pairs:
         # -i option lets the conainer actively run
         '-i',                               
         # platform (precede image!)
-        '--platform', 'linux/amd64',             
+        '--platform', cfg['docker']['platform'],             
         # docker image and version to use
         f'{cfg['docker']['image']}:{cfg['docker']['version']}',
         
@@ -123,3 +123,5 @@ for sample_ref_pair in sample_ref_pairs:
     
     except subprocess.CalledProcessError as e:
         print(f'Error running container for {sample_ref_pair.ab1_1}: {e}')
+
+# %%
