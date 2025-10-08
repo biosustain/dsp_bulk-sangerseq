@@ -2,5 +2,7 @@
 data/sanger_seq/*
 !data/sanger_seq/samplesheet_template.csv
 
-# outdirs
-outdir/sanger_seq/*
+# nextflow
+.nextflow*
+work/*
+results*/
