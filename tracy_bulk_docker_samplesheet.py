@@ -41,7 +41,29 @@ print(sample_ref_pairs)
 print(sample_ref_pairs[0].ab1_file)
 print(sample_ref_pairs[0].reference_id)
 
+#%% read relevant entries from multifasta and create temporary file for each fasta entry
+import tempfile
 
+#get unqiue reference ids and save as list
+ref_names_set = {sample_ref_pair.reference_id for sample_ref_pair in sample_ref_pairs}  #use a set to get unique values
+
+ref_names_list = list(ref_names_set)
+print(ref_names_list)
+
+#parse multifasta file with reference ids, save each fasta entry (header plus sequence) in a temporary file and append paths to a list
+
+temp_file_paths = []
+with open(cfg['paths']['reference_fasta']) as handle:
+    for record in SeqIO.parse(handle, 'fasta'):
+        if record.id in ref_names_list:
+            fasta_entry = f'>{record.id}\n{record.seq}'
+            tmp_file = tempfile.NamedTemporaryFile(suffix=f'_{record.id}', mode='w+')   #set mode to allow writing of string
+            tmp_file.write(fasta_entry)
+            temp_file_paths.append(tmp_file.name)
+            tmp_file.close()
+            #print(tmp_file.name)
+
+print(temp_file_paths)
 
 #%%
 # run analysis (one container per sequencing analysis)
