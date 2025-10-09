@@ -7,6 +7,7 @@ import os
 import glob
 import yaml
 import pandas as pd
+from Bio import SeqIO
 
 
 # %% Read yaml configuration file
@@ -31,23 +32,27 @@ samplesheet = pd.read_csv(cfg['paths']['samplesheet'])
 print(samplesheet)
 
 #create sample-reference pairs as a list of tuples
-sample_ref_df = samplesheet[['sample_id', 'ab1_1', 'reference']]
+sample_ref_df = samplesheet[['sample_id', 'ab1_file', 'group', 'reference_id']]
 print(sample_ref_df)
 
 sample_ref_pairs = list(sample_ref_df.itertuples(index=False))
 print(sample_ref_pairs)
 
-print(sample_ref_pairs[0].ab1_1)
-print(sample_ref_pairs[0].reference)
+print(sample_ref_pairs[0].ab1_file)
+print(sample_ref_pairs[0].reference_id)
+
+
 
 #%%
 # run analysis (one container per sequencing analysis)
 for sample_ref_pair in sample_ref_pairs:
     
-    file_name = sample_ref_pair.ab1_1.split('/')[-1]
+    file_name = sample_ref_pair.ab1_file.split('/')[-1]
     sample_id = sample_ref_pair.sample_id
-    reference_name = sample_ref_pair.reference.split('/')[-1]
+    reference_name = sample_ref_pair.reference_id
+    print(sample_ref_pair.reference_id)
 
+#%%
     docker_cmd = [
         'docker', 'run',
         # Remove the container
@@ -84,7 +89,7 @@ for sample_ref_pair in sample_ref_pairs:
         subprocess.run(docker_cmd, check=True)
     
     except subprocess.CalledProcessError as e:
-        print(f'Error running container for {sample_ref_pair.ab1_1}: {e}')
+        print(f'Error running container for {sample_ref_pair.ab1_file}: {e}')
 
     docker_cmd = [
         'docker', 'run',
@@ -122,6 +127,6 @@ for sample_ref_pair in sample_ref_pairs:
         subprocess.run(docker_cmd, check=True)
     
     except subprocess.CalledProcessError as e:
-        print(f'Error running container for {sample_ref_pair.ab1_1}: {e}')
+        print(f'Error running container for {sample_ref_pair.ab1_file}: {e}')
 
 # %%
