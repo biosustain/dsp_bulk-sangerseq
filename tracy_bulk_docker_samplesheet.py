@@ -8,6 +8,7 @@ import glob
 import yaml
 import pandas as pd
 from Bio import SeqIO
+import tempfile
 
 
 # %% Read yaml configuration file
@@ -42,7 +43,6 @@ print(sample_ref_pairs[0].ab1_file)
 print(sample_ref_pairs[0].reference_id)
 
 #%% read relevant entries from multifasta and create temporary file for each fasta entry
-import tempfile
 
 #get unqiue reference ids and save as list
 ref_names_set = {sample_ref_pair.reference_id for sample_ref_pair in sample_ref_pairs}  #use a set to get unique values
