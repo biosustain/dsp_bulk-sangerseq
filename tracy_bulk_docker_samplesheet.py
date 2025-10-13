@@ -9,6 +9,7 @@ import yaml
 import pandas as pd
 from Bio import SeqIO
 import tempfile
+from pathlib import Path
 
 
 # %% Read yaml configuration file
