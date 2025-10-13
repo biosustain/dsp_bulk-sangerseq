@@ -68,7 +68,7 @@ with open(cfg['paths']['reference_fasta']) as handle:
 # run analysis (one container per sequencing analysis)
 for sample_ref_pair in sample_ref_pairs:
     
-    file_name = sample_ref_pair.ab1_file.split('/')[-1]
+    file_name = Path(sample_ref_pair.ab1_file).name
     sample_id = sample_ref_pair.sample_id
     reference_name = sample_ref_pair.reference_id + '.fa'   #append file extension (.fa) for docker command
     print(reference_name)
