@@ -59,11 +59,7 @@ print(ref_names_list)
 with open(cfg['paths']['reference_fasta']) as handle:
     for record in SeqIO.parse(handle, 'fasta'):
         if record.id in ref_names_list:
-            fasta_entry = f'>{record.id}\n{record.seq}'
-            
-            #Save each fasta entry in a fasta file
-            with open(f'{cfg['paths']['data_host']}/{record.id}.fa', 'w') as file:
-                file.write(fasta_entry)
+            SeqIO.write(record, f'{cfg['paths']['data_host']}/{record.id}.fa', 'fasta')
 
 #%%
 # run analysis (one container per sequencing analysis)
