@@ -42,18 +42,21 @@ Open the terminal and perform the following steps consecutively:
 ## Usage
 
 ### Prepare data and a samplesheet  
-The tool requires Sanger sequencing (.ab1) and reference fasta (.fa) files.  
+The tool requires Sanger sequencing (.ab1) and reference files stored in a multifasta file (.fa) files.  
 
-Copy all .ab1 files into the folder **data**. 
+Copy all .ab1 files and the multifasta file into the folder **data**. 
 
 Prepare a **samplesheet** according to the template below and save it as .csv file. It is recommended to deposit the samplesheet.csv in the **data** folder. Here you can also find a template (samplesheet_template.csv). The tool will read the samplesheet file automatically after specifying the path to it in the ```config.yaml``` file (see instructions below).  
-**Note**: Currently, the tool only analyses samples that were sequenced in one direction (e.g. forward). If a sample was sequenced in forward direction, paste the path to the .ab1 file in column "ab1_1" and leave the column "ab1_2" blank. Fill in the sequencing direction in column "seq_direction" (forward). Fill in the paths where the reference fasta files are saved. Using absolute paths is recommended but relative paths will work too.
+**Note**: 
+Currently, the tool only analyses samples that were sequenced in one direction, i.e. forward or reverse. The direction is automatically determined by the tracy software. 
+The tool uses references stored in a multifasta file. Fill in the reference ID which must be the fasta header in the provided multifasta file. Using absolute paths is recommended but relative paths will work too.  
+The group column will be used for later developments of trace assembly (not functional yet).
 
-|sample_id     |ab1_1                      |ab1_2                      |seq_direction  | reference        |
-|--------------|---------------------------|---------------------------|---------------|------------------|
-|sample_name_1   |path/to/file_1.ab1         |                           |forward        |path/to/ref_1.fa  |
-|sample_name_2   |path/to/file_2.ab1         |                           |forward        |path/to/ref_2.fa  |
-|sample_name_3   |path/to/file_3.ab1         |                           |forward        |path/to/ref_3.fa  |
+| sample_id       | ab1_file                 | group  | reference_id     |
+|-----------------|--------------------------|--------|------------------|
+| sample_name_1   | path/to/file_1.ab1       | 1      | reference_1      |
+| sample_name_2   | path/to/file_2.ab1       | 1      | reference_1      |
+| sample_name_3   | path/to/file_3.ab1       | 2      | reference_2      |
 
 ### Modify the configuration file (config.yaml)  
 Change the ```data_host``` variable to become the absolute path to the data directory on your computer.

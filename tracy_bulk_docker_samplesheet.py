@@ -7,6 +7,9 @@ import os
 import glob
 import yaml
 import pandas as pd
+from Bio import SeqIO
+import tempfile
+from pathlib import Path
 
 
 # %% Read yaml configuration file
@@ -31,22 +34,41 @@ samplesheet = pd.read_csv(cfg['paths']['samplesheet'])
 print(samplesheet)
 
 #create sample-reference pairs as a list of tuples
-sample_ref_df = samplesheet[['sample_id', 'ab1_1', 'reference']]
+sample_ref_df = samplesheet[['sample_id', 'ab1_file', 'group', 'reference_id']]
 print(sample_ref_df)
 
 sample_ref_pairs = list(sample_ref_df.itertuples(index=False))
 print(sample_ref_pairs)
 
-print(sample_ref_pairs[0].ab1_1)
-print(sample_ref_pairs[0].reference)
+print(sample_ref_pairs[0].ab1_file)
+print(sample_ref_pairs[0].reference_id)
+
+
+#%% read relevant entries from multifasta and create temporary file for each fasta entry
+
+#get unqiue reference ids and save as list
+ref_names_set = {sample_ref_pair.reference_id for sample_ref_pair in sample_ref_pairs}  #use a set to get unique values
+
+ref_names_list = list(ref_names_set)
+print(ref_names_list)
+
+
+#%% Parse multifasta file with reference ids and save each fasta entry (header plus sequence) in a fasta file in the host data folder (docker command will read the reference form there)
+
+# get relevant single fasta entries from multifasta file and store in a list
+with open(cfg['paths']['reference_fasta']) as handle:
+    for record in SeqIO.parse(handle, 'fasta'):
+        if record.id in ref_names_list:
+            SeqIO.write(record, f'{cfg['paths']['data_host']}/{record.id}.fa', 'fasta')
 
 #%%
 # run analysis (one container per sequencing analysis)
 for sample_ref_pair in sample_ref_pairs:
     
-    file_name = sample_ref_pair.ab1_1.split('/')[-1]
+    file_name = Path(sample_ref_pair.ab1_file).name
     sample_id = sample_ref_pair.sample_id
-    reference_name = sample_ref_pair.reference.split('/')[-1]
+    reference_name = sample_ref_pair.reference_id + '.fa'   #append file extension (.fa) for docker command
+    print(reference_name)
 
     docker_cmd = [
         'docker', 'run',
@@ -84,7 +106,7 @@ for sample_ref_pair in sample_ref_pairs:
         subprocess.run(docker_cmd, check=True)
     
     except subprocess.CalledProcessError as e:
-        print(f'Error running container for {sample_ref_pair.ab1_1}: {e}')
+        print(f'Error running container for {sample_ref_pair.ab1_file}: {e}')
 
     docker_cmd = [
         'docker', 'run',
@@ -122,6 +144,6 @@ for sample_ref_pair in sample_ref_pairs:
         subprocess.run(docker_cmd, check=True)
     
     except subprocess.CalledProcessError as e:
-        print(f'Error running container for {sample_ref_pair.ab1_1}: {e}')
+        print(f'Error running container for {sample_ref_pair.ab1_file}: {e}')
 
 # %%

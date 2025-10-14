@@ -3,7 +3,8 @@ paths:
   #folder paths on host machine
   data_host: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq'
   outdir_host: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/outdir/sanger_seq'
-  samplesheet: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq/samplesheet.csv'
+  samplesheet: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq/samplesheet_multifasta_ref.csv'
+  reference_fasta: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq/benchling_export_multiseq.fasta'
 
   #paths in docker container
   data_docker: '/home/sanger_seq/data'

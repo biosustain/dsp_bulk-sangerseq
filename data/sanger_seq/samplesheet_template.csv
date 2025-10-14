@@ -1,3 +1,4 @@
-﻿sample_id,ab1_1,ab1_2,seq_direction,reference
-sample_name_1,path/to/sample_1.ab1,,forward,path/to/reference_1.fa
-sample_name_2,path/to/sample_2.ab1,,forward,path/to/reference_2.fa
+﻿sample_id,ab1_file,group,reference_id
+sample_name_1,path/to/sample_1.ab1,1,reference_1
+sample_name_2,path/to/sample_2.ab1,1,reference_1
+sample_name_3,path/to/sample_3.ab1,2,reference_2
