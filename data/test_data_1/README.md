@@ -5,4 +5,5 @@ The data set "test_data_1" was obtained from the [geargenomics Pearl software re
 It is suitable to test the ```tracy assemble``` as well as the ```tracy decompose``` and ```tracy align``` command.  
 
 ## Usage
-Use sample_{x}.abi files for testing against the reference file sample.fa
+Use sample_{x}.abi files for testing against the reference file sample.fa.  
+The sample sheet "samplesheet_test_data_1.csv" is ready to use.
