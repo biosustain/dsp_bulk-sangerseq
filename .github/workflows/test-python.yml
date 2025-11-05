@@ -62,22 +62,27 @@ jobs:
         ls data/test_data_1/
         
     - name: Test ab1_exploration.py
+      if: always()
       run: |
         pipenv run python ab1_exploration.py
         
     - name: Test tracy_bulk_docker.py
+      if: always()
       run: |
         pipenv run python -m py_compile tracy_bulk_docker.py
 
     - name: Test tracy_bulk_docker_samplesheet.py
+      if: always()
       run: |
         pipenv run python -m py_compile tracy_bulk_docker_samplesheet.py
         
     - name: Test tracy_postprocesssing.py
+      if: always()
       run: |
         pipenv run python tracy_postprocesssing.py
         
     - name: Test tracy_render_align.py
+      if: always()
       run: |
         pipenv run python tracy_render_align.py
 
