@@ -47,6 +47,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v5
       
+    - name: Switch to Linux containers on Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        & "C:\Program Files\Docker\Docker\DockerCli.exe" -SwitchLinuxEngine
+      
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v6
       with:
