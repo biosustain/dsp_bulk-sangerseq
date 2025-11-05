@@ -68,9 +68,9 @@ jobs:
       run: |
         ls data/test_data_1/
 
-    - name: Test {{ matrix.script }}
+    - name: Test ${{ matrix.script }}
       run: |
-        pipenv run python {{ matrix.script }}
+        pipenv run python ${{ matrix.script }}
 
     - name: Resolve output folder based on config.yaml
       if: always()
