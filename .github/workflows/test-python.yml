@@ -73,6 +73,7 @@ jobs:
         pipenv run python {{ matrix.script }}
 
     - name: Resolve output folder based on config.yaml
+      if: always()
       id: resolve_outdir
       run: |
         echo "::set-output name=outdir::$(yq '.paths.outdir_host' config.yaml)"
