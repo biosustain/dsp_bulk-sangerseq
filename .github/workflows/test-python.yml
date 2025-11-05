@@ -26,6 +26,13 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         python-version: ['3.12']
+        script: [
+            'ab1_exploration.py',
+            'tracy_bulk_docker.py',
+            'tracy_bulk_docker_samplesheet.py',
+            'tracy_postprocesssing.py',
+            'tracy_render_align.py'
+        ]
         include:
           - os: ubuntu-latest
             shell: bash
@@ -60,31 +67,10 @@ jobs:
     - name: Verify test data files
       run: |
         ls data/test_data_1/
-        
-    - name: Test ab1_exploration.py
-      if: always()
-      run: |
-        pipenv run python ab1_exploration.py
-        
-    - name: Test tracy_bulk_docker.py
-      if: always()
-      run: |
-        pipenv run python -m py_compile tracy_bulk_docker.py
 
-    - name: Test tracy_bulk_docker_samplesheet.py
-      if: always()
+    - name: Test {{ matrix.script }}
       run: |
-        pipenv run python -m py_compile tracy_bulk_docker_samplesheet.py
-        
-    - name: Test tracy_postprocesssing.py
-      if: always()
-      run: |
-        pipenv run python tracy_postprocesssing.py
-        
-    - name: Test tracy_render_align.py
-      if: always()
-      run: |
-        pipenv run python tracy_render_align.py
+        pipenv run python {{ matrix.script }}
 
     - name: Resolve output folder based on config.yaml
       id: resolve_outdir
