@@ -146,4 +146,72 @@ for sample_ref_pair in sample_ref_pairs:
     except subprocess.CalledProcessError as e:
         print(f'Error running container for {sample_ref_pair.ab1_file}: {e}')
 
-# %%
+
+# %% Run tracy assemble against the reference in docker container (for the analysis of overlapping reads)
+
+#prepare data --> TO BE FINALIZED!!!!
+
+#group data by group in sample sheet
+grouped_input = samplesheet.groupby(by='group')
+print(grouped_input)
+
+new = grouped_input.apply(lambda x: list(x.itertuples(index=False))).reset_index()
+print(new)
+
+#rename column
+new.columns = ['group', 'samples']
+#print(new[0][0])
+print(new)
+
+new_select = new.loc['samples', 0].sample_id
+print(new_select)
+#print(new.sample_id)
+
+new_export = new.reset_index()
+new.to_csv('./outdir/assemple_input.csv')
+
+#run tracy assemble in docker container
+
+for i in.....: #FINALIZE for loop (depends on data selection above)
+
+    docker_cmd_assemble = [
+        'docker', 'run',
+        # Remove the container
+        '--rm',                                  
+        # Mount data volume (ro: read-only)
+        '-v', f'{cfg['paths']['data_host']}:{cfg['paths']['data_docker']}:ro',
+        # Mount outdir volume
+        '-v', f'{cfg['paths']['outdir_host']}:{cfg['paths']['outdir_docker']}', 
+        # container name
+        '--name', f'assemble_{sample_id}', 
+        # -i option lets the conainer actively run
+        '-i',                               
+        # platform (precede image!)
+        '--platform', cfg['docker']['platform'],             
+        # docker image and version to use
+        f'{cfg['docker']['image']}:{cfg['docker']['version']}',
+        
+        # tracy assmble command for assembling traces againbst the reference
+        'tracy', 'assemble',
+        # reference to align to
+        '-r', f'{cfg['paths']['data_docker']}/{reference_name}',
+        # outdirectory and outfile name
+        '-o', f'{cfg['paths']['outdir_docker']}/{sample_id}',   #to be MODIFIED: assembled sample ids to avoid overwriting!!!
+        # sequence trimming options
+        '--trimLeft', f'{cfg['tracy']['trim_left']}',
+        '--trimRight', f'{cfg['tracy']['trim_right']}', 
+        # .ab1 file to use
+        f'{cfg['paths']['data_docker']}/{file_name}'
+    ]
+
+    print('Running assemble:', ' '.join(docker_cmd_assemble))
+    
+    try:
+        subprocess.run(docker_cmd_assemble, check=True)
+    
+    except subprocess.CalledProcessError as e:
+        print(f'Error running container for {sample_ref_pair.ab1_file}: {e}')
+
+
+# %% Run tracy decompose using the assembled traces against the reference for variant calling
+#TO BE IMPLEMENTED if necessary
