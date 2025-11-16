@@ -160,19 +160,37 @@ print(new)
 
 #rename column
 new.columns = ['group', 'samples']
-#print(new[0][0])
 print(new)
 
-new_select = new.loc['samples', 0].sample_id
+#select samples column and convert to a list of lists
+new_select = new['samples']
 print(new_select)
-#print(new.sample_id)
 
-new_export = new.reset_index()
-new.to_csv('./outdir/assemple_input.csv')
+#export for easier visualisation
+new_select.to_csv('./outdir/new_select_assembly_groups.csv')
 
+assembly_groups = new_select.values.tolist()    #yields a list of lists
+print(assembly_groups)
+
+#%%
 #run tracy assemble in docker container
 
-for i in.....: #FINALIZE for loop (depends on data selection above)
+for group in assembly_groups:
+
+    #join file names that get assembled and then join with docker container path
+    file_names_joined = ' '.join([f'{cfg['paths']['data_docker']}/{file_path.ab1_file.split('/')[-1]}' for file_path in group])
+    print(file_names_joined)
+
+    #join sample ids that get assembled
+    sample_id_joined = '_'.join([sample.sample_id for sample in group])
+    print(sample_id_joined)
+
+    #append file extension (.fa) for docker command
+    refs_temp = [reference.reference_id + '.fa' for reference in group]
+    print(refs_temp)    #has duplicated reference files
+
+    reference_name = ''.join((set(refs_temp)))   #delete identical reference files in list because tracy assemble command only accepts one reference file
+    print(reference_name)
 
     docker_cmd_assemble = [
         'docker', 'run',
@@ -183,7 +201,7 @@ for i in.....: #FINALIZE for loop (depends on data selection above)
         # Mount outdir volume
         '-v', f'{cfg['paths']['outdir_host']}:{cfg['paths']['outdir_docker']}', 
         # container name
-        '--name', f'assemble_{sample_id}', 
+        '--name', f'assemble_{sample_id_joined}', 
         # -i option lets the conainer actively run
         '-i',                               
         # platform (precede image!)
@@ -196,12 +214,12 @@ for i in.....: #FINALIZE for loop (depends on data selection above)
         # reference to align to
         '-r', f'{cfg['paths']['data_docker']}/{reference_name}',
         # outdirectory and outfile name
-        '-o', f'{cfg['paths']['outdir_docker']}/{sample_id}',   #to be MODIFIED: assembled sample ids to avoid overwriting!!!
+        '-o', f'{cfg['paths']['outdir_docker']}/{sample_id_joined}',
         # sequence trimming options
-        '--trimLeft', f'{cfg['tracy']['trim_left']}',
-        '--trimRight', f'{cfg['tracy']['trim_right']}', 
-        # .ab1 file to use
-        f'{cfg['paths']['data_docker']}/{file_name}'
+        #'--trimLeft', f'{cfg['tracy']['trim_left']}',
+        #'--trimRight', f'{cfg['tracy']['trim_right']}',
+        # .ab1 files to assemble
+        file_names_joined
     ]
 
     print('Running assemble:', ' '.join(docker_cmd_assemble))
@@ -210,7 +228,7 @@ for i in.....: #FINALIZE for loop (depends on data selection above)
         subprocess.run(docker_cmd_assemble, check=True)
     
     except subprocess.CalledProcessError as e:
-        print(f'Error running container for {sample_ref_pair.ab1_file}: {e}')
+        print(f'Error running container for {file_names_joined}: {e}')
 
 
 # %% Run tracy decompose using the assembled traces against the reference for variant calling
