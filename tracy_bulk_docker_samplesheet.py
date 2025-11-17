@@ -10,6 +10,7 @@ import pandas as pd
 from Bio import SeqIO
 import tempfile
 from pathlib import Path
+import itertools
 
 
 # %% Read yaml configuration file
@@ -149,8 +150,6 @@ for sample_ref_pair in sample_ref_pairs:
 
 # %% Run tracy assemble against the reference in docker container (for the analysis of overlapping reads)
 
-#prepare data --> TO BE FINALIZED!!!!
-
 #group data by group in sample sheet
 grouped_input = samplesheet.groupby(by='group')
 print(grouped_input)
@@ -177,9 +176,9 @@ print(assembly_groups)
 
 for group in assembly_groups:
 
-    #join file names that get assembled and then join with docker container path
-    file_names_joined = ' '.join([f'{cfg['paths']['data_docker']}/{file_path.ab1_file.split('/')[-1]}' for file_path in group])
-    print(file_names_joined)
+    #generate fa list of paths to files that get assembled (paths in docker container)
+    file_paths_list = [f'{cfg['paths']['data_docker']}/{file_path.ab1_file.split('/')[-1]}' for file_path in group]
+    print(file_paths_list)
 
     #join sample ids that get assembled
     sample_id_joined = '_'.join([sample.sample_id for sample in group])
@@ -217,17 +216,22 @@ for group in assembly_groups:
         '-o', f'{cfg['paths']['outdir_docker']}/{sample_id_joined}',
         # sequence trimming options (only trimming stringency can be specified but not fixed values using trimLeft and trimRight; default according to tracy assemble --help: 4 --> set here explicitly ([0:9], 0: disable trimming))
         '-t', '4',
-        # .ab1 files to assemble
-        file_names_joined
+        # .ab1 files to assemble (passed here as a list; see also below) 
+        file_paths_list     
     ]
 
-    print('Running assemble:', ' '.join(docker_cmd_assemble))
+    #flatten docker_assemble_cmd because the file_path_list variable is a list(inspired by https://stackoverflow.com/questions/22569094/how-to-flatten-a-list-with-various-data-types-int-tuple)
+    docker_cmd_assemble_flattened = list(itertools.chain(*(i if isinstance(i, list) else (i,) for i in docker_cmd_assemble)))
+
+    print('Running assemble:', ' '.join(docker_cmd_assemble_flattened))
     
     try:
-        subprocess.run(docker_cmd_assemble, check=True)
+        subprocess.run(docker_cmd_assemble_flattened, check=True)
     
     except subprocess.CalledProcessError as e:
-        print(f'Error running container for {file_names_joined}: {e}')
+        print(f'Error running container for TO BE FILLED: {e}')
+
+
 
 
 # %% Run tracy decompose using the assembled traces against the reference for variant calling
