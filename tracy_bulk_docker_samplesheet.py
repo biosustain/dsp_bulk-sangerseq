@@ -215,9 +215,8 @@ for group in assembly_groups:
         '-r', f'{cfg['paths']['data_docker']}/{reference_name}',
         # outdirectory and outfile name
         '-o', f'{cfg['paths']['outdir_docker']}/{sample_id_joined}',
-        # sequence trimming options
-        #'--trimLeft', f'{cfg['tracy']['trim_left']}',
-        #'--trimRight', f'{cfg['tracy']['trim_right']}',
+        # sequence trimming options (only trimming stringency can be specified but not fixed values using trimLeft and trimRight; default according to tracy assemble --help: 4 --> set here explicitly ([0:9], 0: disable trimming))
+        '-t', '4',
         # .ab1 files to assemble
         file_names_joined
     ]
