@@ -165,9 +165,6 @@ print(new)
 new_select = new['samples']
 print(new_select)
 
-#export for easier visualisation
-new_select.to_csv('./outdir/new_select_assembly_groups.csv')
-
 assembly_groups = new_select.values.tolist()    #yields a list of lists
 print(assembly_groups)
 
