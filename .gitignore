@@ -1,6 +1,7 @@
 #data dirs
-data/sanger_seq/*
-!data/sanger_seq/samplesheet_template.csv
+data/*
+!data/test_data_1
 
 # outdirs
-outdir/sanger_seq/*
+outdir/*
+outdir/.gitkeep
