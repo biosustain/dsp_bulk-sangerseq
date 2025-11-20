@@ -87,7 +87,7 @@ logging.info('Unique reference IDs: %s', ref_names_list)
 
 # %% Parse multifasta file with reference ids and save each fasta entry
 # (header plus sequence) in a fasta file in the host data folder
-# (docker command will read the reference form there)
+# (docker command will read the reference from there)
 
 # get relevant single fasta entries from multifasta file and store in a list
 with open(cfg['paths']['reference_fasta'], encoding='utf-8') as handle:
@@ -128,7 +128,7 @@ for sample_ref_pair in sample_ref_pairs:
         # container name
         '--name',
         f'decompose_{sample_id}',
-        # -i option lets the conainer actively run
+        # -i option lets the container actively run
         '-i',
         # platform (precede image!)
         '--platform',
@@ -179,7 +179,7 @@ for sample_ref_pair in sample_ref_pairs:
         # container name
         '--name',
         f'align_{sample_id}',
-        # -i option lets the conainer actively run
+        # -i option lets the container actively run
         '-i',
         # platform (precede image!)
         '--platform',
@@ -223,9 +223,8 @@ for sample_ref_pair in sample_ref_pairs:
 for group_name, group in samplesheet.groupby(by='group'):
     # Generate list of paths to files that get assembled
     # (paths in docker container)
-    data_docker = datadir_docker
     file_paths_list = [
-        path.join(data_docker, row['ab1_file']) for _, row in group.iterrows()
+        path.join(datadir_docker, row['ab1_file']) for _, row in group.iterrows()
     ]
     logging.debug('File paths for assembly: %s', file_paths_list)
 
@@ -261,7 +260,7 @@ for group_name, group in samplesheet.groupby(by='group'):
         'assemble',
         # reference to align to
         '-r',
-        reference_path,
+        path.join(datadir_docker, reference_name)
         # outdirectory and outfile name
         '-o',
         path.join(outdir_docker, sample_id_joined),
