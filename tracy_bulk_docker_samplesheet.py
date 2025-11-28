@@ -260,7 +260,7 @@ for group_name, group in samplesheet.groupby(by='group'):
         'assemble',
         # reference to align to
         '-r',
-        path.join(datadir_docker, reference_name)
+        path.join(datadir_docker, reference_name),
         # outdirectory and outfile name
         '-o',
         path.join(outdir_docker, sample_id_joined),
