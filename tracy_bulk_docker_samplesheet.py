@@ -234,6 +234,7 @@ for group_name, group in samplesheet.groupby(by='group'):
 
     # Append file extension (.fa) for docker command
     # Use first reference since all in group should have same reference
+    assert group['reference_id'].nunique() == 1, f'Group {group_name} has multiple reference IDs: {group['reference_id'].unique()}'
     reference_name = group['reference_id'].iloc[0] + '.fa'
     logging.debug('Reference name: %s', reference_name)
 
