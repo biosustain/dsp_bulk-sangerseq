@@ -10,6 +10,7 @@ import pandas as pd
 from Bio import SeqIO
 from os import path
 
+logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 # %% Read yaml configuration file
 with open('./config.yaml', 'r', encoding='utf-8') as file:
