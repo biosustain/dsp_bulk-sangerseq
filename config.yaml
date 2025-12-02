@@ -4,7 +4,7 @@ paths:
   data_host: './data/test_data_1'
   outdir_host: './outdir'
   samplesheet: './data/test_data_1/samplesheet_test_data_1.csv'
-  reference_fasta: './data/test_data_1/sample.fa'
+  reference_fasta: './data/test_data_1/references.fa'
 
   #paths in docker container
   data_docker: '/home/sanger_seq/data'
