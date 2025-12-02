@@ -22,7 +22,7 @@ with open('./config.yaml', 'r') as file:
 
 
 # %% add all json files from host directory to a list for simple bulk processing
-file_paths = [file_path for file_path in glob.glob(os.path.join(cfg['paths']['outdir_host'], '*.json'))]
+file_paths = [file_path for file_path in glob.glob(os.path.join(cfg['paths']['outdir_host'], 'decompose', '*.json'))]
 
 print(file_paths)
 
@@ -45,9 +45,7 @@ for file_path in file_paths:
 
         # add each df to a dictionary
         result_df_dict[sample_name] = result_df
-
-print(result_df_dict['EF73244592_EF73244592'])
-print(result_df_dict['EF73244592_EF73244592'])
+        
 
 #%%
 # write sample name (dictionary key to a new column and export each resulting dfs of the dictionary

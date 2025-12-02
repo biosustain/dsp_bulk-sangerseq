@@ -125,7 +125,7 @@ for sample_ref_pair in sample_ref_pairs:
         f'{datadir_host}:{datadir_docker}:ro',
         # Mount outdir volume
         '-v',
-        f'{outdir_host}:{outdir_docker}',
+        f'{path.join(outdir_host, 'decompose')}:{outdir_docker}',
         # container name
         '--name',
         f'decompose_{sample_id}',
@@ -248,7 +248,7 @@ for group_name, group in samplesheet.groupby(by='group'):
         f'{datadir_host}:{datadir_docker}:ro',
         # Mount outdir volume
         '-v',
-        f'{outdir_host}:{outdir_docker}',
+        f'{path.join(outdir_host, 'assemble')}:{outdir_docker}',
         # container name
         '--name', f'assemble_{sample_id_joined}', 
         # -i option lets the container actively run
