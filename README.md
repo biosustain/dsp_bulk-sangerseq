@@ -46,17 +46,23 @@ The tool requires Sanger sequencing (.ab1) and reference files stored in a multi
 
 Copy all .ab1 files and the multifasta file into the folder **data**. 
 
-Prepare a **samplesheet** according to the template below and save it as .csv file. It is recommended to deposit the samplesheet.csv in the **data** folder. Here you can also find a template (samplesheet_template.csv). The tool will read the samplesheet file automatically after specifying the path to it in the ```config.yaml``` file (see instructions below).  
+Prepare a **samplesheet** according to the template below and save it as .csv file. It is recommended to deposit the samplesheet.csv in the **data** folder. Here you can also find three templates in subfolder ```data/test_data_1```. The tool will read the samplesheet file automatically after specifying the path to it in the ```config.yaml``` file (see instructions below).  
 **Note**: 
-Currently, the tool only analyses samples that were sequenced in one direction, i.e. forward or reverse. The direction is automatically determined by the tracy software. 
-The tool uses references stored in a multifasta file. Fill in the reference ID which must be the fasta header in the provided multifasta file. Using absolute paths is recommended but relative paths will work too.  
-The group column will be used for later developments of trace assembly (not functional yet).
+The tool analyses samples that were sequenced in either forward or reverse direction. Reverse sequencing is automatically detected by the tracy software, i.e. any input sequences do not need to be reverse-complemented prior to analysis. The output files will indicate if reverse-complementation was performed.  
 
-| sample_id       | ab1_file                 | group  | reference_id     |
-|-----------------|--------------------------|--------|------------------|
-| sample_name_1   | path/to/file_1.ab1       | 1      | reference_1      |
-| sample_name_2   | path/to/file_2.ab1       | 1      | reference_1      |
-| sample_name_3   | path/to/file_3.ab1       | 2      | reference_2      |
+In the ```sample_id``` column, fill in the sample names. In the ```ab1_file``` column, fill in the path to the corresponding .ab1 sequencing file (using absolute paths is recommended but relative paths will work too).   
+The tool uses references stored in a multifasta file. Fill the ```reference_id``` with reference names which must be the fasta header in the provided multifasta file. 
+
+The ```assembly_group``` column is used for sequence assembly, e.g. assembling DNA sequencing from forward and reverse sequencing of a gene of interest. A minimum of two sequences can be assembled, however, assembling more sequences is possible. Currently, only reference-guided assembly is implemented, i.e. a reference file must be provided. In the ```assembly_group```column the user has to specify which sequences should be assembled. This is done here using a ```1``` or ```2```. In the example below, samples_3 and sample_4 (assembly_group 1) will be assembled using reference_C whereas sample_5 and sample_6 (assembly_group 2) will be assembled separately using reference_D.
+
+| sample_id       | ab1_file              | assembly_group  | reference_id     |
+|-----------------|-----------------------|-----------------|------------------|
+| sample_name_1   | path/to/file_1.ab1    |                 | reference_A      |
+| sample_name_2   | path/to/file_2.ab1    |                 | reference_B      |
+| sample_name_3   | path/to/file_3.ab1    | 1               | reference_C      |
+| sample_name_4   | path/to/file_4.ab1    | 1               | reference_C      |
+| sample_name_5   | path/to/file_5.ab1    | 2               | reference_D      |
+| sample_name_6   | path/to/file_6.ab1    | 2               | reference_D      |
 
 ### Modify the configuration file (config.yaml)  
 Change the ```data_host``` variable to become the absolute path to the data directory on your computer.
