@@ -2,8 +2,8 @@
 sample_1,sample_1.abi,1,ref_B_T674C
 sample_2,sample_2.abi,1,ref_B_T674C
 sample_3,sample_3.abi,1,ref_B_T674C
-sample_4,sample_4.abi,2,ref_A
-sample_5,sample_5.abi,2,ref_A
+sample_4,sample_4.abi,,ref_A
+sample_5,sample_5.abi,,ref_A
 sample_6,sample_6.abi,2,ref_A
 sample_7,sample_7.abi,2,ref_A
 sample_8,sample_8.abi,1,ref_B_T674C
