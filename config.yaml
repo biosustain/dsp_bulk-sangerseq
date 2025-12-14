@@ -1,10 +1,10 @@
 ## Path configuration: absolute paths to data (.ab1 files) and output directory on host machine and in mounted Docker container
 paths:
   #folder paths on host machine
-  data_host: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq'
-  outdir_host: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/outdir/sanger_seq'
-  samplesheet: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq/samplesheet_multifasta_ref.csv'
-  reference_fasta: '/Users/sebschu/Documents/senDS_cfb/code/dsp_bulk-sangerseq/data/sanger_seq/benchling_export_multiseq.fasta'
+  data_host: './data/test_data_1'
+  outdir_host: './outdir'
+  samplesheet: './data/test_data_1/samplesheet_test_data_1.csv'
+  reference_fasta: './data/test_data_1/references.fa'
 
   #paths in docker container
   data_docker: '/home/sanger_seq/data'
@@ -22,6 +22,6 @@ docker:
 tracy:
   # trimming length: number nucleotides at 5' (left) and 3' (right) to be removed
   trim_left: 50
-  trim_right: 200
+  trim_right: 50
 
 
