@@ -140,7 +140,7 @@ for sample_ref_pair in sample_ref_pairs:
         f'{datadir_host}:{datadir_docker}:ro',
         # Mount outdir volume
         '-v',
-        f'{path.join(outdir_host, 'decompose')}:{outdir_docker}',
+        f'{path.join(outdir_host, "decompose")}:{outdir_docker}',
         # container name
         '--name',
         f'decompose_{sample_id}',
@@ -191,7 +191,7 @@ for sample_ref_pair in sample_ref_pairs:
         f'{datadir_host}:{datadir_docker}:ro',
         # Mount outdir volume
         '-v',
-        f'{path.join(outdir_host, 'align')}:{outdir_docker}',
+        f'{path.join(outdir_host, "align")}:{outdir_docker}',
         # container name
         '--name',
         f'align_{sample_id}',
@@ -250,7 +250,7 @@ for group_name, group in samplesheet.groupby(by='assembly_group'):
 
     # Append file extension (.fa) for docker command
     # Use first reference since all in group should have same reference
-    assert group['reference_id'].nunique() == 1, f'Group {group_name} has multiple reference IDs: {group['reference_id'].unique()}'
+    assert group['reference_id'].nunique() == 1, f'Group {group_name} has multiple reference IDs: {group["reference_id"].unique()}'
     reference_name = group['reference_id'].iloc[0] + '.fa'
     logging.debug('Reference name: %s', reference_name)
 
@@ -263,7 +263,7 @@ for group_name, group in samplesheet.groupby(by='assembly_group'):
         f'{datadir_host}:{datadir_docker}:ro',
         # Mount outdir volume
         '-v',
-        f'{path.join(outdir_host, 'assemble')}:{outdir_docker}',
+        f'{path.join(outdir_host, "assemble")}:{outdir_docker}',
         # container name
         '--name', f'assemble_{sample_id_joined}', 
         # -i option lets the container actively run
