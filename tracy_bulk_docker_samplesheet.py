@@ -62,7 +62,7 @@ logging.info('Samplesheet loaded:\n%s', samplesheet)
 
 # create sample-reference pairs as a list of tuples
 sample_ref_df = samplesheet[
-    ['sample_id', 'ab1_file', 'group', 'reference_id']
+    ['sample_id', 'ab1_file', 'assembly_group', 'reference_id']
 ]
 logging.debug('Sample-reference dataframe:\n%s', sample_ref_df)
 
@@ -221,7 +221,7 @@ for sample_ref_pair in sample_ref_pairs:
 # group data by group in sample sheet
 # run tracy assemble in docker container
 
-for group_name, group in samplesheet.groupby(by='group'):
+for group_name, group in samplesheet.groupby(by='assembly_group'):
     # Generate list of paths to files that get assembled
     # (paths in docker container)
     file_paths_list = [
