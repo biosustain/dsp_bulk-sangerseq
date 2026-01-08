@@ -12,15 +12,30 @@ from os import path
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-# %% Read yaml configuration file
+# %% Read yaml configuration file and save all config parameters as variables (must be all strings)
 with open('./config.yaml', 'r', encoding='utf-8') as file:
     cfg = yaml.safe_load(file)
 
+#paths to data directories (host and docker)
 datadir_host = cfg['paths']['data_host']
 datadir_docker = cfg['paths']['data_docker']
 
+#paths to out-directories (host and docker)
 outdir_host = cfg['paths']['outdir_host']
 outdir_docker = cfg['paths']['outdir_docker']
+
+#paths to sample sheet and reference fasta file
+samplesheet = cfg['paths']['samplesheet']
+reference_fasta = cfg['paths']['reference_fasta']
+
+#docker config parameters
+docker_image = cfg['docker']['image']
+docker_version = cfg['docker']['version']
+docker_platform = cfg['docker']['platform']
+
+#tracy config parameters
+trim_left = str(cfg['tracy']['trim_left'])  #int converted to str
+trim_right = str(cfg['tracy']['trim_right'])    #int converted to str
 
 
 # %% Download Docker image
@@ -30,16 +45,16 @@ try:
             'docker',
             'pull',
             '--platform',
-            f'{cfg['docker']['platform']}',
-            f'{cfg['docker']['image']}:{cfg['docker']['version']}',
+            docker_platform,
+            f'{docker_image}:{docker_version}',
         ],
         check=True,
     )
 except subprocess.CalledProcessError as e:
     logging.error(
         'Error pulling image %s:%s: %s',
-        cfg['docker']['image'],
-        cfg['docker']['version'],
+        docker_image,
+        docker_version,
         e,
     )
 
@@ -50,11 +65,11 @@ except subprocess.CalledProcessError as e:
 
 # read samplesheet
 samplesheet_data_rel_dir = path.relpath(
-    path.dirname(cfg['paths']['samplesheet']),
+    path.dirname(samplesheet),
     start=datadir_host
 )
 samplesheet = pd.read_csv(
-    cfg['paths']['samplesheet'],
+    samplesheet,
     # Convert ab1_file to data dir relative paths
     converters={'ab1_file': lambda x: path.join(samplesheet_data_rel_dir, x)},
 )
@@ -62,7 +77,7 @@ logging.info('Samplesheet loaded:\n%s', samplesheet)
 
 # create sample-reference pairs as a list of tuples
 sample_ref_df = samplesheet[
-    ['sample_id', 'ab1_file', 'group', 'reference_id']
+    ['sample_id', 'ab1_file', 'assembly_group', 'reference_id']
 ]
 logging.debug('Sample-reference dataframe:\n%s', sample_ref_df)
 
@@ -91,7 +106,7 @@ logging.info('Unique reference IDs: %s', ref_names_list)
 # (docker command will read the reference from there)
 
 # get relevant single fasta entries from multifasta file and store in a list
-with open(cfg['paths']['reference_fasta'], encoding='utf-8') as handle:
+with open(reference_fasta, encoding='utf-8') as handle:
     for record in SeqIO.parse(handle, 'fasta'):
         if record.id in ref_names_list:
             SeqIO.write(
@@ -125,7 +140,7 @@ for sample_ref_pair in sample_ref_pairs:
         f'{datadir_host}:{datadir_docker}:ro',
         # Mount outdir volume
         '-v',
-        f'{path.join(outdir_host, 'decompose')}:{outdir_docker}',
+        f'{path.join(outdir_host, "decompose")}:{outdir_docker}',
         # container name
         '--name',
         f'decompose_{sample_id}',
@@ -133,9 +148,9 @@ for sample_ref_pair in sample_ref_pairs:
         '-i',
         # platform (precede image!)
         '--platform',
-        cfg['docker']['platform'],
+        docker_platform,
         # docker image and version to use
-        f'{cfg['docker']['image']}:{cfg['docker']['version']}',
+        f'{docker_image}:{docker_version}',
         # tracy decompose command for variant calling
         'tracy',
         'decompose',
@@ -148,9 +163,9 @@ for sample_ref_pair in sample_ref_pairs:
         path.join(outdir_docker, str(sample_id)),
         # sequence trimming options
         '--trimLeft',
-        f'{cfg['tracy']['trim_left']}',
+        trim_left,
         '--trimRight',
-        f'{cfg['tracy']['trim_right']}',
+        trim_right,
         # .ab1 file to use
         ab1_abs_path,
     ]
@@ -176,7 +191,7 @@ for sample_ref_pair in sample_ref_pairs:
         f'{datadir_host}:{datadir_docker}:ro',
         # Mount outdir volume
         '-v',
-        f'{path.join(outdir_host, 'align')}:{outdir_docker}',
+        f'{path.join(outdir_host, "align")}:{outdir_docker}',
         # container name
         '--name',
         f'align_{sample_id}',
@@ -184,9 +199,9 @@ for sample_ref_pair in sample_ref_pairs:
         '-i',
         # platform (precede image!)
         '--platform',
-        cfg['docker']['platform'],
+        docker_platform,
         # docker image and version to use
-        f'{cfg['docker']['image']}:{cfg['docker']['version']}',
+        f'{docker_image}:{docker_version}',
         # tracy align command for variant calling
         'tracy', 'align',
         # reference to align to
@@ -196,8 +211,8 @@ for sample_ref_pair in sample_ref_pairs:
         '-o',
         path.join(outdir_docker, str(sample_id)),
         # sequence trimming options
-        '--trimLeft', f'{cfg['tracy']['trim_left']}',
-        '--trimRight', f'{cfg['tracy']['trim_right']}', 
+        '--trimLeft', trim_left,
+        '--trimRight', trim_right,
         # .ab1 file to use
         ab1_abs_path
     ]
@@ -221,7 +236,7 @@ for sample_ref_pair in sample_ref_pairs:
 # group data by group in sample sheet
 # run tracy assemble in docker container
 
-for group_name, group in samplesheet.groupby(by='group'):
+for group_name, group in samplesheet.groupby(by='assembly_group'):
     # Generate list of paths to files that get assembled
     # (paths in docker container)
     file_paths_list = [
@@ -235,7 +250,7 @@ for group_name, group in samplesheet.groupby(by='group'):
 
     # Append file extension (.fa) for docker command
     # Use first reference since all in group should have same reference
-    assert group['reference_id'].nunique() == 1, f'Group {group_name} has multiple reference IDs: {group['reference_id'].unique()}'
+    assert group['reference_id'].nunique() == 1, f'Group {group_name} has multiple reference IDs: {group["reference_id"].unique()}'
     reference_name = group['reference_id'].iloc[0] + '.fa'
     logging.debug('Reference name: %s', reference_name)
 
@@ -248,15 +263,15 @@ for group_name, group in samplesheet.groupby(by='group'):
         f'{datadir_host}:{datadir_docker}:ro',
         # Mount outdir volume
         '-v',
-        f'{path.join(outdir_host, 'assemble')}:{outdir_docker}',
+        f'{path.join(outdir_host, "assemble")}:{outdir_docker}',
         # container name
         '--name', f'assemble_{sample_id_joined}', 
         # -i option lets the container actively run
         '-i',
         # platform (precede image!)
-        '--platform', cfg['docker']['platform'],             
+        '--platform', docker_platform,             
         # docker image and version to use
-        f'{cfg['docker']['image']}:{cfg['docker']['version']}',
+        f'{docker_image}:{docker_version}',
         # tracy assemble command for assembling traces against the reference
         'tracy',
         'assemble',
