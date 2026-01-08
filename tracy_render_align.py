@@ -13,7 +13,7 @@ align_output_dir = os.path.join(cfg["paths"]["outdir_host"], "align")
 if not os.path.exists(align_output_dir):
     raise Exception(f"Alignment output directory does not exist: {align_output_dir}")
 
-shutil.copy(Path("static", "traceView.js"), align_output_dir)
+shutil.copy(Path("static", "traceView.js"), os.path.join(align_output_dir, "traceView.js"))
 
 
 def viewer_html_factory(json_file):
