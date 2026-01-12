@@ -37,6 +37,10 @@ docker_platform = cfg['docker']['platform']
 trim_left = str(cfg['tracy']['trim_left'])  #int converted to str
 trim_right = str(cfg['tracy']['trim_right'])    #int converted to str
 
+trim_stringency_decompose = str(cfg['tracy']['trim_stringency_decompose'])
+trim_stringency_align = str(cfg['tracy']['trim_stringency_align'])
+trim_stringency_assemble = str(cfg['tracy']['trim_stringency_assemble'])
+
 
 # %% Download Docker image
 try:
@@ -161,11 +165,13 @@ for sample_ref_pair in sample_ref_pairs:
         # outdirectory and outfile name
         '-o',
         path.join(outdir_docker, str(sample_id)),
-        # sequence trimming options
+        # sequence trimming options (trimming stringency default is 0: disable)
         '--trimLeft',
         trim_left,
         '--trimRight',
         trim_right,
+        '-t',
+        trim_stringency_decompose, 
         # .ab1 file to use
         ab1_abs_path,
     ]
@@ -210,9 +216,13 @@ for sample_ref_pair in sample_ref_pairs:
         # outdirectory and outfile name
         '-o',
         path.join(outdir_docker, str(sample_id)),
-        # sequence trimming options
-        '--trimLeft', trim_left,
-        '--trimRight', trim_right,
+        # sequence trimming options (trimming stringency default is 0: disable)
+        '--trimLeft', 
+        trim_left,
+        '--trimRight', 
+        trim_right,
+        '-t',
+        trim_stringency_align,
         # .ab1 file to use
         ab1_abs_path
     ]
@@ -286,7 +296,7 @@ for group_name, group in samplesheet.groupby(by='assembly_group'):
         # using trimLeft and trimRight; default according to tracy assemble
         # --help: 4 --> set here explicitly ([0:9], 0: disable trimming))
         '-t',
-        '4',
+        trim_stringency_assemble,
         # .ab1 files to assemble (passed here as a list; see also below)
         *file_paths_list
     ]

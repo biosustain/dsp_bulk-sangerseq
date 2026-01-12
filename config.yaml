@@ -24,4 +24,11 @@ tracy:
   trim_left: 50
   trim_right: 50
 
+  # trimming stringency for automatic determination of trimming length
+  # [1:9} with 1 being the lowest and 9 the highest stringency, 0: disable
+  # tracy default trimming stringency values for each command are defined here
+  trim_stringency_decompose: 0
+  trim_stringency_align: 0
+  trim_stringency_assemble: 4
+
 
