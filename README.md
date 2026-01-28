@@ -9,25 +9,25 @@ Currently, Sanger sequencing results with one sequencing file can be analysed. T
 Combined analyses by assembling forward and reverse sequencing results is currently not possible, albeit tracy offers this functionality (to be implemented soon). A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
 
 ## Installations instructions and prerequisites
-To be able to install and run the bulk-sangerseq tool, several installations steps need o be performed and a github account need to be created.  
+To be able to use the bulk-sangerseq tool, several installations steps need to be performed and a GitHub account need to be created.  
 
-### Github account
-[Create a github account](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home) or sign in to your existing account.  
+### Create GitHub account
+[Create a GitHub account](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home) or sign in to your existing account.   
 
 ### Install all prerequisites
 
 The installation instructions are specifically for users of WSL (Windows Subsystems for Linux).
 
-### Install Ubuntu via WSL on Windows machine
+#### Install Ubuntu via WSL on Windows machine
 Open PowerShell by right-clicking on the icon and select "Run as administrator". Use command ```wsl --install``` to install WSL on your machine. For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and don't change the distribution.  
 To open the Ubuntu terminal, right-click on the PowerShell icon and select "Ubuntu 22.04.5 LTS".
 
-### Update package manager
-In the following sections multiple installations carried out using the linux pckage manager ```apt-get```. Update the package manager uisng the following command in the Ubuntu terminal.  
+#### Update package manager
+In the following sections multiple installations carried out using the linux package manager ```apt-get```. Update the package manager using the following command in the Ubuntu terminal.  
 
 ```sudo apt-get update```  
 
-### Generate SSH key and add it to the ssh-agent
+#### Generate SSH key and add it to the ssh-agent
 SSH connections are secure connections that work with a private and a public key pair. Generating such a key pair and adding the public key to your github account is important to clone github repositories.  
 To generate an ssh-keygen pair, please follow the [instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) until section "Adding your SSH key to the ssh-agent".  
 The public key has to be added to your github account. Please follow [these instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?platform=linux).  
@@ -35,26 +35,27 @@ Now, a secure ssh connection between your computer and github can be established
 
 **NOTE:** Every time you restart your computer, you have to add the ssh key to the ssh agent.
 
-### Install git
+#### Install git
 Check if git is already installed on your system by typing into your terminal ```git version```. If not already installed on your computer, follow the [installation instructions](https://github.com/git-guides/install-git) in section "Install Git on Linux".
 
-### Install Python 3.12.6
+#### Install Python 3.12.6
 The bulk-sangerseq tool requires python version 3.12.6. which can be installed using the following commands. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
 
 ```sudo apt-get install python3.12.6```
 
-### Install  pipenv
+#### Install  pipenv
 Pipenv is a virtual environment management tool. You can install it from the command line using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
 ```pip install --user pipenv``` 
 
-### Install Docker
+#### Install Docker
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
 
-### Install  Visual Studio code [*optional*]
+#### Install  Visual Studio code [*optional*]
 Installing Visual Studio (VS) code is not a requirement but it facilitates while working with the tool. VS Code can be dowloaded [here](https://code.visualstudio.com/download).
 
-## Installation of dsp_bulk_sangerseq
+## Cloning the dsp_bulk_sangerseq repository from GitHub
 Open the terminal and perform the following steps consecutively:
+
 1. Change to the desired directory using ```cd </absolute/path/to/project/folder>```.
 2. Clone the github repository using ```git clone https://github.com/biosustain/dsp_bulk-sangerseq.git```.
 3. Change to the project directory using ```cd </dsp_bulk-sangerseq>```.
