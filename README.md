@@ -60,7 +60,7 @@ Open the terminal and perform the following steps consecutively:
 3. Change to the project directory using ```cd </dsp_bulk-sangerseq>```.
 4. Install all dependencies from the Pipfile.lock using ```pipenv sync```.
 
-## Usage
+## Usage of the tool
 
 ### Prepare data and a samplesheet  
 The tool requires Sanger sequencing (.ab1) and reference files stored in a multifasta file (.fa) files.  
@@ -91,13 +91,24 @@ Change the ```data_host``` variable to become the absolute path to the data dire
 Change the ```outdir_host``` variable to become the absolute path to the outdir directory on your computer.
 In general, the use of absolute paths is recommmended but relative paths can be used too.
 
-### Start the Docker engine  
-- On MacOS and Windows, start Docker desktop.
-- On Linux: command goes here
+### Start the Docker daemon  
+Sequence analysis using tracy is done in Docker containers for which the Docker daemon has to be started using the following command. Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
+
+```sudo systemctl start docker```  
 
 ### Run scripts of dsp_bulk_sangerseq consecutively    
-Perfrom all the following steps consecutively.
-1. In the project directory, activate the environment using ```pipenv shell```. Alternatively, activate the environment from within the code editor, e.g. VS code.
-2. Perform Sanger sequencing analysis using tracy by running command ```python tracy_bulk_docker_samplesheet.py```.
-3. Perform post-processing of results by running command ```python tracy_postprocessing.py```.
-4. Generate Sanger trace images (interactive html files) by running ```python tracy_render_align.py```.
+Perform all the following steps consecutively.
+1. In the project directory, activate the environment using command  
+```pipenv shell```. 
+
+2. Perform Sanger sequencing analysis by running the below command. Before, replace ```<venv name>``` with the name of your virtual environment which can be found using command ```cd /home/.local/share/virtualenvs/```.  
+
+```/home/.local/share/virtualenvs/<venv name>/bin/python tracy_bulk_docker_samplesheet.py```.
+
+3. Perform post-processing of results by running the below command. Before, replace ```<venv name>``` as described above.
+
+```/home/.local/share/virtualenvs/<venv name>/bin/python tracy_postprocessing.py```.
+
+4. Generate Sanger trace images (interactive html files) by running the below command. Before, replace ```<venv name>``` as described above.  
+
+```/home/.local/share/virtualenvs/<venv name>/bin/python tracy_render_align.py```.
