@@ -8,7 +8,8 @@ This **Bulk Sanger Sequencing Tool** was developed to reduce this time investmen
 Currently, Sanger sequencing results with one sequencing file can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the refernece sequence indicates it it was used in forward direction or reverse-complemented for the alignment).  
 Combined analyses by assembling forward and reverse sequencing results is currently not possible, albeit tracy offers this functionality (to be implemented soon). A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
 
-## Prerequisites
+## Installations instructions and prerequisites
+To be able to install and run the bulk-sangerseq tool, several installations steps need o be performed and a github account need to be created.  
 
 ### Github account
 [Create a github account](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home) or sign in to your existing account.  
@@ -21,7 +22,7 @@ The installation instructions are specifically for users of WSL (Windows Subsyst
 Open PowerShell by right-clicking on the icon and select "Run as administrator". Use command ```wsl --install``` to install WSL on your machine. For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and don't change the distribution.  
 To open the Ubuntu terminal, right-click on the PowerShell icon and select "Ubuntu 22.04.5 LTS".
 
-## Update package manager
+### Update package manager
 In the following sections multiple installations carried out using the linux pckage manager ```apt-get```. Update the package manager uisng the following command in the Ubuntu terminal.  
 
 ```sudo apt-get update```  
