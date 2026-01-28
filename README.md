@@ -10,26 +10,46 @@ Combined analyses by assembling forward and reverse sequencing results is curren
 
 ## Prerequisites
 
-### Github account and git
+### Github account
 [Create a github account](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home) or sign in to your existing account.  
-Check if git is already installed on your system by typing into your terminal ```git version```. If not already installed on your computer, you can follow the installation instructions [here](https://github.com/git-guides/install-git).
 
 ### Install all prerequisites
 
-#### Python 3.7 or higher
-You can install the latest Python 3.x version by following the instructions [here](https://www.python.org/downloads/).  
-Add Python 3.x to your system's PATH.
+The installation instructions are specifically for users of WSL (Windows Subsystems for Linux).
 
+### Install Ubuntu via WSL on Windows machine
+Open PowerShell by right-clicking on the icon and select "Run as administrator". Use command ```wsl --install``` to install WSL on your machine. For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and don't change the distribution.  
+To open the Ubuntu terminal, right-click on the PowerShell icon and select "Ubuntu 22.04.5 LTS".
 
-#### pipenv
-Pipenv is a virtual environment management tool that requires Python version 3.7 or higher. You can install it from the command line using ```pip install --user pipenv```. Further details can be found [here](https://pypi.org/project/pipenv/).  
-Add pipenv to your system's PATH.
+## Update package manager
+In the following sections multiple installations carried out using the linux pckage manager ```apt-get```. Update the package manager uisng the following command in the Ubuntu terminal.  
 
+```sudo apt-get update```  
 
-#### Docker
-The tool makes use of Docker images for containerization of software applications. Follow the installation instructions [here](https://docs.docker.com/engine/install/). Alternatively, you can install the Docker engine via [Docker Desktop](https://docs.docker.com/desktop/).
+### Generate SSH key and add it to the ssh-agent
+SSH connections are secure connections that work with a private and a public key pair. Generating such a key pair and adding the public key to your github account is important to clone github repositories.  
+To generate an ssh-keygen pair, please follow the [instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) until section "Adding your SSH key to the ssh-agent".  
+The public key has to be added to your github account. Please follow [these instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?platform=linux).  
+Now, a secure ssh connection between your computer and github can be established.  
 
-#### Visual Studio code [*optional*]
+**NOTE:** Every time you restart your computer, you have to add the ssh key to the ssh agent.
+
+### Install git
+Check if git is already installed on your system by typing into your terminal ```git version```. If not already installed on your computer, follow the [installation instructions](https://github.com/git-guides/install-git) in section "Install Git on Linux".
+
+### Install Python 3.12.6
+The bulk-sangerseq tool requires python version 3.12.6. which can be installed using the following commands. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
+
+```sudo apt-get install python3.12.6```
+
+### Install  pipenv
+Pipenv is a virtual environment management tool. You can install it from the command line using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
+```pip install --user pipenv``` 
+
+### Install Docker
+The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
+
+### Install  Visual Studio code [*optional*]
 Installing Visual Studio (VS) code is not a requirement but it facilitates while working with the tool. VS Code can be dowloaded [here](https://code.visualstudio.com/download).
 
 ## Installation of dsp_bulk_sangerseq
