@@ -38,10 +38,10 @@ Now, a secure ssh connection between your computer and github can be established
 #### Install git
 Check if git is already installed on your system by typing into your terminal ```git version```. If not already installed on your computer, follow the [installation instructions](https://github.com/git-guides/install-git) in section "Install Git on Linux".
 
-#### Install Python 3.12.6
-The bulk-sangerseq tool requires python version 3.12.6. which can be installed using the following commands. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
+#### Install Python 3.12.12
+The bulk-sangerseq tool requires python version 3.12. All tests on WSL were performed using python version 3.12.12 which can be installed using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
 
-```sudo apt-get install python3.12.6```
+```sudo apt-get install python3.12.12```
 
 #### Install  pipenv
 Pipenv is a virtual environment management tool. You can install it from the command line using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
@@ -102,14 +102,14 @@ Perform all the following steps consecutively.
 1. In the project directory, activate the environment using command  
 ```pipenv shell```. 
 
-2. Perform Sanger sequencing analysis by running the below command. Before, replace ```<venv name>``` with the name of your virtual environment which can be found using command ```cd /home/.local/share/virtualenvs/```.  
+2. Perform Sanger sequencing analysis by running the below command: 
 
-```/home/.local/share/virtualenvs/<venv name>/bin/python tracy_bulk_docker_samplesheet.py```.
+```python3 tracy_bulk_docker_samplesheet.py```
 
-3. Perform post-processing of results by running the below command. Before, replace ```<venv name>``` as described above.
+3. Perform post-processing of results by running the below command:
 
-```/home/.local/share/virtualenvs/<venv name>/bin/python tracy_postprocessing.py```.
+```python3 tracy_postprocessing.py```.
 
-4. Generate Sanger trace images (interactive html files) by running the below command. Before, replace ```<venv name>``` as described above.  
+4. Generate Sanger trace images (interactive html files) by running the below command:  
 
-```/home/.local/share/virtualenvs/<venv name>/bin/python tracy_render_align.py```.
+```python3 tracy_render_align.py```.
