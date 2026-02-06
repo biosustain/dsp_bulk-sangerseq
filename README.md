@@ -19,15 +19,15 @@ To be able to use the bulk-sangerseq tool, several installations steps need to b
 The installation instructions are specifically for users of WSL (Windows Subsystems for Linux).
 
 #### Install Ubuntu via WSL on Windows machine
-Open PowerShell by right-clicking on the icon and select "Run as administrator". Use command 
+Open PowerShell by right-clicking on the icon and select "Run as administrator". To install WSL on your machine, use the folloowing command: 
 ```
 wsl --install
-``` 
-to install WSL on your machine. For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and don't change the distribution.  
+```  
+For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and don't change the distribution.  
 To open the Ubuntu terminal, right-click on the PowerShell icon and select "Ubuntu 22.04.5 LTS".
 
 #### Update package manager
-In the following sections multiple installations carried out using the linux package manager ```apt-get```. Update the package manager using the following command in the Ubuntu terminal.  
+In the following sections multiple installations carried out using the linux package manager ```apt-get```. Update the package manager using the following command in the Ubuntu terminal:  
 
 ```
 sudo apt-get update
@@ -42,7 +42,11 @@ Now, a secure ssh connection between your computer and github can be established
 **NOTE:** Every time you restart your computer, you have to add the ssh key to the ssh agent.
 
 #### Install git
-Check if git is already installed on your system by typing into your terminal ```git version```. If not already installed on your computer, follow the [installation instructions](https://github.com/git-guides/install-git) in section "Install Git on Linux".
+Check if git is already installed on your system by typing into your terminal 
+```
+git version
+```
+If not already installed on your computer, follow the [installation instructions](https://github.com/git-guides/install-git) in section "Install Git on Linux".
 
 #### Install Python 3.12.12
 The bulk-sangerseq tool requires python version 3.12. All tests on WSL were performed using python version 3.12.12 which can be installed using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
