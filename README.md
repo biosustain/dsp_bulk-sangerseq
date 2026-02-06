@@ -104,7 +104,7 @@ Trimming of sequences can be adjusted using hardcoded values.
 
 Trimming stringency can be used in combination with ```trim_left``` and ```trim_right``` to determine sequence trimming length automatically based on the sequencing quality.  Trimming stringency ranges from 1:9 with 1 being the lowest and 9 the highest stringency, 0: disable.  
 Trimming stringency is handled separately for each of he tracy commands ```decompose```, ```align``` and ```assemble```.
-Note, that for standard analyses workflows, trimming stirngency for ```decompose``` and ```align``` should be identical values.  
+Note, that for standard analyses workflows, trimming stringency for ```decompose``` and ```align``` should be identical values.  
 
 ```trimming_stringency_decompose``` (dtype: integer): Default is ```0```.  
 ```trimming_stringency_align``` (dtype: integer): Default is ```0```.  
@@ -126,4 +126,5 @@ Perform all the following steps consecutively.
 3. Perform post-processing of results by running the below command:  
 ```python3 tracy_postprocessing.py```.
 
-4. Generate Sanger trace images (interactive html files) by running the below command:   ```python3 tracy_render_align.py```.
+4. Generate Sanger trace images (interactive html files) by running the below command:  
+```python3 tracy_render_align.py```.
