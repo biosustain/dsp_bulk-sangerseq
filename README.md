@@ -8,38 +8,60 @@ This **Bulk Sanger Sequencing Tool** was developed to reduce this time investmen
 Currently, Sanger sequencing results with one sequencing file can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the refernece sequence indicates it it was used in forward direction or reverse-complemented for the alignment).  
 Combined analyses by assembling forward and reverse sequencing results is currently not possible, albeit tracy offers this functionality (to be implemented soon). A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
 
-## Prerequisites
+## Installations instructions and prerequisites
+To be able to use the bulk-sangerseq tool, several installations steps need to be performed and a GitHub account need to be created.  
 
-### Github account and git
-[Create a github account](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home) or sign in to your existing account.  
-Check if git is already installed on your system by typing into your terminal ```git version```. If not already installed on your computer, you can follow the installation instructions [here](https://github.com/git-guides/install-git).
+### Create GitHub account
+[Create a GitHub account](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home) or sign in to your existing account.   
 
 ### Install all prerequisites
 
-#### Python 3.7 or higher
-You can install the latest Python 3.x version by following the instructions [here](https://www.python.org/downloads/).  
-Add Python 3.x to your system's PATH.
+The installation instructions are specifically for users of WSL (Windows Subsystems for Linux).
 
+#### Install Ubuntu via WSL on Windows machine
+Open PowerShell by right-clicking on the icon and select "Run as administrator". Use command ```wsl --install``` to install WSL on your machine. For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and don't change the distribution.  
+To open the Ubuntu terminal, right-click on the PowerShell icon and select "Ubuntu 22.04.5 LTS".
 
-#### pipenv
-Pipenv is a virtual environment management tool that requires Python version 3.7 or higher. You can install it from the command line using ```pip install --user pipenv```. Further details can be found [here](https://pypi.org/project/pipenv/).  
-Add pipenv to your system's PATH.
+#### Update package manager
+In the following sections multiple installations carried out using the linux package manager ```apt-get```. Update the package manager using the following command in the Ubuntu terminal.  
 
+```sudo apt-get update```  
 
-#### Docker
-The tool makes use of Docker images for containerization of software applications. Follow the installation instructions [here](https://docs.docker.com/engine/install/). Alternatively, you can install the Docker engine via [Docker Desktop](https://docs.docker.com/desktop/).
+#### Generate SSH key and add it to the ssh-agent
+SSH connections are secure connections that work with a private and a public key pair. Generating such a key pair and adding the public key to your github account is important to clone github repositories.  
+To generate an ssh-keygen pair, please follow the [instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) until section "Adding your SSH key to the ssh-agent".  
+The public key has to be added to your github account. Please follow [these instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?platform=linux).  
+Now, a secure ssh connection between your computer and github can be established.  
 
-#### Visual Studio code [*optional*]
+**NOTE:** Every time you restart your computer, you have to add the ssh key to the ssh agent.
+
+#### Install git
+Check if git is already installed on your system by typing into your terminal ```git version```. If not already installed on your computer, follow the [installation instructions](https://github.com/git-guides/install-git) in section "Install Git on Linux".
+
+#### Install Python 3.12.12
+The bulk-sangerseq tool requires python version 3.12. All tests on WSL were performed using python version 3.12.12 which can be installed using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
+
+```sudo apt-get install python3.12.12```
+
+#### Install  pipenv
+Pipenv is a virtual environment management tool. You can install it from the command line using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
+```pip install --user pipenv``` 
+
+#### Install Docker
+The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
+
+#### Install  Visual Studio code [*optional*]
 Installing Visual Studio (VS) code is not a requirement but it facilitates while working with the tool. VS Code can be dowloaded [here](https://code.visualstudio.com/download).
 
-## Installation of dsp_bulk_sangerseq
+## Cloning the dsp_bulk_sangerseq repository from GitHub
 Open the terminal and perform the following steps consecutively:
+
 1. Change to the desired directory using ```cd </absolute/path/to/project/folder>```.
 2. Clone the github repository using ```git clone https://github.com/biosustain/dsp_bulk-sangerseq.git```.
 3. Change to the project directory using ```cd </dsp_bulk-sangerseq>```.
 4. Install all dependencies from the Pipfile.lock using ```pipenv sync```.
 
-## Usage
+## Usage of the tool
 
 ### Prepare data and a samplesheet  
 The tool requires Sanger sequencing (.ab1) and reference files stored in a multifasta file (.fa) files.  
@@ -66,17 +88,42 @@ If no assmebly of samples is desired, the fields in the ```assembly_group``` col
 | sample_name_6   | file_6.ab1   | 2               | reference_D   |
 
 ### Modify the configuration file (config.yaml)  
-Change the ```data_host``` variable to become the absolute path to the data directory on your computer.
-Change the ```outdir_host``` variable to become the absolute path to the outdir directory on your computer.
-In general, the use of absolute paths is recommmended but relative paths can be used too.
+Change the following **variables to update the paths**. In general, the use of absolute paths is recommmended but relative paths can be used too.  
 
-### Start the Docker engine  
-- On MacOS and Windows, start Docker desktop.
-- On Linux: command goes here
+```data_host``` (dtype: string): relative or absolute path to the data directory on your computer.    
+```outdir_host``` (dtype: string): relative or absolute path to the outdir directory on your computer. Default is ```./outdir```.  
+```samplesheet`` (dtype: string): relative or absolute path to the samplesheet on your computer.  
+```reference_fasta``` (dtype: string): relative or absolute path to the multi-fasta reference file on your computer.  
+
+
+Change the following **variables to update tracy trimming parameters**.  
+
+Trimming of sequences can be adjusted using hardcoded values.  
+```trim_left``` (dtype: integer): number of DNA bases to trim at the 5'-end. Default is ```50```.   
+```trim_right``` (dtype: integer): number of DNA bases to trim at the 3'-end. Default is ```50```.
+
+Trimming stringency can be used in combination with ```trim_left``` and ```trim_right``` to determine sequence trimming length automatically based on the sequencing quality.  Trimming stringency ranges from 1:9 with 1 being the lowest and 9 the highest stringency, 0: disable.  
+Trimming stringency is handled separately for each of he tracy commands ```decompose```, ```align``` and ```assemble```.
+Note, that for standard analyses workflows, trimming stirngency for ```decompose``` and ```align``` should be identical values.  
+
+```trimming_stringency_decompose``` (dtype: integer): Default is ```0```. 
+```trimming_stringency_align``` (dtype: integer): Default is ```0```. 
+```trimming_stringency_assemble``` (dtype: integer): Default is ```4```. 
+
+### Start the Docker daemon  
+Sequence analysis using tracy is done in Docker containers for which the Docker daemon has to be started using the following command. Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
+
+```sudo systemctl start docker```  
 
 ### Run scripts of dsp_bulk_sangerseq consecutively    
-Perfrom all the following steps consecutively.
-1. In the project directory, activate the environment using ```pipenv shell```. Alternatively, activate the environment from within the code editor, e.g. VS code.
-2. Perform Sanger sequencing analysis using tracy by running command ```python tracy_bulk_docker_samplesheet.py```.
-3. Perform post-processing of results by running command ```python tracy_postprocessing.py```.
-4. Generate Sanger trace images (interactive html files) by running ```python tracy_render_align.py```.
+Perform all the following steps consecutively.
+1. In the project directory, activate the environment using command  
+```pipenv shell```. 
+
+2. Perform Sanger sequencing analysis by running the below command:  
+```python3 tracy_bulk_docker_samplesheet.py```
+
+3. Perform post-processing of results by running the below command:  
+```python3 tracy_postprocessing.py```.
+
+4. Generate Sanger trace images (interactive html files) by running the below command:   ```python3 tracy_render_align.py```.
