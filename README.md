@@ -19,13 +19,19 @@ To be able to use the bulk-sangerseq tool, several installations steps need to b
 The installation instructions are specifically for users of WSL (Windows Subsystems for Linux).
 
 #### Install Ubuntu via WSL on Windows machine
-Open PowerShell by right-clicking on the icon and select "Run as administrator". Use command ```wsl --install``` to install WSL on your machine. For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and don't change the distribution.  
+Open PowerShell by right-clicking on the icon and select "Run as administrator". Use command 
+```
+wsl --install
+``` 
+to install WSL on your machine. For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and don't change the distribution.  
 To open the Ubuntu terminal, right-click on the PowerShell icon and select "Ubuntu 22.04.5 LTS".
 
 #### Update package manager
 In the following sections multiple installations carried out using the linux package manager ```apt-get```. Update the package manager using the following command in the Ubuntu terminal.  
 
-```sudo apt-get update```  
+```
+sudo apt-get update
+```  
 
 #### Generate SSH key and add it to the ssh-agent
 SSH connections are secure connections that work with a private and a public key pair. Generating such a key pair and adding the public key to your github account is important to clone github repositories.  
@@ -41,11 +47,16 @@ Check if git is already installed on your system by typing into your terminal ``
 #### Install Python 3.12.12
 The bulk-sangerseq tool requires python version 3.12. All tests on WSL were performed using python version 3.12.12 which can be installed using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
 
-```sudo apt-get install python3.12.12```
+```
+sudo apt-get install python3.12.12
+```
 
 #### Install  pipenv
 Pipenv is a virtual environment management tool. You can install it from the command line using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
-```pip install --user pipenv``` 
+
+```
+pip install --user pipenv
+``` 
 
 #### Install Docker
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
@@ -113,18 +124,28 @@ Note, that for standard analyses workflows, trimming stringency for ```decompose
 ### Start the Docker daemon  
 Sequence analysis using tracy is done in Docker containers for which the Docker daemon has to be started using the following command. Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
 
-```sudo systemctl start docker```  
+```
+sudo systemctl start docker
+```  
 
 ### Run scripts of dsp_bulk_sangerseq consecutively    
 Perform all the following steps consecutively.
 1. In the project directory, activate the environment using command  
-```pipenv shell```. 
+```
+pipenv shell
+```
 
 2. Perform Sanger sequencing analysis by running the below command:  
-```python3 tracy_bulk_docker_samplesheet.py```
+```
+python3 tracy_bulk_docker_samplesheet.py
+```
 
 3. Perform post-processing of results by running the below command:  
-```python3 tracy_postprocessing.py```.
+```
+python3 tracy_postprocessing.py
+```
 
 4. Generate Sanger trace images (interactive html files) by running the below command:  
-```python3 tracy_render_align.py```.
+```
+python3 tracy_render_align.py
+```
