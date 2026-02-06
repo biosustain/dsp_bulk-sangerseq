@@ -92,7 +92,7 @@ Change the following **variables to update the paths**. In general, the use of a
 
 ```data_host``` (dtype: string): relative or absolute path to the data directory on your computer.    
 ```outdir_host``` (dtype: string): relative or absolute path to the outdir directory on your computer. Default is ```./outdir```.  
-```samplesheet`` (dtype: string): relative or absolute path to the samplesheet on your computer.  
+```samplesheet``` (dtype: string): relative or absolute path to the samplesheet on your computer.  
 ```reference_fasta``` (dtype: string): relative or absolute path to the multi-fasta reference file on your computer.  
 
 
@@ -106,9 +106,9 @@ Trimming stringency can be used in combination with ```trim_left``` and ```trim_
 Trimming stringency is handled separately for each of he tracy commands ```decompose```, ```align``` and ```assemble```.
 Note, that for standard analyses workflows, trimming stirngency for ```decompose``` and ```align``` should be identical values.  
 
-```trimming_stringency_decompose``` (dtype: integer): Default is ```0```. 
-```trimming_stringency_align``` (dtype: integer): Default is ```0```. 
-```trimming_stringency_assemble``` (dtype: integer): Default is ```4```. 
+```trimming_stringency_decompose``` (dtype: integer): Default is ```0```.  
+```trimming_stringency_align``` (dtype: integer): Default is ```0```.  
+```trimming_stringency_assemble``` (dtype: integer): Default is ```4```.  
 
 ### Start the Docker daemon  
 Sequence analysis using tracy is done in Docker containers for which the Docker daemon has to be started using the following command. Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
