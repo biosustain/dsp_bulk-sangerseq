@@ -15,13 +15,13 @@ with open('./config.yaml', 'r', encoding='utf-8') as file:
 outdir_host = cfg['paths']['outdir_host']
 
 # %% define variables
-outdir_vuegen = Path(os.path.join(outdir_host, 'vuegen_report'))
+outdir_vuegen = os.path.join(outdir_host, 'vuegen_report')
+
 
 # %% create vuegen folder and relevant sub-folders
-
 subdir_names = ['mut_table_summary_01', 'alignments_02', 'traces_03']
 for subdir_name in subdir_names:
-    Path(os.makedirs(os.path.join(outdir_vuegen, subdir_name)))
+    os.makedirs(Path(os.path.join(outdir_vuegen, subdir_name)), exist_ok=True)
 
 
 # %% copy results files into vuegen folder
