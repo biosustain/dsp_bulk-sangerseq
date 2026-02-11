@@ -27,6 +27,30 @@ for subdir_name in subdir_names:
 # %% copy results files into vuegen folder
 
 
+#%%destination =
+src_dir = './outdir/align'
+dest_dir = './outdir/vuegen_report/traces_03'
+    
+for filename in os.listdir(src_dir):
+    if filename.endswith(('.json', '.html')):
+        shutil.copy2(os.path.join(src_dir , filename), dest_dir)
+
+#%%
+#try:
+    #copy summary mutation file
+
+    #copy Sanger traces (.json, and .htmk)
+#    src_dir = './outdir/align'
+#    dest_dir = './outdir/vuegen_report/traces_03'
+    
+#    for filename in os.listdir(src_dir):
+#        if filename.endswith(('.json', '.html')):
+#            shutil.copy2(src_dir + filename, dest_dir)
+#    print("File copied successfully.")
+
+#except:
+#    print('Error occured while copying files.')
+
 
 
 # %% create vuegen report
