@@ -48,13 +48,18 @@ for subdir_name in subdir_names:
 # %% copy results files into vuegen folder
 
 #copy mutation sumamry file
-copy_files(src_file=src_dir_mut_comb, dest_file=dest_dir_mut_comb)
+copy_files(src_file=src_dir_mut_comb, 
+           dest_file=dest_dir_mut_comb)
 
 #copy files from decompose dir
-copy_files_extension(src_dir=src_dir_decompose, dest_dir=dest_dir_decompose, file_ext=file_ext_decompose)
+copy_files_extension(src_dir=src_dir_decompose, 
+                     dest_dir=dest_dir_decompose, 
+                     file_ext=file_ext_decompose)
 
 #copy files from align dir
-copy_files_extension(src_dir=src_dir_align, dest_dir=dest_dir_align, file_ext=file_ext_align)
+copy_files_extension(src_dir=src_dir_align, 
+                     dest_dir=dest_dir_align, 
+                     file_ext=file_ext_align)
 
 
 
