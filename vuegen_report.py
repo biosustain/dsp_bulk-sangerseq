@@ -62,25 +62,10 @@ copy_files_extension(src_dir=src_dir_align,
                      file_ext=file_ext_align)
 
 
+# %% Format files for vuegen report
+# Rename .align* files to csv to allow for visualization (vuegen does NOT recognise the .align* extension)
 
-
-#%%
-#try:
-    #copy summary mutation file
-
-    #copy Sanger traces (.json, and .htmk)
-#    src_dir = './outdir/align'
-#    dest_dir = './outdir/vuegen_report/traces_03'
-    
-#    for filename in os.listdir(src_dir):
-#        if filename.endswith(('.json', '.html')):
-#            shutil.copy2(src_dir + filename, dest_dir)
-#    print("File copied successfully.")
-
-#except:
-#    print('Error occured while copying files.')
-
-
+os.rename(src=, dest=) 
 
 # %% create vuegen report
 # vuegen and streamlit bash command:
@@ -123,3 +108,5 @@ except subprocess.CalledProcessError as e:
     )
 
 
+
+# %%
