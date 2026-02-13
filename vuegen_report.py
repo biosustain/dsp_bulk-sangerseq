@@ -28,7 +28,7 @@ dest_dir_mut_comb = f'./outdir/vuegen_report/{subdir_names[0]}/results_combined.
 #files to copy from decompose dir
 src_dir_decompose = 'outdir/decompose'
 dest_dir_decompose = f'./outdir/vuegen_report/{subdir_names[1]}'
-file_ext_decompose = ('.align1', '.align2', '.align3')
+file_ext_decompose = '.align1'  #for now only the main signal in .align1 files since they need to be renamed for vuegen (see below); later all .align* files should be copied using ('.align1', '.align2', '.align3')
 
 #files to copy from align dir
 src_dir_align = './outdir/align'    #source dir
@@ -65,7 +65,12 @@ copy_files_extension(src_dir=src_dir_align,
 # %% Format files for vuegen report
 # Rename .align* files to csv to allow for visualization (vuegen does NOT recognise the .align* extension)
 
-os.rename(src=, dest=) 
+#this code works but the visualisation in vuegen is not optimal yet
+for i in os.listdir(dest_dir_decompose):
+    files = os.path.join(dest_dir_decompose, i)
+    split_file = os.path.splitext(files)
+    if split_file[1] == '.align1':
+       os.rename(files,split_file[0] + '.csv')
 
 # %% create vuegen report
 # vuegen and streamlit bash command:
