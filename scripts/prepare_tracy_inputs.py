@@ -67,7 +67,7 @@ def main() -> None:
     if not data_dir.exists():
         raise FileNotFoundError(f'Data directory not found: {data_dir}')
 
-    with samplesheet_path.open(encoding='utf-8', newline='') as handle:
+    with samplesheet_path.open(encoding='utf-8-sig', newline='') as handle:
         reader = csv.DictReader(handle)
         missing_columns = REQUIRED_COLUMNS.difference(reader.fieldnames or [])
         if missing_columns:
