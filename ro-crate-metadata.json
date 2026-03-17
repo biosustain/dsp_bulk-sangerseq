@@ -1,0 +1,18 @@
+{
+    "@context": "https://w3id.org/ro/crate/1.1/context",
+    "@graph": [
+        {
+            "@id": "ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "about": {
+                "@id": "./"
+            },
+            "description": "# dsp_bulk-sangerseq\n\n[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A523.10.0-23aa62.svg)](https://www.nextflow.io/)\n[![pipeline conventions](https://img.shields.io/badge/conventions-nf--core--inspired-4A4A4A.svg)](https://github.com/biosustain/dsp_bulk-sangerseq)\n\nBulk Sanger sequencing analysis pipeline using [Tracy](https://github.com/gear-genomics/tracy), implemented in Nextflow DSL2.\n\nThis repository follows nf-core-inspired layout conventions, but it is maintained as a standalone biosustain pipeline:\n\n- Thin entrypoint in [main.nf](main.nf)\n- Pipeline orchestration in [workflows/dsp_bulk_sangerseq.nf](workflows/dsp_bulk_sangerseq.nf)\n- Process modules in [modules/local](modules/local)\n- Layered configs in [conf/base.config](conf/base.config) and [conf/test.config](conf/test.config)\n- Parameter schema in [nextflow_schema.json](nextflow_schema.json)\n- Usage and output docs under [docs](docs)\n\n## Quick start\n\nRun with bundled test data:\n\n```bash\nnextflow run . -profile docker,test\n```\n\nRun with custom data:\n\n```bash\nnextflow run . -profile docker \\\n  --data_dir /path/to/ab1 \\\n  --samplesheet /path/to/samplesheet.csv \\\n  --reference_fasta /path/to/references.fa \\\n  --outdir results\n```\n\n## Required samplesheet columns\n\n- `sample_id`\n- `ab1_file`\n- `assembly_group`\n- `reference_id`\n\n## Outputs\n\nPublished outputs are written to `--outdir`:\n\n- `decompose/`\n- `align/` (includes generated HTML trace viewers)\n- `assemble/`\n\nSee [docs/output.md](docs/output.md) for details.\n\n## Documentation\n\n- Usage: [docs/usage.md](docs/usage.md)\n- Output: [docs/output.md](docs/output.md)\n\n## Development checks\n\n```bash\nmake lint\nmake test\n```\n\n## Legacy Python entrypoints\n\nThe historical script-based workflow is still present for backward compatibility:\n\n- [tracy_bulk_docker_samplesheet.py](tracy_bulk_docker_samplesheet.py)\n- [tracy_postprocesssing.py](tracy_postprocesssing.py)\n\nConfiguration for that legacy flow remains in [config.yaml](config.yaml).\n"
+        },
+        {
+            "@id": "./",
+            "@type": "Dataset",
+            "name": "dsp_bulk-sangerseq"
+        }
+    ]
+}

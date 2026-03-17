@@ -1,0 +1,19 @@
+nextflow_pipeline {
+  name "default"
+  script "main.nf"
+  config "tests/nextflow.config"
+
+  test("default") {
+    when {
+      params {
+        outdir = "$outputDir"
+      }
+    }
+    then {
+      assertAll(
+        { assert workflow.success },
+        { assert path("${outputDir}/pipeline_info/execution_report.html").exists() }
+      )
+    }
+  }
+}

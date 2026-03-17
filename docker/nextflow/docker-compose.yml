@@ -1,0 +1,16 @@
+services:
+  nextflow:
+    build:
+      context: ../..
+      dockerfile: docker/nextflow/Dockerfile
+    working_dir: /workspace
+    volumes:
+      - ../..:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+      - nextflow-cache:/opt/nextflow/.nextflow
+    environment:
+      - NXF_HOME=/opt/nextflow/.nextflow
+    command: ["nextflow", "run", ".", "-profile", "docker"]
+
+volumes:
+  nextflow-cache:
