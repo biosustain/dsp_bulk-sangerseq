@@ -3,7 +3,6 @@ import csv
 from collections import defaultdict
 from pathlib import Path
 
-
 REQUIRED_COLUMNS = {'sample_id', 'ab1_file', 'assembly_group', 'reference_id'}
 
 

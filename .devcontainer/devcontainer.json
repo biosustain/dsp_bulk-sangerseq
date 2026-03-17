@@ -1,0 +1,21 @@
+{
+    "name": "dsp_bulk-sangerseq",
+    "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
+    "features": {
+        "ghcr.io/devcontainers/features/java:1": {
+            "version": "21"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "charliermarsh.ruff",
+                "nextflow.nextflow",
+                "redhat.vscode-yaml"
+            ]
+        }
+    },
+    "postCreateCommand": "bash -lc 'set -e; python -m pip install --upgrade pip; if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi; curl -fsSL https://get.nextflow.io | bash; install -m 0755 nextflow /usr/local/bin/nextflow; rm -f nextflow'"
+}

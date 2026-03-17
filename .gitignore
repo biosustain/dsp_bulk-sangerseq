@@ -11,3 +11,16 @@ outdir/*
 __pycache__/
 **/.DS_Store
 docker_tests/
+
+# nextflow
+.nextflow*
+work/*
+
+# python caches
+__pycache__/
+.pytest_cache/
+
+# local tools
+.local/
+
+.validation-out/

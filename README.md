@@ -285,3 +285,21 @@ outdir/vuegen_report
     └── consensus_sequences
         └── sample_1_sample_2.cons.fa.md
 ```
+
+## Run the workflow with Nextflow
+
+The repository also contains a Nextflow pipeline that mirrors the current samplesheet-driven Tracy workflow.
+
+```bash
+nextflow run . -profile docker,test
+```
+
+Common parameter overrides:
+
+```bash
+nextflow run . -profile docker \
+  --data_dir data/test_data_1 \
+  --samplesheet data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_9samples.csv \
+  --reference_fasta data/test_data_1/references.fa \
+  --outdir outdir
+```
