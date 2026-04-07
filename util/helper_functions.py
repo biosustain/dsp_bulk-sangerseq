@@ -21,3 +21,28 @@ def copy_files_extension(src_dir: str, dest_dir: str, file_ext: tuple):
         for filename in os.listdir(src_dir):
             if filename.endswith(file_ext):
                 shutil.copy2(os.path.join(src_dir , filename), dest_dir)
+
+
+def convert_files_to_markdown(dir_path: str, 
+                              file_ext: str):
+    """
+    Converts files of specified file type to markdown files in the specified directory path.
+    Args:
+
+    """
+
+    if len(os.listdir(dir_path)) > 0:    #check if directory contains files
+        for file in os.listdir(dir_path):
+            if file.endswith(file_ext):
+                
+                #read file content
+                with open(file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+
+                #create new filename (.md)
+                new_filename = os.path.splitext(file)[0] + '.md'
+                new_filepath = os.path.join(dir_path, new_filename)
+
+                #write wrapped content
+                with open(new_filepath, 'w', encoding='utf-8') as f:
+                    f.write('```\n' + content + '\n```')
