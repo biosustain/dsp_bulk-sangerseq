@@ -24,7 +24,8 @@ def copy_files_extension(src_dir: str, dest_dir: str, file_ext: tuple):
 
 
 def convert_files_to_markdown(dir_path: str, 
-                              file_ext: str):
+                              file_ext: str | tuple[str, ...]
+                              ):
     """
     Converts files of specified file type to markdown files in the specified directory path.
     Args:
