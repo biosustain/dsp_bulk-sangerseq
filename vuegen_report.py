@@ -19,7 +19,8 @@ outdir_host = cfg['paths']['outdir_host']
 outdir_vuegen = os.path.join(outdir_host, 'vuegen_report')
 
 #sub-directory names where files will be copied to
-subdir_names = ['mut_table_summary_01', 'alignments_02', 'traces_03']
+subdir_names = ['mut_table_summary_01', 'alignments_decompose_02', 'traces_03']
+subdir_names_alignments_decompose_02 = ['align1', 'align2', 'align3']
 
 #mutation table output to be copied
 src_dir_mut_comb = 'outdir/results_combined.csv'
@@ -28,7 +29,6 @@ dest_dir_mut_comb = f'./outdir/vuegen_report/{subdir_names[0]}/results_combined.
 #files to copy from decompose dir
 src_dir_decompose = 'outdir/decompose'
 dest_dir_decompose = f'./outdir/vuegen_report/{subdir_names[1]}'
-file_ext_decompose = '.align1'  #for now only the main signal in .align1 files since they need to be renamed for vuegen (see below); later all .align* files should be copied using ('.align1', '.align2', '.align3')
 
 #files to copy from align dir
 src_dir_align = './outdir/align'    #source dir
@@ -45,6 +45,10 @@ for subdir_name in subdir_names:
     os.makedirs(Path(os.path.join(outdir_vuegen, subdir_name)), exist_ok=True)
 
 
+for subdir in subdir_names_alignments_decompose_02:
+    os.makedirs(Path(os.path.join(dest_dir_decompose, subdir)), exist_ok=True)
+
+
 # %% copy results files into vuegen folder and convert .align* files to markdown (.md)
 
 #copy mutation summary file
@@ -52,10 +56,11 @@ copy_files(src_file=src_dir_mut_comb,
            dest_file=dest_dir_mut_comb)
 
 #copy files from decompose dir
-convert_files_to_markdown_read_write(src_dir_path=src_dir_decompose, 
-                                    src_file_ext='.align1', 
-                                    dest_dir_path=dest_dir_decompose
-                                    )
+for i in subdir_names_alignments_decompose_02:
+    convert_files_to_markdown_read_write(
+                src_dir_path=src_dir_decompose, 
+                src_file_ext=f'.{i}', dest_dir_path=f'{dest_dir_decompose}/{i}'
+                )
 
 #copy files from align dir
 # Todo: read aling files and then create markdown file from it 
