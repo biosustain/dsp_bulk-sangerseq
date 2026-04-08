@@ -19,7 +19,10 @@ outdir_host = cfg['paths']['outdir_host']
 outdir_vuegen = os.path.join(outdir_host, 'vuegen_report')
 
 #sub-directory names where files will be copied to
-subdir_names = ['mut_table_summary_01', 'alignments_decompose_02', 'traces_03']
+subdir_names = ['01_Mutation_tables_decompose', 
+                '02_alignments_decompose', 
+                '03_traces'
+                ]
 subdir_names_alignments_decompose_02 = ['align1', 'align2', 'align3']
 
 #mutation table output to be copied
