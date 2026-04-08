@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import yaml
-from util.helper_functions import copy_files, copy_files_extension, convert_files_to_markdown
+from util.helper_functions import copy_files, copy_files_extension,  convert_files_to_markdown_read_save
 
 
 # %% read relevant onfig parameters
@@ -45,19 +45,17 @@ for subdir_name in subdir_names:
     os.makedirs(Path(os.path.join(outdir_vuegen, subdir_name)), exist_ok=True)
 
 
-# %% copy results files into vuegen folder and convert .lign* files to markdown (.md)
+# %% copy results files into vuegen folder and convert .align* files to markdown (.md)
 
-#copy mutation sumamry file
+#copy mutation summary file
 copy_files(src_file=src_dir_mut_comb, 
            dest_file=dest_dir_mut_comb)
 
 #copy files from decompose dir
-copy_files_extension(src_dir=src_dir_decompose, 
-                     dest_dir=dest_dir_decompose, 
-                     file_ext=file_ext_decompose)
-
-convert_files_to_markdown(dir_path=dest_dir_decompose, 
-                          file_ext='.align1')
+convert_files_to_markdown_read_save(src_dir_path=src_dir_decompose, 
+                                    src_file_ext='.align1', 
+                                    dest_dir_path=dest_dir_decompose
+                                    )
 
 #copy files from align dir
 # Todo: read aling files and then create markdown file from it 

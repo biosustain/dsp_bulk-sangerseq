@@ -51,3 +51,37 @@ def convert_files_to_markdown(dir_path: str,
                 #write wrapped content
                 with open(new_filepath, 'w', encoding='utf-8') as f:
                     f.write('```\n' + content + '\n```')
+
+
+
+def convert_files_to_markdown_read_save(src_dir_path: str, 
+                                        src_file_ext: str | tuple[str, ...], 
+                                        dest_dir_path: str
+                                        ):
+    """
+    Read file with specified file type from source directory, convert to markdown and save to a destination directory.
+    
+    Args:
+        src_dir_path: path to source directory holding files to be converted
+        src_file_ext: extension of files to be converted, e.g. '.align1' or ('.align1', '.align2', '.align3')
+        dest_dir_path: path to sdestination directory the .md files will be saved to
+    """
+
+    if len(os.listdir(src_dir_path)) > 0:    #check if directory contains files
+        for file in os.listdir(src_dir_path):
+            if file.endswith(src_file_ext):
+                
+                #create file path
+                filepath = os.path.join(src_dir_path, file)
+                
+                #read file content
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    content = f.read()
+
+                #create markdown file by adding .md to existing filename with its original extension
+                new_filename = file + '.md'
+                dest_filepath = os.path.join(dest_dir_path, new_filename)
+
+                #write wrapped content
+                with open(dest_filepath, 'w', encoding='utf-8') as f:
+                    f.write('```\n' + content + '\n```')
