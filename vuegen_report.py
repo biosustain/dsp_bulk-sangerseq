@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import yaml
-from util.helper_functions import copy_files, copy_files_extension,  convert_files_to_markdown_read_save
+from util.helper_functions import copy_files, copy_files_extension,  convert_files_to_markdown_read_write
 
 
 # %% read relevant onfig parameters
@@ -52,7 +52,7 @@ copy_files(src_file=src_dir_mut_comb,
            dest_file=dest_dir_mut_comb)
 
 #copy files from decompose dir
-convert_files_to_markdown_read_save(src_dir_path=src_dir_decompose, 
+convert_files_to_markdown_read_write(src_dir_path=src_dir_decompose, 
                                     src_file_ext='.align1', 
                                     dest_dir_path=dest_dir_decompose
                                     )

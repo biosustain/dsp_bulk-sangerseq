@@ -54,7 +54,7 @@ def convert_files_to_markdown(dir_path: str,
 
 
 
-def convert_files_to_markdown_read_save(src_dir_path: str, 
+def convert_files_to_markdown_read_write(src_dir_path: str, 
                                         src_file_ext: str | tuple[str, ...], 
                                         dest_dir_path: str
                                         ):
