@@ -28,19 +28,23 @@ def convert_files_to_markdown(dir_path: str,
     """
     Converts files of specified file type to markdown files in the specified directory path.
     Args:
-
+        dir_path: path to directory holding files to be converted
+        file_ext: extension of files to be converted, e.g. ".align1"
     """
 
     if len(os.listdir(dir_path)) > 0:    #check if directory contains files
         for file in os.listdir(dir_path):
             if file.endswith(file_ext):
                 
+                #create file path
+                filepath = os.path.join(dir_path, file)
+                
                 #read file content
-                with open(file, 'r', encoding='utf-8') as f:
+                with open(filepath, 'r', encoding='utf-8') as f:
                     content = f.read()
 
-                #create new filename (.md)
-                new_filename = os.path.splitext(file)[0] + '.md'
+                #create markdown file by adding .md to existing filename with its original extension
+                new_filename = file + '.md'
                 new_filepath = os.path.join(dir_path, new_filename)
 
                 #write wrapped content

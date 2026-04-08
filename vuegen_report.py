@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import yaml
-from util.helper_functions import copy_files, copy_files_extension
+from util.helper_functions import copy_files, copy_files_extension, convert_files_to_markdown
 
 
 # %% read relevant onfig parameters
@@ -45,7 +45,7 @@ for subdir_name in subdir_names:
     os.makedirs(Path(os.path.join(outdir_vuegen, subdir_name)), exist_ok=True)
 
 
-# %% copy results files into vuegen folder
+# %% copy results files into vuegen folder and convert .lign* files to markdown (.md)
 
 #copy mutation sumamry file
 copy_files(src_file=src_dir_mut_comb, 
@@ -56,21 +56,15 @@ copy_files_extension(src_dir=src_dir_decompose,
                      dest_dir=dest_dir_decompose, 
                      file_ext=file_ext_decompose)
 
+convert_files_to_markdown(dir_path=dest_dir_decompose, 
+                          file_ext='.align1')
+
 #copy files from align dir
+# Todo: read aling files and then create markdown file from it 
 copy_files_extension(src_dir=src_dir_align, 
                      dest_dir=dest_dir_align, 
                      file_ext=file_ext_align)
 
-
-# %% Format files for vuegen report
-# Rename .align* files to csv to allow for visualization (vuegen does NOT recognise the .align* extension)
-
-#this code works but the visualisation in vuegen is not optimal yet
-for i in os.listdir(dest_dir_decompose):
-    files = os.path.join(dest_dir_decompose, i)
-    split_file = os.path.splitext(files)
-    if split_file[1] == '.align1':
-       os.rename(files,split_file[0] + '.csv')
 
 # %% create vuegen report
 # vuegen and streamlit bash command:
