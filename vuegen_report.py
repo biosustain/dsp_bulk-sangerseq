@@ -9,14 +9,14 @@ from util.helper_functions import copy_files, copy_files_extension,  convert_fil
 
 
 # %% read relevant onfig parameters
-with open('./config.yaml', 'r', encoding='utf-8') as file:
+with open(Path('./config.yaml'), 'r', encoding='utf-8') as file:
     cfg = yaml.safe_load(file)
 
-outdir_host = cfg['paths']['outdir_host']
+outdir_host = Path(cfg['paths']['outdir_host'])
 
 
 # %% define variables
-outdir_vuegen = os.path.join(outdir_host, 'vuegen_report')
+outdir_vuegen = Path(os.path.join(outdir_host, 'vuegen_report'))
 
 #sub-directory names where files will be copied to
 subdir_names = ['01_Mutation_tables_decompose', 
@@ -26,16 +26,16 @@ subdir_names = ['01_Mutation_tables_decompose',
 subdir_names_alignments_decompose_02 = ['align1', 'align2', 'align3']
 
 #mutation table output to be copied
-src_dir_mut_comb = 'outdir/results_combined.csv'
-dest_dir_mut_comb = f'./outdir/vuegen_report/{subdir_names[0]}/results_combined.csv'
+src_dir_mut_comb = Path('outdir/results_combined.csv')
+dest_dir_mut_comb = Path(f'./outdir/vuegen_report/{subdir_names[0]}/results_combined.csv')
 
 #files to copy from decompose dir
-src_dir_decompose = 'outdir/decompose'
-dest_dir_decompose = f'./outdir/vuegen_report/{subdir_names[1]}'
+src_dir_decompose = Path('outdir/decompose')
+dest_dir_decompose = Path(f'./outdir/vuegen_report/{subdir_names[1]}')
 
 #files to copy from align dir
-src_dir_align = './outdir/align'    #source dir
-dest_dir_align = f'./outdir/vuegen_report/{subdir_names[2]}'    #destination dir
+src_dir_align = Path('./outdir/align')    #source dir
+dest_dir_align = Path(f'./outdir/vuegen_report/{subdir_names[2]}')    #destination dir
 file_ext_align = ('.json', '.html') #file extensions
 
 #files to copy from assembly process
