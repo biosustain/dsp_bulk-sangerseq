@@ -58,8 +58,13 @@ for sample_name, result_df in result_df_dict.items():
     #write sample name (dict key) to new column
     result_df['sample_name'] = sample_name
     
+    #insert column decribing editing success or the detection of the mutation (Note, that the curent logic only applied if the user aligns against the edited reference sequence which is currently the preferred alignment mode; the logic fails if alignment against the wild-type sequence is performed)
+    
+    #returns True in case of an NaN value which indicates a successful edit
+    result_df['successfully_edited'] = result_df['alt'].isna()  
+
     #order df columns
-    result_df = result_df[['sample_name', 'chr', 'pos', 'id', 'ref', 'alt', 'qual', 'filter', 'type', 'genotype', 'basepos', 'signalpos']]
+    result_df = result_df[['sample_name', 'chr', 'pos', 'id', 'ref', 'alt', 'qual', 'filter', 'type', 'genotype', 'basepos', 'signalpos', 'successfully_edited']]
     
     #export df
     result_df.to_csv(f'{cfg['paths']['outdir_host']}/{sample_name}.csv', index=False)
@@ -70,7 +75,7 @@ for sample_name, result_df in result_df_dict.items():
 combined_result_df = pd.concat(list(result_df_dict.values()))
 
 #order df columns of concatenated df
-combined_result_df = combined_result_df[['sample_name', 'chr', 'pos', 'id', 'ref', 'alt', 'qual', 'filter', 'type', 'genotype', 'basepos', 'signalpos']]
+combined_result_df = combined_result_df[['sample_name', 'chr', 'pos', 'id', 'ref', 'alt', 'qual', 'filter', 'type', 'genotype', 'basepos', 'signalpos', 'successfully_edited']]
 
 #export combined results df
 combined_result_df.to_csv(f'{cfg['paths']['outdir_host']}/results_combined.csv', index=False)
