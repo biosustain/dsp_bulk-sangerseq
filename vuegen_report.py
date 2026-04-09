@@ -21,7 +21,7 @@ outdir_vuegen = Path(os.path.join(outdir_host, 'vuegen_report'))
 #sub-directory names where files will be copied to
 subdir_names = ['01_Mutation_tables_decompose', 
                 '02_alignments_decompose', 
-                '03_traces'
+                '03_alignments_align'
                 ]
 subdir_names_alignments_decompose_02 = ['align1', 'align2', 'align3']
 
@@ -36,7 +36,7 @@ dest_dir_decompose = Path(f'./outdir/vuegen_report/{subdir_names[1]}')
 #files to copy from align dir
 src_dir_align = Path('./outdir/align')    #source dir
 dest_dir_align = Path(f'./outdir/vuegen_report/{subdir_names[2]}')    #destination dir
-file_ext_align = ('.json', '.html') #file extensions
+file_ext_align = ('.txt') #file extensions
 
 #files to copy from assembly process
 
@@ -54,23 +54,24 @@ for subdir in subdir_names_alignments_decompose_02:
 
 # %% copy results files into vuegen folder and convert .align* files to markdown (.md)
 
-#copy mutation summary file
+#copy mutation summary file (from decompose process)
 copy_files(src_file=src_dir_mut_comb, 
            dest_file=dest_dir_mut_comb)
 
-#copy files from decompose dir
+#copy files from decompose dir as markdowns
 for i in subdir_names_alignments_decompose_02:
     convert_files_to_markdown_read_write(
                 src_dir_path=src_dir_decompose, 
-                src_file_ext=f'.{i}', dest_dir_path=f'{dest_dir_decompose}/{i}'
+                src_file_ext=f'.{i}', 
+                dest_dir_path=f'{dest_dir_decompose}/{i}'
                 )
 
-#copy files from align dir
-# Todo: read aling files and then create markdown file from it 
-copy_files_extension(src_dir=src_dir_align, 
-                     dest_dir=dest_dir_align, 
-                     file_ext=file_ext_align)
-
+#copy files from align dir as markdowns
+convert_files_to_markdown_read_write(
+                src_dir_path=src_dir_align, 
+                src_file_ext=file_ext_align, 
+                dest_dir_path=dest_dir_align
+                )
 
 # %% create vuegen report
 # vuegen and streamlit bash command:
