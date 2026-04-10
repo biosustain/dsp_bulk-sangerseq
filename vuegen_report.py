@@ -49,15 +49,15 @@ dest_dir_assemble = Path(f'./outdir/vuegen_report/{subdir_names[3]}')
 
 #vuegen directory
 for subdir_name in subdir_names:
-    os.makedirs(Path(os.path.join(outdir_vuegen, subdir_name)), exist_ok=True)
+    os.makedirs(outdir_vuegen / subdir_name, exist_ok=True)
 
 #sub-directories of the 02_alignments_decompose directory
 for subdir in subdir_names_alignments_decompose_02:
-    os.makedirs(Path(os.path.join(dest_dir_decompose, subdir)), exist_ok=True)
+    os.makedirs(dest_dir_decompose / subdir, exist_ok=True)
 
 #sub-directories of the 04_sequence_assembly_assemble directory
 for subdir_assemble in subdir_names_seq_assemble_04:
-    os.makedirs(Path(os.path.join(dest_dir_assemble, subdir_assemble)), exist_ok=True)
+    os.makedirs(dest_dir_assemble / subdir_assemble, exist_ok=True)
 
 
 # %% copy results files into vuegen folder and convert .align* files to markdown (.md)
