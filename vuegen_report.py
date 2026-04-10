@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import yaml
-from util.helper_functions import copy_files, copy_files_extension,  convert_files_to_markdown_read_write
+from util.helper_functions import copy_files,   convert_files_to_markdown_read_write
 
 
 # %% read relevant config parameters
@@ -24,8 +24,11 @@ subdir_names = ['01_Mutation_tables_decompose',
                 '03_alignments_align', 
                 '04_sequence_assembly_assemble'
                 ]
+
 subdir_names_alignments_decompose_02 = ['align1', 'align2', 'align3']
+
 subdir_names_seq_assemble_04 = ['alignments', 'consensus_sequences']
+
 
 #mutation table output to be copied
 src_dir_mut_comb = Path('outdir/results_combined.csv')
@@ -71,7 +74,7 @@ for i in subdir_names_alignments_decompose_02:
     convert_files_to_markdown_read_write(
                 src_dir_path=src_dir_decompose, 
                 src_file_ext=f'.{i}', 
-                dest_dir_path=f'{dest_dir_decompose}/{i}'
+                dest_dir_path=dest_dir_decompose / i
                 )
 
 ##copy files from align dir as markdowns
@@ -82,20 +85,19 @@ convert_files_to_markdown_read_write(
                 )
 
 ##copy files from assemble dir as markdowns
-
 #alignments
 convert_files_to_markdown_read_write(
         src_dir_path=src_dir_assemble, 
         src_file_ext='.align.fa', 
-        dest_dir_path=f'{dest_dir_assemble}/{subdir_names_seq_assemble_04[0]}'
-                )
+        dest_dir_path=dest_dir_assemble / subdir_names_seq_assemble_04[0]
+        )
 
 #consensus sequences
 convert_files_to_markdown_read_write(
         src_dir_path=src_dir_assemble, 
         src_file_ext='.cons.fa', 
-        dest_dir_path=f'{dest_dir_assemble}/{subdir_names_seq_assemble_04[1]}'
-                )
+        dest_dir_path=dest_dir_assemble / subdir_names_seq_assemble_04[1]
+        )
 
 # %% create vuegen report
 # vuegen and streamlit bash command:
