@@ -153,3 +153,8 @@ python3 tracy_postprocessing.py
 ```
 python3 tracy_render_align.py
 ```
+
+5. Generate final results report by running the below command:
+```
+python3 vuegen_report.py
+```
