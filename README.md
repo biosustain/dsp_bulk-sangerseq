@@ -151,7 +151,7 @@ python3 tracy_postprocessing.py
 
 4. Generate Sanger trace images (interactive html files) by running the below command:  
 ```
-python3 tracy_render_align.py
+python3 tracy_render_visualisations.py
 ```
 
 5. Generate final results report by running the below command:
