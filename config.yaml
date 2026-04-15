@@ -18,6 +18,13 @@ docker:
   platform: 'linux/amd64'
 
 
+## HTML visualisation configuration
+visualisation:
+  image: 'ghcr.io/biosustain/tracy-visualisations'
+  tag: 'latest'
+  platform: 'linux/amd64'
+
+
 ## Tracy software configuration
 tracy:
   # trimming length: number nucleotides at 5' (left) and 3' (right) to be removed

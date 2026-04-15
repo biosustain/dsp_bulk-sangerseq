@@ -32,7 +32,7 @@ jobs:
             'tracy_bulk_docker.py',
             'tracy_bulk_docker_samplesheet.py',
             'tracy_postprocesssing.py',
-            'tracy_render_align.py'
+            'tracy_render_visualisations.py'
         ]
     
     steps:
