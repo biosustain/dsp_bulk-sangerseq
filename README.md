@@ -125,36 +125,26 @@ Note, that for standard analyses workflows, trimming stringency for ```decompose
 ```trimming_stringency_align``` (dtype: integer): Default is ```0```.  
 ```trimming_stringency_assemble``` (dtype: integer): Default is ```4```.  
 
-### Start the Docker daemon  
+
+### Run the dsp_bulk_sangerseq tool   
+
+Perform the following three steps consecutively.
+
+1. Start the Docker daemon  
 Sequence analysis using tracy is done in Docker containers for which the Docker daemon has to be started using the following command. Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
 
 ```
 sudo systemctl start docker
 ```  
 
-### Run scripts of dsp_bulk_sangerseq consecutively    
-Perform all the following steps consecutively.
-1. In the project directory, activate the environment using command  
+Alternatively, Docker Desktop can be started instead.
+
+2. In the project directory, activate the virtual environment using command  
 ```
 pipenv shell
 ```
 
-2. Perform Sanger sequencing analysis by running the below command:  
+3. Perform Sanger sequencing analysis using command  
 ```
-python3 tracy_bulk_docker_samplesheet.py
-```
-
-3. Perform post-processing of results by running the below command:  
-```
-python3 tracy_postprocessing.py
-```
-
-4. Generate Sanger trace images (interactive html files) by running the below command:  
-```
-python3 tracy_render_visualisations.py
-```
-
-5. Generate final results report by running the below command:
-```
-python3 vuegen_report.py
+bash main.sh
 ```
