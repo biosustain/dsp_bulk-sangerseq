@@ -5,3 +5,7 @@ data/*
 # outdirs
 outdir/*
 outdir/.gitkeep
+
+# files and folders in entire repo
+__pycache__/
+.DS_Store
