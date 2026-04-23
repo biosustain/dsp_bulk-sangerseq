@@ -72,7 +72,7 @@ Installing Visual Studio (VS) code is not a requirement but it facilitates while
 Open the terminal and perform the following steps consecutively:
 
 1. Change to the desired directory using ```cd </absolute/path/to/project/folder>```.
-2. Clone the github repository using ```git clone https://github.com/biosustain/dsp_bulk-sangerseq.git```.
+2. Clone the github repository using ```git clone git@github.com:biosustain/dsp_bulk-sangerseq.git```.
 3. Change to the project directory using ```cd </dsp_bulk-sangerseq>```.
 4. Install all dependencies from the Pipfile.lock using ```pipenv sync```.
 
