@@ -2,11 +2,11 @@
 
 ## Background
 Sanger sequencing ([Sanger *et al.*, 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the substantial increase of throughput in biological experimentation like in microbial genome engineering campaigns in industrial biotechnology, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.  
-This **Bulk Sanger Sequencing Tool** was developed to reduce this time investment while maintaining a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [Tracy](https://www.gear-genomics.com/) ([GitHub](https://github.com/gear-genomics/tracy)) and [Sage](https://www.gear-genomics.com/) ([GitHub](https://github.com/gear-genomics/sage)) are used for the analysis and visualisation of Sanger sequencing data ([Rausch *et al.*, 2020](https://doi.org/10.1186/s12864-020-6635-8)).
+This **Bulk Sanger Sequencing Tool** was developed to reduce this time investment while maintaining a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [Tracy] (https://github.com/gear-genomics/tracy), [Sage] (https://github.com/gear-genomics/sage) and [Indigo](https://github.com/gear-genomics/indigo) are used for the analysis and visualisation of Sanger sequencing data ([Rausch *et al.*, 2020](https://doi.org/10.1186/s12864-020-6635-8)).
 
 ## Applicability
-Currently, Sanger sequencing results with one sequencing file can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the refernece sequence indicates it it was used in forward direction or reverse-complemented for the alignment).  
-Combined analyses by assembling forward and reverse sequencing results is currently not possible, albeit tracy offers this functionality (to be implemented soon). A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
+Sanger sequencing results with one or multiple sequencing files can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the refernece sequence indicates it it was used in forward direction or reverse-complemented for the alignment).  
+Combined analyses by assembling forward and reverse sequencing results is possible. A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
 
 ## Installations instructions and prerequisites
 To be able to use the bulk-sangerseq tool, several installations steps need to be performed and a GitHub account need to be created.  
@@ -19,11 +19,11 @@ To be able to use the bulk-sangerseq tool, several installations steps need to b
 The installation instructions are specifically for users of WSL (Windows Subsystems for Linux).
 
 #### Install Ubuntu via WSL on Windows machine
-Open PowerShell by right-clicking on the icon and select "Run as administrator". To install WSL on your machine, use the folloowing command: 
+Open PowerShell by right-clicking on the icon and select "Run as administrator". To install WSL on your machine, use the following command: 
 ```
 wsl --install
 ```  
-For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and don't change the distribution.  
+For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and do not change the distribution.  
 To open the Ubuntu terminal, right-click on the PowerShell icon and select "Ubuntu 22.04.5 LTS".
 
 #### Update package manager
@@ -34,7 +34,7 @@ sudo apt-get update
 ```  
 
 #### Generate SSH key and add it to the ssh-agent
-SSH connections are secure connections that work with a private and a public key pair. Generating such a key pair and adding the public key to your github account is important to clone github repositories.  
+SSH connections are secure connections that work with a private and a public key pair.  
 To generate an ssh-keygen pair, please follow the [instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) until section "Adding your SSH key to the ssh-agent".  
 The public key has to be added to your github account. Please follow [these instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?platform=linux).  
 Now, a secure ssh connection between your computer and github can be established.  
@@ -55,7 +55,7 @@ The bulk-sangerseq tool requires python version 3.12. All tests on WSL were perf
 sudo apt-get install python3.12.12
 ```
 
-#### Install  pipenv
+#### Install pipenv
 Pipenv is a virtual environment management tool. You can install it from the command line using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
 
 ```
@@ -66,7 +66,7 @@ pip install --user pipenv
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
 
 #### Install  Visual Studio code [*optional*]
-Installing Visual Studio (VS) code is not a requirement but it facilitates while working with the tool. VS Code can be dowloaded [here](https://code.visualstudio.com/download).
+Installing Visual Studio (VS) code is not a requirement but it facilitates while working with the tool. VS Code can be downloaded [here](https://code.visualstudio.com/download).
 
 ## Cloning the dsp_bulk_sangerseq repository from GitHub
 Open the terminal and perform the following steps consecutively:
@@ -81,16 +81,16 @@ Open the terminal and perform the following steps consecutively:
 ### Prepare data and a samplesheet  
 The tool requires Sanger sequencing (.ab1) and reference files stored in a multifasta file (.fa) files.  
 
-Copy all .ab1 files and the multifasta file into the folder **data**. 
+Deposit all .ab1 files and the multifasta file into the folder **data**. 
 
 Prepare a **samplesheet** according to the template below and save it as .csv file. It is recommended to deposit the samplesheet.csv in the **data** folder. Here you can also find three templates in subfolder ```data/test_data_1```. The tool will read the samplesheet file automatically after specifying the path to it in the ```config.yaml``` file (see instructions below).  
 **Note**: 
-The tool analyses samples that were sequenced in either forward or reverse direction. Reverse sequencing is automatically detected by the tracy software, i.e. any input sequences do not need to be reverse-complemented prior to analysis. The output files will indicate if reverse-complementation was performed.  
+The tool analyses samples that were sequenced in either forward or reverse direction. Reverse sequencing is **automatically** detected by the tracy software, *i.e.* any input sequences do **not** need to be reverse-complemented prior to analysis. The output files will indicate if reverse-complementation was performed.  
 
 In the ```sample_id``` column, fill in the sample names. In the ```ab1_file``` column, fill in the name of the sequencing file including the .ab1 file extension.   
-The tool uses references stored in a multifasta file. Fill the ```reference_id``` column with reference names which must be the fasta header in the provided multifasta file. 
+The tool uses references stored in a multifasta file. Fill the ```reference_id``` column with reference names which **must be the fasta header in the provided multifasta file**. 
 
-The ```assembly_group``` column is used for sequence assembly, e.g. assembling DNA sequencing from forward and reverse sequencing of a gene of interest. A minimum of two sequences can be assembled, however, assembling more sequences is possible. Currently, only reference-guided assembly is implemented, i.e. a reference file must be provided. In the ```assembly_group```column the user has to specify which sequences should be assembled. This is done here using a ```1``` or ```2```. In the example below, samples_3 and sample_4 (assembly_group 1) will be assembled using reference_C whereas sample_5 and sample_6 (assembly_group 2) will be assembled separately using reference_D.  
+The ```assembly_group``` column is used for sequence assembly, e.g. assembling DNA sequencing from forward and reverse sequencing of a gene of interest. A minimum of two sequences can be assembled, however, assembling more sequences is possible. Currently, only reference-guided assembly is implemented, *i.e.* a reference file must be provided. In the ```assembly_group```column the user has to specify which sequences should be assembled. This is done here using a ```1``` or ```2```. In the example below, samples_3 and sample_4 (assembly_group 1) will be assembled using reference_C whereas sample_5 and sample_6 (assembly_group 2) will be assembled separately using reference_D.  
 If no assmebly of samples is desired, the fields in the ```assembly_group``` column have to be left blank (see sample_1 and sample_2 in below example).
 
 | sample_id       | ab1_file     | assembly_group  | reference_id  |
@@ -137,7 +137,7 @@ Sequence analysis using tracy is done in Docker containers for which the Docker 
 sudo systemctl start docker
 ```  
 
-Alternatively, Docker Desktop can be started instead.
+Alternatively, Docker Desktop can be started instead (if installed).
 
 2. In the project directory, activate the virtual environment using command  
 ```
