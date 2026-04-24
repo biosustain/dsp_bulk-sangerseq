@@ -10,21 +10,6 @@ paths:
   data_docker: '/home/sanger_seq/data'
   outdir_docker: '/home/sanger_seq/outdir'
 
-
-## Docker configuration
-docker:
-  image: 'geargenomics/tracy'
-  version: 'latest'
-  platform: 'linux/amd64'
-
-
-## HTML visualisation configuration
-visualisation:
-  image: 'ghcr.io/biosustain/tracy-visualisations'
-  tag: 'latest'
-  platform: 'linux/amd64'
-
-
 ## Tracy software configuration
 tracy:
   # trimming length: number nucleotides at 5' (left) and 3' (right) to be removed
@@ -37,5 +22,20 @@ tracy:
   trim_stringency_decompose: 0
   trim_stringency_align: 0
   trim_stringency_assemble: 4
+
+
+
+## Docker configuration
+docker:
+  image: 'geargenomics/tracy'
+  version: 'latest'
+  platform: 'linux/amd64'
+
+## HTML visualisation configuration
+visualisation:
+  image: 'ghcr.io/biosustain/tracy-visualisations'
+  tag: 'latest'
+  platform: 'linux/amd64'
+
 
 
