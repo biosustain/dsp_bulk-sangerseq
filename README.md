@@ -1,14 +1,14 @@
-# Sanger sequencing tool for bulk analysis
+# Prototype Sanger sequencing tool for bulk analysis
 
 ## Background
-Sanger sequencing ([Sanger *et al.*, 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the substantial increase of throughput in biological experimentation like in microbial genome engineering campaigns in industrial biotechnology, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.  
+Sanger sequencing ([Sanger *et al.*, 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the increase of throughput in biological experimentation like in microbial genome engineering campaigns in industrial biotechnology, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.  
 This **Bulk Sanger Sequencing Tool** was developed to reduce this time investment while maintaining a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [Tracy](https://github.com/gear-genomics/tracy), [Sage](https://github.com/gear-genomics/sage) and [Indigo](https://github.com/gear-genomics/indigo) are used for the analysis and visualisation of Sanger sequencing data ([Rausch *et al.*, 2020](https://doi.org/10.1186/s12864-020-6635-8)).
 
-## Applicability
-Sanger sequencing results with one or multiple sequencing files can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the refernece sequence indicates it it was used in forward direction or reverse-complemented for the alignment).  
+## Applicability of the dsp_bulk_sangerseq tool
+Using this prototype tool, Sanger sequencing results with one or multiple sequencing files can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the reference sequence indicates if it was used in forward direction or reverse-complemented for the alignment).  
 Combined analyses by assembling forward and reverse sequencing results is possible. A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
 
-## Installations instructions and prerequisites
+## Installation instructions and prerequisites
 To be able to use the bulk-sangerseq tool, several installations steps need to be performed and a GitHub account need to be created.  
 
 ### Create GitHub account
@@ -76,7 +76,7 @@ Open the terminal and perform the following steps consecutively:
 3. Change to the project directory using ```cd </dsp_bulk-sangerseq>```.
 4. Install all dependencies from the Pipfile.lock using ```pipenv sync```.
 
-## Usage of the tool
+## Using the dsp_bulk_sangerseq tool
 
 ### Prepare data and a samplesheet  
 The tool requires Sanger sequencing (.ab1) and reference files stored in a multifasta file (.fa) files.  
