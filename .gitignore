@@ -8,5 +8,5 @@ outdir/*
 
 # files and folders in entire repo
 __pycache__/
-.DS_Store
+**/.DS_Store
 docker_tests/
