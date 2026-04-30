@@ -168,3 +168,111 @@ pipenv shell
 ```
 bash main.sh
 ```
+
+## Output of the tool
+
+### Structure of the output directory
+```
+outdir
+├── align
+├── assemble
+├── decompose
+├── results_combined.csv
+├── sample_1.csv
+├── sample_2.csv
+└── vuegen_report
+```
+- ```align```: directory with results from the ```tracy align``` process  (sequence alignment of Sanger sequencing result against a reference)
+- ```assemble```: directory with results from the ```tracy assemble``` process (reference-guided asssembly of overlapping DNA sequences) 
+-  ```decompose```: directory with results from the ```tracy decompose``` process (detection of mutations and decomposition of double-peaks)  
+- ```sample_1.csv``` and ```sample_2.csv```: mutation detection results from ```tracy decompose``` process per sample
+- ```results_combined.csv```: Consolidated mutation detection results from all samples (here ```sample_1.csv``` and ```sample_2.csv```)  
+
+#### Structure of the ```align``` subdirectory
+```
+outdir/align
+├── sample_1.abif
+├── sample_1.align.fa
+├── sample_1.html
+├── sample_1.json
+├── sample_1.txt
+├── sample_2.abif
+├── sample_2.align.fa
+├── sample_2.html
+├── sample_2.json
+└── sample_2.txt
+```  
+
+- ```.align.fa```: pairwise sequence alignment file (Sanger sequencing result against reference sequence)  
+- ```.txt```: pairwise sequence alignment (Sanger sequencing result against reference sequence)   
+- ```.html```: visualisation of Sanger sequeencing result using ```Sage```  
+- ```.json```: all output from ```tracy align```process
+
+#### Structure of the ```decompose``` subdirectory
+```
+outdir/decompose
+├── sample_1.abif
+├── sample_1.align1
+├── sample_1.align2
+├── sample_1.align3
+├── sample_1.bcf
+├── sample_1.bcf.csi
+├── sample_1.decomp
+├── sample_1.html
+├── sample_1.json
+├── sample_2.abif
+├── sample_2.align1
+├── sample_2.align2
+├── sample_2.align3
+├── sample_2.bcf
+├── sample_2.bcf.csi
+├── sample_2.decomp
+├── sample_2.html
+└── sample_2.json
+```  
+- ```.align1.fa```: pairwise sequence alignment file of main signal against reference sequence  
+- ```.align2.fa```: pairwise sequence alignment file of minor signal against reference sequence  
+- ```.align3.fa```: pairwise sequence alignment file of major against minor signal  
+- ```.html```: visualisation of Sanger sequeencing result using ```Indigo```  
+- ```.bcf```: binary call format file; binary version of the variant calling file (VCF); can be converted to VCF using [bcftools](https://github.com/samtools/bcftools)
+- ```.json```: all output from ```tracy decompose``` process
+
+#### Structure of the ```assemble``` subdirectory
+```
+outdir/assemble
+├── sample_1_sample_2.align.fa
+├── sample_1_sample_2.cons.fa
+├── sample_1_sample_2.html
+├── sample_1_sample_2.json
+└── sample_1_sample_2.vertical
+```  
+- ```.align.fa```: multiple sequence alignment file of Sanger sequencing results against the reference sequence --> can be visualised using the 
+webtool [Sabre](https://www.gear-genomics.com/sabre/)  
+- ```.cons.fa```: consensus sequence generated from ```tracy assemble```  
+- ```.html``` (NOT IMPLEMENTED YET): Visualisation of the using ```Pearl```  
+- ```.json```: all output from ```tracy assemble``` process
+
+#### Structure of the ```vuegen_report``` subdirectory 
+```
+outdir/vuegen_report
+├── 01_Mutation_tables_decompose
+│   └── results_combined.csv
+├── 02_alignments_decompose
+│   ├── align1
+│   │   ├── sample_1.align1.md
+│   │   └── sample_2.align1.md
+│   ├── align2
+│   │   ├── sample_1.align2.md
+│   │   └── sample_2.align2.md
+│   └── align3
+│       ├── sample_1.align3.md
+│       └── sample_2.align3.md
+├── 03_alignments_align
+│   ├── sample_1.txt.md
+│   └── sample_2.txt.md
+└── 04_sequence_assembly_assemble
+    ├── alignments
+    │   └── sample_1_sample_2.align.fa.md
+    └── consensus_sequences
+        └── sample_1_sample_2.cons.fa.md
+```
