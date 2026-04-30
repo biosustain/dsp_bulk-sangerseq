@@ -6,7 +6,8 @@ This **Bulk Sanger Sequencing Tool** was developed to reduce this time investmen
 
 ## Applicability of the dsp_bulk_sangerseq tool
 Using this prototype tool, Sanger sequencing results with one or multiple sequencing files can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the reference sequence indicates if it was used in forward direction or reverse-complemented for the alignment).  
-Combined analyses by assembling forward and reverse sequencing results is possible. A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
+Combined analyses by assembling forward and reverse sequencing results is possible. A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).  
+Currently, the tool supports only sequential analysis of multiple Sanger sequencing samples.
 
 ## Installation instructions and prerequisites
 To be able to use the bulk-sangerseq tool, several installations steps need to be performed and a GitHub account need to be created.  
