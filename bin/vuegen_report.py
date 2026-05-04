@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import yaml
-from util.helper_functions import copy_files,   convert_files_to_markdown_read_write
+from util.helper_functions import copy_files, convert_files_to_markdown_read_write
 
 
 # %% read relevant config parameters
