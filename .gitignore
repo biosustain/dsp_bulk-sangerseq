@@ -4,6 +4,7 @@ data/*
 
 # outdirs
 outdir/*
+!outdir/test_data_1
 !outdir/.gitkeep
 
 # files and folders in entire repo
