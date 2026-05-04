@@ -1,4 +1,3 @@
-# source: https://chatgpt.com/share/6842f7c0-29dc-8003-9574-048726a5893a
 # Script uses a samplesheet as a way to couple each sample with a single
 # reference file to align to
 
@@ -119,8 +118,7 @@ with open(reference_fasta, encoding='utf-8') as handle:
                 'fasta'
             )
 
-# %%
-# run analysis (one container per sequencing analysis)
+# %% run analysis (one container per sequencing analysis)
 for sample_ref_pair in sample_ref_pairs:
     ab1_abs_path = path.join(
         datadir_docker, str(sample_ref_pair.ab1_file)
@@ -241,10 +239,8 @@ for sample_ref_pair in sample_ref_pairs:
 
 # %% Run tracy assemble against the reference in docker container
 # (for the analysis of overlapping reads)
-
-# %%
-# group data by group in sample sheet
-# run tracy assemble in docker container
+# 1. group data by group in sample sheet
+# 2. run tracy assemble in docker container
 
 for group_name, group in samplesheet.groupby(by='assembly_group'):
     # Generate list of paths to files that get assembled
@@ -311,8 +307,3 @@ for group_name, group in samplesheet.groupby(by='assembly_group'):
             'Error running container for group %s: %s',
             str(sample_id_joined), e
         )
-
-
-# %% Run tracy decompose using the assembled traces
-# against the reference for variant calling
-# TO BE IMPLEMENTED if necessary

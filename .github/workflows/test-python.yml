@@ -28,11 +28,10 @@ jobs:
       matrix:
         python-version: ['3.12']
         script: [
-            'ab1_exploration.py',
-            'tracy_bulk_docker.py',
-            'tracy_bulk_docker_samplesheet.py',
-            'tracy_postprocesssing.py',
-            'tracy_render_visualisations.py'
+            'bin/tracy_bulk_docker_samplesheet.py',
+            'bin/tracy_postprocesssing.py',
+            'bin/tracy_render_visualisations.py',
+            'bin/vuegen_report.py'
         ]
     
     steps:
