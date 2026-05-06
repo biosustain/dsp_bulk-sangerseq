@@ -9,65 +9,34 @@ Using this prototype tool, Sanger sequencing results with one or multiple sequen
 Combined analyses by assembling forward and reverse sequencing results is possible. A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).  
 Currently, the tool supports only sequential analysis of multiple Sanger sequencing samples.
 
-## Installation instructions and prerequisites
-To be able to use the bulk-sangerseq tool, several installations steps need to be performed and a GitHub account need to be created.  
+## Installing required software
+Installation instructions are specifically described for Linux users.  
+Windows users should first install 'Windows Subsystems for Linux' (WSL) and install ```git``` on their system as detailed in this [description](docs/installation_prerequisites.md).
 
-### Create GitHub account
-[Create a GitHub account](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home) or sign in to your existing account.   
-
-### Install all prerequisites
-
-The installation instructions are specifically for users of WSL (Windows Subsystems for Linux).
-
-#### Install Ubuntu via WSL on Windows machine
-Open PowerShell by right-clicking on the icon and select "Run as administrator". To install WSL on your machine, use the following command: 
-```
-wsl --install
-```  
-For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and do not change the distribution.  
-To open the Ubuntu terminal, right-click on the PowerShell icon and select "Ubuntu 22.04.5 LTS".
-
-#### Update package manager
-In the following sections multiple installations carried out using the linux package manager ```apt-get```. Update the package manager using the following command in the Ubuntu terminal:  
+### Install Python 3.12.12
+Update the ```apt-get``` package manager using the following command:  
 
 ```
 sudo apt-get update
 ```  
 
-#### Generate SSH key and add it to the ssh-agent
-SSH connections are secure connections that work with a private and a public key pair.  
-To generate an ssh-keygen pair, please follow the [instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) until section "Adding your SSH key to the ssh-agent".  
-The public key has to be added to your github account. Please follow [these instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?platform=linux).  
-Now, a secure ssh connection between your computer and github can be established.  
-
-**NOTE:** Every time you restart your computer, you have to add the ssh key to the ssh agent.
-
-#### Install git
-Check if git is already installed on your system by typing into your terminal 
-```
-git version
-```
-If not already installed on your computer, follow the [installation instructions](https://github.com/git-guides/install-git) in section "Install Git on Linux".
-
-#### Install Python 3.12.12
-The bulk-sangerseq tool requires python version 3.12. All tests on WSL were performed using python version 3.12.12 which can be installed using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
+The bulk-sangerseq tool requires python version 3.12. All tests were performed using python version 3.12.12 which can be installed using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
 
 ```
 sudo apt-get install python3.12.12
 ```
 
-#### Install pipenv
-Pipenv is a virtual environment management tool. You can install it from the command line using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
+### Install pipenv
+Pipenv is a virtual environment management tool that can be installed using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
 
 ```
 pip install --user pipenv
 ``` 
 
-#### Install Docker
+### Install Docker
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
 
-#### Install  Visual Studio code [*optional*]
-Installing Visual Studio (VS) code is not a requirement but it facilitates while working with the tool. VS Code can be downloaded [here](https://code.visualstudio.com/download).
+
 
 ## Cloning the dsp_bulk_sangerseq repository from GitHub
 Open the terminal and perform the following steps consecutively:
@@ -75,14 +44,17 @@ Open the terminal and perform the following steps consecutively:
 1. Change to the desired directory using ```cd </absolute/path/to/project/folder>```.
 
 2. Clone the github repository:  
-a. To clone the latest version of the entire repository, use  
+a. To clone the latest version of the repository, use  
 ```
-git clone git@github.com:biosustain/dsp_bulk-sangerseq.git
+git clone https://github.com/biosustain/dsp_bulk-sangerseq.git
 ```  
-b. To clone a specific release, use  
-
+b. If a specific release version of the code is intended to be used, use commands
 ```
-git clone --branch <release-tag> --single-branch git@github.com:biosustain/dsp_bulk-sangerseq.git
+git pull
+```
+and  
+```
+git checkout <release-tag>
 ```  
 Replace <release-tag> by the desired release tag, e.g. ```v1```.
 
@@ -144,6 +116,8 @@ Note, that for standard analyses workflows, trimming stringency for ```decompose
 ```trimming_stringency_decompose``` (dtype: integer): Default is ```0```.  
 ```trimming_stringency_align``` (dtype: integer): Default is ```0```.  
 ```trimming_stringency_assemble``` (dtype: integer): Default is ```4```.  
+
+**Note**, that other ```tracy``` command line parameters are not accessible yet which will be implemented in future.  
 
 
 ### Run the dsp_bulk_sangerseq tool   
