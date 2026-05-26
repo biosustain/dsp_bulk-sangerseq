@@ -11,7 +11,7 @@ Currently, the tool supports only sequential analysis of multiple Sanger sequenc
 
 ## Installing required software
 Installation instructions are specifically described for Linux users.  
-Windows users should first install 'Windows Subsystems for Linux' (WSL) and install ```git``` on their system as detailed in this [description](docs/installation_prerequisites.md).
+Windows users should first install ```Windows Subsystems for Linux (WSL)``` and ```git``` on their system. Installing a code editor like ```VS Code``` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).
 
 ### Install Python 3.12.12
 Update the ```apt-get``` package manager using the following command:  
@@ -44,11 +44,11 @@ Open the terminal and perform the following steps consecutively:
 1. Change to the desired directory using ```cd </absolute/path/to/project/folder>```.
 
 2. Clone the github repository:  
-a. To clone the latest version of the repository, use  
+To clone the latest version of the repository, use  
 ```
 git clone https://github.com/biosustain/dsp_bulk-sangerseq.git
 ```  
-b. If a specific release version of the code is intended to be used, use commands
+If a specific release version of the code is intended to be used, use the below commands consecutively.
 ```
 git pull
 ```
