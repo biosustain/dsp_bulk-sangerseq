@@ -61,7 +61,7 @@ To clone the latest version of the repository, use
 ```
 git clone https://github.com/biosustain/dsp_bulk-sangerseq.git
 ```  
-If a specific release version of the code is intended to be used, use the below commands consecutively.
+If a specific release version of the code is intended to be used, use the below commands consecutively from within the local code repository ```dsp_bulk-sangerseq```.
 ```
 git pull
 ```
