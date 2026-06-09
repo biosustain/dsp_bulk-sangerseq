@@ -11,19 +11,21 @@ Currently, the tool supports only sequential analysis of multiple Sanger sequenc
 
 ## Installing required software
 Installation instructions are specifically described for Linux users.  
-Windows users should first install ```Windows Subsystems for Linux (WSL)``` and ```git``` on their system. Installing a code editor like ```VS Code``` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).
+Windows users should first install ```Windows Subsystems for Linux (WSL)``` and ```git``` on their system. Installing a code editor like ```VS Code``` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).  
 
-### Install Python 3.12.12
+All the following steps assume you have Ubuntu-24.04 (noble) installed. Certain installation details might be different on other Ubuntu releases.
+
+### Install Python 3.12
 Update the ```apt-get``` package manager using the following command:  
 
 ```
 sudo apt-get update
 ```  
 
-The bulk-sangerseq tool requires python version 3.12. All tests were performed using python version 3.12.12 which can be installed using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
+The bulk-sangerseq tool requires python version 3.12 (most tests were performed using python patch release 3.12.12). Install python 3.12 using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
 
 ```
-sudo apt-get install python3.12.12
+sudo apt-get install python3.12
 ```
 
 ### Install pipenv
