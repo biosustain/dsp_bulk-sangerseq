@@ -15,7 +15,7 @@ Windows users should first install ```Windows Subsystems for Linux (WSL)``` and 
 
 All the following steps assume you have Ubuntu-24.04 (noble) installed. Certain installation details might be different on other Ubuntu releases.
 
-### Install Python 3.12
+### Install Python 3.12 and pip
 Update the ```apt-get``` package manager using the following command:  
 
 ```
@@ -26,14 +26,25 @@ The bulk-sangerseq tool requires python version 3.12 (most tests were performed 
 
 ```
 sudo apt-get install python3.12
+```  
+
+If not installed already, install ```pip``` using command 
+```
+sudo apt-get install python3-pip
 ```
 
 ### Install pipenv
-Pipenv is a virtual environment management tool that can be installed using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
-
+Pipenv is a virtual environment management tool that can be installed using the following commands. Further details can be found [here](https://pypi.org/project/pipenv/).  
+Install ```pipx``` first:  
 ```
-pip install --user pipenv
+sudo apt install pipx
+pipx ensurepath
+```
+Install ```pipenv``` via ```pipx``` using command
+```
+pipx install pipenv
 ``` 
+**Close the terminal and open a new terminal. The changes to your PATH to use ```pipenv``` take only effect when a tnew terminal session is started.**
 
 ### Install Docker
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
