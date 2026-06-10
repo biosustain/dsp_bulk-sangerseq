@@ -135,16 +135,28 @@ Note, that for standard analyses workflows, trimming stringency for ```decompose
 
 ### Run the dsp_bulk_sangerseq tool   
 
-Perform the following three steps consecutively.
+If you use VS code, open the Ubuntu terminal, ```cd``` into the project directory and open VS code from the direcory using command  
+```
+code .
+```
+Make sure VS code is connected to WSL by selecting ```Connect to WSL``` from the bottom left button in VS Code. If connected, ```WSL:Ubuntu-24.04``` should be displayed.
 
-1. Start the Docker daemon  
-Sequence analysis using tracy is done in Docker containers for which the Docker daemon has to be started using the following command. Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
+
+Perform the following steps consecutively.
+
+0. Add user to the docker group (only required once) 
+Sequence analysis using ```tracy``` is done in Docker containers. To execute python scripts without ```sudo``` preceeding commands (which can lead to other issues like accessed python installation), add your user to the docker group using command  
+```
+sudo usermod -aG docker $USER
+```
+**IMPORTANT: Close the terminal and open a new one to let the change take effect.**
+
+1. Start the Docker daemon 
+To use the tool, the Docker daemon has to be started using the following command (here ```sudo``` preceeding the command is still required). Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
 
 ```
 sudo systemctl start docker
 ```  
-
-Alternatively, Docker Desktop can be started instead (if installed).
 
 2. In the project directory, activate the virtual environment using command  
 ```
