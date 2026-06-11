@@ -39,7 +39,7 @@ Install ```pipenv``` via ```pipx``` using command
 ```
 pipx install pipenv
 ``` 
-**Close the terminal and open a new terminal. The changes to your PATH to use ```pipenv``` take only effect when a new terminal session is started.**
+**IMPORTANT: Close the terminal and open a new terminal. The changes to your PATH to use ```pipenv``` take only effect when a new terminal session is started.**
 
 ### Install Docker
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
@@ -139,7 +139,7 @@ Make sure VS code is connected to WSL by selecting ```Connect to WSL``` from the
 
 Perform the following steps consecutively.
 
-0. Add user to the docker group (only required once) 
+0. Add user to the docker group (only required once)  
 Sequence analysis using ```tracy``` is done in Docker containers. To execute python scripts without ```sudo``` preceeding commands (which can lead to other issues like accessed python installation), add your user to the docker group using command  
 ```
 sudo usermod -aG docker $USER
@@ -180,7 +180,7 @@ outdir
 - ```assemble```: directory with results from the ```tracy assemble``` process (reference-guided asssembly of overlapping DNA sequences) 
 -  ```decompose```: directory with results from the ```tracy decompose``` process (detection of mutations and decomposition of double-peaks)  
 - ```sample_1.csv``` and ```sample_2.csv```: mutation detection results from ```tracy decompose``` process per sample
-- ```results_combined.csv```: Consolidated mutation detection results from all samples (here ```sample_1.csv``` and ```sample_2.csv```)  
+- ```results_combined.csv```: consolidated mutation detection results from all samples (here ```sample_1.csv``` and ```sample_2.csv```)  
 
 #### Structure of the ```align``` subdirectory
 ```
@@ -199,7 +199,7 @@ outdir/align
 
 - ```.align.fa```: pairwise sequence alignment file (Sanger sequencing result against reference sequence)  
 - ```.txt```: pairwise sequence alignment (Sanger sequencing result against reference sequence)   
-- ```.html```: visualisation of Sanger sequeencing result using ```Sage```  
+- ```.html```: visualisation of Sanger sequencing result using ```Sage```  
 - ```.json```: all output from ```tracy align```process
 
 #### Structure of the ```decompose``` subdirectory
@@ -243,7 +243,7 @@ outdir/assemble
 - ```.align.fa```: multiple sequence alignment file of Sanger sequencing results against the reference sequence --> can be visualised using the 
 webtool [Sabre](https://www.gear-genomics.com/sabre/)  
 - ```.cons.fa```: consensus sequence generated from ```tracy assemble```  
-- ```.html``` (NOT IMPLEMENTED YET): Visualisation of the using ```Pearl```  
+- ```.html``` (NOT IMPLEMENTED YET): visualisation of Sanger sequencing assembly result using ```Pearl```  
 - ```.json```: all output from ```tracy assemble``` process
 
 #### Structure of the ```vuegen_report``` subdirectory 
