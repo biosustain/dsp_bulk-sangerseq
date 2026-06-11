@@ -11,7 +11,7 @@ Currently, the tool supports only sequential analysis of multiple Sanger sequenc
 
 ## Installing required software
 Installation instructions are specifically described for Linux users.  
-Windows users should first install ```Windows Subsystems for Linux (WSL)``` and ```git``` on their system. Installing a code editor like ```VS Code``` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).  
+Windows users should first install ```Windows Subsystem for Linux (WSL)``` and ```git``` on their system. Installing a code editor like ```VS Code``` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).  
 
 All the following steps assume you have Ubuntu-24.04 (noble) installed. Certain installation details might be different on other Ubuntu releases.
 
@@ -32,14 +32,14 @@ sudo apt-get install python3.12
 Pipenv is a virtual environment management tool that can be installed using the following commands. Further details can be found [here](https://pypi.org/project/pipenv/).  
 Install ```pipx``` first:  
 ```
-sudo apt install pipx
+sudo apt-get install pipx
 pipx ensurepath
 ```
 Install ```pipenv``` via ```pipx``` using command
 ```
-pipx install pipenv
+sudo pipx install pipenv
 ``` 
-**Close the terminal and open a new terminal. The changes to your PATH to use ```pipenv``` take only effect when a tnew terminal session is started.**
+**Close the terminal and open a new terminal. The changes to your PATH to use ```pipenv``` take only effect when a new terminal session is started.**
 
 ### Install Docker
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
