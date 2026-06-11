@@ -37,7 +37,7 @@ pipx ensurepath
 ```
 Install ```pipenv``` via ```pipx``` using command
 ```
-sudo pipx install pipenv
+pipx install pipenv
 ``` 
 **Close the terminal and open a new terminal. The changes to your PATH to use ```pipenv``` take only effect when a new terminal session is started.**
 
