@@ -28,11 +28,6 @@ The bulk-sangerseq tool requires python version 3.12 (most tests were performed 
 sudo apt-get install python3.12
 ```  
 
-If not installed already, install ```pip``` using command 
-```
-sudo apt-get install python3-pip
-```
-
 ### Install pipenv
 Pipenv is a virtual environment management tool that can be installed using the following commands. Further details can be found [here](https://pypi.org/project/pipenv/).  
 Install ```pipx``` first:  
