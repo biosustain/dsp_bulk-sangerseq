@@ -15,7 +15,7 @@ Windows users should first install ```Windows Subsystems for Linux (WSL)``` and 
 
 All the following steps assume you have Ubuntu-24.04 (noble) installed. Certain installation details might be different on other Ubuntu releases.
 
-### Install Python 3.12 and pip
+### Install Python 3.12
 Update the ```apt-get``` package manager using the following command:  
 
 ```
