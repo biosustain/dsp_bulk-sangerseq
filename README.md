@@ -11,27 +11,35 @@ Currently, the tool supports only sequential analysis of multiple Sanger sequenc
 
 ## Installing required software
 Installation instructions are specifically described for Linux users.  
-Windows users should first install ```Windows Subsystems for Linux (WSL)``` and ```git``` on their system. Installing a code editor like ```VS Code``` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).
+Windows users should first install ```Windows Subsystem for Linux (WSL)``` and ```git``` on their system. Installing a code editor like ```VS Code``` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).  
 
-### Install Python 3.12.12
+All the following steps assume you have Ubuntu-24.04 (noble) installed. Certain installation details might be different on other Ubuntu releases.
+
+### Install Python 3.12
 Update the ```apt-get``` package manager using the following command:  
 
 ```
 sudo apt-get update
 ```  
 
-The bulk-sangerseq tool requires python version 3.12. All tests were performed using python version 3.12.12 which can be installed using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
+The bulk-sangerseq tool requires python version 3.12 (most tests were performed using python patch release 3.12.12). Install python 3.12 using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
 
 ```
-sudo apt-get install python3.12.12
-```
+sudo apt-get install python3.12
+```  
 
 ### Install pipenv
-Pipenv is a virtual environment management tool that can be installed using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
-
+Pipenv is a virtual environment management tool that can be installed using the following commands. Further details can be found [here](https://pypi.org/project/pipenv/).  
+Install ```pipx``` first:  
 ```
-pip install --user pipenv
+sudo apt-get install pipx
+pipx ensurepath
+```
+Install ```pipenv``` via ```pipx``` using command
+```
+pipx install pipenv
 ``` 
+**IMPORTANT: Close the terminal and open a new terminal. The changes to your PATH to use ```pipenv``` take only effect when a new terminal session is started.**
 
 ### Install Docker
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
@@ -48,7 +56,7 @@ To clone the latest version of the repository, use
 ```
 git clone https://github.com/biosustain/dsp_bulk-sangerseq.git
 ```  
-If a specific release version of the code is intended to be used, use the below commands consecutively.
+If a specific release version of the code is intended to be used, use the below commands consecutively from within the local code repository ```dsp_bulk-sangerseq```.
 ```
 git pull
 ```
@@ -122,16 +130,28 @@ Note, that for standard analyses workflows, trimming stringency for ```decompose
 
 ### Run the dsp_bulk_sangerseq tool   
 
-Perform the following three steps consecutively.
+If you use VS code, open the Ubuntu terminal, ```cd``` into the project directory and open VS code from the direcory using command  
+```
+code .
+```
+Make sure VS code is connected to WSL by selecting ```Connect to WSL``` from the bottom left button in VS Code. If connected, ```WSL:Ubuntu-24.04``` should be displayed.
 
-1. Start the Docker daemon  
-Sequence analysis using tracy is done in Docker containers for which the Docker daemon has to be started using the following command. Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
+
+Perform the following steps consecutively.
+
+0. Add user to the docker group (only required once)  
+Sequence analysis using ```tracy``` is done in Docker containers. To execute python scripts without ```sudo``` preceeding commands (which can lead to other issues like accessed python installation), add your user to the docker group using command  
+```
+sudo usermod -aG docker $USER
+```
+**IMPORTANT: Close the terminal and open a new one to let the change take effect.**
+
+1. Start the Docker daemon 
+To use the tool, the Docker daemon has to be started using the following command (here ```sudo``` preceeding the command is still required). Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
 
 ```
 sudo systemctl start docker
 ```  
-
-Alternatively, Docker Desktop can be started instead (if installed).
 
 2. In the project directory, activate the virtual environment using command  
 ```
@@ -160,7 +180,7 @@ outdir
 - ```assemble```: directory with results from the ```tracy assemble``` process (reference-guided asssembly of overlapping DNA sequences) 
 -  ```decompose```: directory with results from the ```tracy decompose``` process (detection of mutations and decomposition of double-peaks)  
 - ```sample_1.csv``` and ```sample_2.csv```: mutation detection results from ```tracy decompose``` process per sample
-- ```results_combined.csv```: Consolidated mutation detection results from all samples (here ```sample_1.csv``` and ```sample_2.csv```)  
+- ```results_combined.csv```: consolidated mutation detection results from all samples (here ```sample_1.csv``` and ```sample_2.csv```)  
 
 #### Structure of the ```align``` subdirectory
 ```
@@ -179,7 +199,7 @@ outdir/align
 
 - ```.align.fa```: pairwise sequence alignment file (Sanger sequencing result against reference sequence)  
 - ```.txt```: pairwise sequence alignment (Sanger sequencing result against reference sequence)   
-- ```.html```: visualisation of Sanger sequeencing result using ```Sage```  
+- ```.html```: visualisation of Sanger sequencing result using ```Sage```  
 - ```.json```: all output from ```tracy align```process
 
 #### Structure of the ```decompose``` subdirectory
@@ -223,7 +243,7 @@ outdir/assemble
 - ```.align.fa```: multiple sequence alignment file of Sanger sequencing results against the reference sequence --> can be visualised using the 
 webtool [Sabre](https://www.gear-genomics.com/sabre/)  
 - ```.cons.fa```: consensus sequence generated from ```tracy assemble```  
-- ```.html``` (NOT IMPLEMENTED YET): Visualisation of the using ```Pearl```  
+- ```.html``` (NOT IMPLEMENTED YET): visualisation of Sanger sequencing assembly result using ```Pearl```  
 - ```.json```: all output from ```tracy assemble``` process
 
 #### Structure of the ```vuegen_report``` subdirectory 
