@@ -13,6 +13,7 @@ with open(Path('./config.yaml'), 'r', encoding='utf-8') as file:
     cfg = yaml.safe_load(file)
 
 outdir_host = Path(cfg['paths']['outdir_host'])
+vuegen_report_type = cfg['vuegen']['report_type']
 
 
 # %% define variables
@@ -115,7 +116,7 @@ try:
             '--directory',
             outdir_vuegen,
             '--report_type',
-            'streamlit'
+            vuegen_report_type
         ],
         check=True,
     )
