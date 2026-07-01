@@ -128,6 +128,19 @@ Note, that for standard analyses workflows, trimming stringency for ```decompose
 **Note**, that other ```tracy``` command line parameters are not accessible yet which will be implemented in future.  
 
 
+Change the following **variable to update the vuegen report type**.   
+
+```report_type```(dtype: string): Default is ```streamlit```
+
+The type of vuegen report can be chosen:  
+-  ```streamlit```. An interactive report is generated using the streamlit app. The report opens up automatically in an internet browser window after the analysis run is completed. **Note,** that for WSL users this doesn't work yet but a fix is underway.  
+    - After closing the streamlit app report, it can be generated again by running ```python3 -m bin.vuegen_report``` from the root of the directory (activate the virtual environment before using ```pipenv shell```)
+- ```html```. The report is saved as html file.
+- ```pdf```. The report is saved as pdf file.
+    - For the ```pdf``` report type, it is required to install ```tinytex```. System-wide installation is achieved using command ```quarto install tinytex```
+- Further vuegen report types can be found in the [vuegen documentation](https://github.com/Multiomics-Analytics-Group/vuegen).  
+
+
 ### Run the dsp_bulk_sangerseq tool   
 
 If you use VS code, open the Ubuntu terminal, ```cd``` into the project directory and open VS code from the direcory using command  
