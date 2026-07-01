@@ -25,7 +25,7 @@ tracy:
 
 ## Vuegen report configuration
 vuegen:
-  # select one of the following report types: streamlit (default), html
+  # select one of the following report types: streamlit (default), html or pdf (note that the pdf report is not interactive)
   report_type: 'streamlit'
 
 ## Docker configuration
