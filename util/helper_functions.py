@@ -37,21 +37,25 @@ def convert_files_to_markdown_read_write(src_dir_path: str,
         dest_dir_path: path to sdestination directory the .md files will be saved to
     """
 
-    if len(os.listdir(src_dir_path)) > 0:    #check if directory contains files
-        for file in os.listdir(src_dir_path):
-            if file.endswith(src_file_ext):
+    try: 
+        if len(os.listdir(src_dir_path)) > 0:    #check if directory contains files
+            for file in os.listdir(src_dir_path):
+                if file.endswith(src_file_ext):
                 
-                #create file path
-                filepath = os.path.join(src_dir_path, file)
+                    #create file path
+                    filepath = os.path.join(src_dir_path, file)
                 
-                #read file content
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    content = f.read()
+                    #read file content
+                    with open(filepath, 'r', encoding='utf-8') as f:
+                        content = f.read()
 
-                #create markdown file by adding .md to existing filename with its original extension
-                new_filename = file + '.md'
-                dest_filepath = os.path.join(dest_dir_path, new_filename)
+                    #create markdown file by adding .md to existing filename with its original extension
+                    new_filename = file + '.md'
+                    dest_filepath = os.path.join(dest_dir_path, new_filename)
 
-                #write wrapped content
-                with open(dest_filepath, 'w', encoding='utf-8') as f:
-                    f.write('```\n' + content + '\n```')
+                    #write wrapped content
+                    with open(dest_filepath, 'w', encoding='utf-8') as f:
+                        f.write('```\n' + content + '\n```')
+    
+    except FileNotFoundError:
+        print(f'Directory not found: {src_dir_path}')
