@@ -163,7 +163,7 @@ pipenv shell
 bash main.sh
 ```  
 
-Once the analysis is completed, the streamlit report should open automatically in a browser window. For WSL users, opining the report automatically might not work or might be delayed. If his is observed, hit ```Enter``` to open it.
+Once the analysis is completed, the streamlit report should open automatically in a browser window (if ```streamlit``` was selected as the report type). For WSL users, opining the report automatically might not work or might be delayed. If his is observed, hit ```Enter``` to open it.
 
 ## Output of the tool
 
