@@ -161,7 +161,9 @@ pipenv shell
 3. Perform Sanger sequencing analysis using command  
 ```
 bash main.sh
-```
+```  
+
+Once the analysis is completed, the streamlit report should open automatically in a browser window. For WSL users, opining the report automatically might not work or might be delayed. If his is observed, hit ```Enter``` to open it.
 
 ## Output of the tool
 
