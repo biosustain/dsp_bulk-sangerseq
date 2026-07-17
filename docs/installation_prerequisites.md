@@ -1,25 +1,14 @@
 # Installing prerequisites
 
-## Install Ubuntu via Windows Subsystems for Linux (WSL) on Windows machine
-Open PowerShell by ```Run as administrator```. To install WSL on your machine, use the following command: 
-```
-wsl --install
-```  
-When completed, reboot your computer. Installing WSL does not install a specific Linux distribution yet.  
-A list of available Linux distributions is available by executing the following command in Powershell (```Run as administrator```):  
-```
-wsl --list --online
-```  
-Install the desired version using command by replacing ```<distribution name>``` with the desired Ubuntu release name 
-```
-wsl --install -d <distribution name>
-```  
-
-For example, all initial tests of the bulk-sangerseq tool were conducted using ```Ubuntu 22.04.5 LTS``` which can be installed using command  
+## Install Ubuntu-24.04 via Windows Subsystem for Linux (WSL) on Windows machine
+Open ```PowerShell``` by selecting ```Run as administrator```. If running PowerShell as administrator is not permitted, open the ```Windows Command Prompt``` instead by selecting ```Run as administrator```.  
+To install WSL and Ubuntu-24.04 on your machine, use the following command: 
 ```
 wsl --install -d Ubuntu-24.04
-```  
-When completed, you will be prompted to choose a default Unix user account and a password.  
+```   
+
+When completed, you will be prompted to choose a user account and a password.  
+**IMPORTANT: Once completed, reboot your computer.**
 
 For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install).  
 
@@ -38,5 +27,5 @@ git version
 ```
 If not already installed on your computer, follow the [installation instructions](https://github.com/git-guides/install-git) in section "Install Git on Linux".
 
-## Install  Visual Studio code [*optional*]
+## Install  Visual Studio code [*optional, but recommended*]
 Installing Visual Studio (VS) code is not a requirement but it facilitates while working with the tool. VS Code can be downloaded [here](https://code.visualstudio.com/download).
