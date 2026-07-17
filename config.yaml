@@ -23,7 +23,10 @@ tracy:
   trim_stringency_align: 0
   trim_stringency_assemble: 4
 
-
+## Vuegen report configuration
+vuegen:
+  # select one of the following report types: streamlit (default), html or pdf (note that the pdf report is not interactive)
+  report_type: 'streamlit'
 
 ## Docker configuration
 docker:
