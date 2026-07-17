@@ -35,21 +35,21 @@ subdir_names_seq_assemble_04 = ['alignments', 'consensus_sequences']
 
 
 #mutation table output to be copied
-src_dir_mut_comb = Path(f'{outdir_host}/results_combined.csv')
+src_dir_mut_comb = outdir_host / 'results_combined.csv'
 dest_dir_mut_comb = outdir_vuegen / subdir_names[0] / 'results_combined.csv'
 
 #files to copy from decompose dir
-src_dir_decompose = Path(f'{outdir_host}/decompose')
-dest_dir_decompose = Path(outdir_vuegen / subdir_names[1])
+src_dir_decompose = outdir_host / 'decompose'
+dest_dir_decompose = outdir_vuegen / subdir_names[1]
 
 #files to copy from align dir
-src_dir_align = Path(f'./{outdir_host}/align')    #source dir
-dest_dir_align = Path(outdir_vuegen / subdir_names[2])    #destination dir
+src_dir_align = outdir_host / 'align'    #source dir
+dest_dir_align = outdir_vuegen / subdir_names[2]    #destination dir
 file_ext_align = ('.txt') #file extensions
 
 #files to copy from assembly dir
-src_dir_assemble = Path(f'{outdir_host}/assemble')
-dest_dir_assemble = Path(outdir_vuegen / subdir_names[3])
+src_dir_assemble = outdir_host / 'assemble'
+dest_dir_assemble = outdir_vuegen / subdir_names[3]
 
 
 # %% create vuegen directory and relevant sub-folders
