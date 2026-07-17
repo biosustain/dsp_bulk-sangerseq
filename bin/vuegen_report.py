@@ -36,7 +36,7 @@ subdir_names_seq_assemble_04 = ['alignments', 'consensus_sequences']
 
 #mutation table output to be copied
 src_dir_mut_comb = Path(f'{outdir_host}/results_combined.csv')
-dest_dir_mut_comb = Path(outdir_vuegen / subdir_names[0] / 'results_combined.csv')
+dest_dir_mut_comb = outdir_vuegen / subdir_names[0] / 'results_combined.csv'
 
 #files to copy from decompose dir
 src_dir_decompose = Path(f'{outdir_host}/decompose')
