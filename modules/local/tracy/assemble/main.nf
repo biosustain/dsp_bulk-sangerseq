@@ -4,8 +4,6 @@ process TRACY_ASSEMBLE {
     container params.tracy_image
     containerOptions "--platform ${params.container_platform}"
 
-    publishDir "${params.outdir}/assemble", mode: 'copy', pattern: "${sample_id_joined}*"
-
     input:
     tuple val(assembly_group), val(sample_id_joined), path(reference_file), path(ab1_files)
 
