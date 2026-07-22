@@ -1,5 +1,6 @@
 include { PREPARE_INPUTS } from '../modules/local/prepare/inputs/main'
 include { TRACY_DECOMPOSE } from '../modules/local/tracy/decompose/main'
+include { TRACY_POSTPROCESS } from '../modules/local/tracy/postprocess/main'
 include { TRACY_ALIGN } from '../modules/local/tracy/align/main'
 include { TRACY_ASSEMBLE } from '../modules/local/tracy/assemble/main'
 include { COPY_TRACE_JS } from '../modules/local/utils/copy_trace_js/main'
@@ -67,6 +68,13 @@ workflow DSP_BULK_SANGERSEQ {
 
     TRACY_DECOMPOSE(sample_branched.decompose)
     TRACY_ALIGN(sample_branched.align)
+
+    TRACY_DECOMPOSE.out.json_results
+        .map { sample_id, json_file -> json_file }
+        .collect()
+        .set { postprocess_ch }
+
+    TRACY_POSTPROCESS(postprocess_ch)
 
     def assembly_tasks_ch = PREPARE_INPUTS.out.assemblies_tsv
         .splitCsv(header: true, sep: '\t')
