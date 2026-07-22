@@ -303,3 +303,32 @@ nextflow run . -profile docker \
   --reference_fasta data/test_data_1/references.fa \
   --outdir outdir
 ```
+
+### Testing the Nextflow pipeline
+
+The pipeline is covered by [nf-test](https://www.nf-test.com). Tests run against the small dataset in `data/test_data_1` using the `docker,test` profile, so **Docker must be running** (the `geargenomics/tracy` and `python:3.12` images are pulled automatically).
+
+Install nf-test once (it is git-ignored and not committed):
+
+```bash
+curl -fsSL https://get.nf-test.com | bash
+```
+
+Run the full suite, or a single test file:
+
+```bash
+./nf-test test
+./nf-test test modules/local/tracy/align/tests/main.nf.test
+```
+
+The suite consists of:
+
+| Test | Scope |
+| --- | --- |
+| `tests/default.nf.test` | End-to-end pipeline run on the test dataset |
+| `workflows/tests/dsp_bulk_sangerseq.nf.test` | `DSP_BULK_SANGERSEQ` workflow, including input-validation failure cases |
+| `modules/local/prepare/inputs/tests/main.nf.test` | `PREPARE_INPUTS` |
+| `modules/local/tracy/{align,decompose,assemble}/tests/main.nf.test` | `TRACY_ALIGN`, `TRACY_DECOMPOSE`, `TRACY_ASSEMBLE` |
+| `modules/local/utils/{copy_trace_js,render_align_viewer}/tests/main.nf.test` | `COPY_TRACE_JS`, `RENDER_ALIGN_VIEWER` |
+
+Test configuration lives in `nf-test.config` (profiles, work dir) and `tests/nextflow.config`; the test dataset paths are defined once in `conf/test.config`.

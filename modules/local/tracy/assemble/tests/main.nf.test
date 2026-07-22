@@ -1,0 +1,54 @@
+nextflow_process {
+
+    name "Test Process TRACY_ASSEMBLE"
+    script "modules/local/tracy/assemble/main.nf"
+    process "TRACY_ASSEMBLE"
+
+    tag "modules"
+    tag "tracy"
+    tag "assemble"
+
+    setup {
+        run("PREPARE_INPUTS") {
+            script "modules/local/prepare/inputs/main.nf"
+            process {
+                """
+                input[0] = file("${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv")
+                input[1] = file("${projectDir}/data/test_data_1/references.fa")
+                """
+            }
+        }
+    }
+
+    test("Should assemble a group of samples against their reference") {
+
+        when {
+            params {
+                data_dir = "${projectDir}/data/test_data_1"
+            }
+            process {
+                """
+                input[0] = PREPARE_INPUTS.out.reference_files.map { ref ->
+                    tuple(
+                        '1',
+                        'sample_1_sample_2',
+                        ref,
+                        [
+                            file("${projectDir}/data/test_data_1/sample_1.abi"),
+                            file("${projectDir}/data/test_data_1/sample_2.abi")
+                        ]
+                    )
+                }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.assemble_results.size() == 1 },
+                { assert process.out.assemble_results.get(0).get(0) == '1' }
+            )
+        }
+    }
+}

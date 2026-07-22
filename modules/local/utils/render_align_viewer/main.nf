@@ -1,7 +1,7 @@
 process RENDER_ALIGN_VIEWER {
     tag "${sample_id}"
 
-    container 'python:3.12-slim'
+    container 'python:3.12'
 
     publishDir "${params.outdir}/align", mode: 'copy', pattern: '*.html'
 
