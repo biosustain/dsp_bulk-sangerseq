@@ -1,96 +1,96 @@
-# Sanger sequencing tool for bulk analysis
+# Prototype Sanger sequencing tool for bulk analysis
 
 ## Background
-Sanger sequencing ([Sanger *et al.*, 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the substantial increase of throughput in biological experimentation like in microbial genome engineering campaigns in industrial biotechnology, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.  
-This **Bulk Sanger Sequencing Tool** was developed to reduce this time investment while maintaining a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [Tracy](https://www.gear-genomics.com/) ([GitHub](https://github.com/gear-genomics/tracy)) and [Sage](https://www.gear-genomics.com/) ([GitHub](https://github.com/gear-genomics/sage)) are used for the analysis and visualisation of Sanger sequencing data ([Rausch *et al.*, 2020](https://doi.org/10.1186/s12864-020-6635-8)).
+Sanger sequencing ([Sanger *et al.*, 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the increase of throughput in biological experimentation like in microbial genome engineering campaigns in industrial biotechnology, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.  
+This **Bulk Sanger Sequencing Tool** was developed to reduce this time investment while maintaining a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [Tracy](https://github.com/gear-genomics/tracy), [Sage](https://github.com/gear-genomics/sage) and [Indigo](https://github.com/gear-genomics/indigo) are used for the analysis and visualisation of Sanger sequencing data ([Rausch *et al.*, 2020](https://doi.org/10.1186/s12864-020-6635-8)). An analysis report is generated automatically with [VueGen](https://github.com/Multiomics-Analytics-Group/vuegen) ([Ayala-Ruano *et al.*, 2025](https://doi.org/10.1093/bioadv/vbaf149))
 
-## Applicability
-Currently, Sanger sequencing results with one sequencing file can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the refernece sequence indicates it it was used in forward direction or reverse-complemented for the alignment).  
-Combined analyses by assembling forward and reverse sequencing results is currently not possible, albeit tracy offers this functionality (to be implemented soon). A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
+## Applicability of the dsp_bulk_sangerseq tool
+Using this prototype tool, Sanger sequencing results with one or multiple sequencing files can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the reference sequence indicates if it was used in forward direction or reverse-complemented for the alignment).  
+Combined analyses by assembling forward and reverse sequencing results is possible. A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).  
+Currently, the tool supports only sequential analysis of multiple Sanger sequencing samples.
 
-## Installations instructions and prerequisites
-To be able to use the bulk-sangerseq tool, several installations steps need to be performed and a GitHub account need to be created.  
+## Installing required software
+Installation instructions are specifically described for Linux users.  
+Windows users should first install ```Windows Subsystem for Linux (WSL)``` and ```git``` on their system. Installing a code editor like ```VS Code``` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).  
 
-### Create GitHub account
-[Create a GitHub account](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home) or sign in to your existing account.   
+All the following steps assume you have Ubuntu-24.04 (noble) installed. Certain installation details might be different on other Ubuntu releases.
 
-### Install all prerequisites
-
-The installation instructions are specifically for users of WSL (Windows Subsystems for Linux).
-
-#### Install Ubuntu via WSL on Windows machine
-Open PowerShell by right-clicking on the icon and select "Run as administrator". To install WSL on your machine, use the folloowing command: 
-```
-wsl --install
-```  
-For further details, please refer to these [instructions](https://learn.microsoft.com/en-gb/windows/wsl/install). The default Linux distribution installed is Ubuntu. Please keep that and don't change the distribution.  
-To open the Ubuntu terminal, right-click on the PowerShell icon and select "Ubuntu 22.04.5 LTS".
-
-#### Update package manager
-In the following sections multiple installations carried out using the linux package manager ```apt-get```. Update the package manager using the following command in the Ubuntu terminal:  
+### Install Python 3.12
+Update the ```apt-get``` package manager using the following command:  
 
 ```
 sudo apt-get update
 ```  
 
-#### Generate SSH key and add it to the ssh-agent
-SSH connections are secure connections that work with a private and a public key pair. Generating such a key pair and adding the public key to your github account is important to clone github repositories.  
-To generate an ssh-keygen pair, please follow the [instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) until section "Adding your SSH key to the ssh-agent".  
-The public key has to be added to your github account. Please follow [these instructions](https://docs.github.com/en/enterprise-cloud@latest/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?platform=linux).  
-Now, a secure ssh connection between your computer and github can be established.  
-
-**NOTE:** Every time you restart your computer, you have to add the ssh key to the ssh agent.
-
-#### Install git
-Check if git is already installed on your system by typing into your terminal 
-```
-git version
-```
-If not already installed on your computer, follow the [installation instructions](https://github.com/git-guides/install-git) in section "Install Git on Linux".
-
-#### Install Python 3.12.12
-The bulk-sangerseq tool requires python version 3.12. All tests on WSL were performed using python version 3.12.12 which can be installed using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
+The bulk-sangerseq tool requires python version 3.12 (most tests were performed using python patch release 3.12.12). Install python 3.12 using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/). 
 
 ```
-sudo apt-get install python3.12.12
-```
+sudo apt-get install python3.12
+```  
 
-#### Install  pipenv
-Pipenv is a virtual environment management tool. You can install it from the command line using the following command. Further details can be found [here](https://pypi.org/project/pipenv/).  
-
+### Install pipenv
+Pipenv is a virtual environment management tool that can be installed using the following commands. Further details can be found [here](https://pypi.org/project/pipenv/).  
+Install ```pipx``` first:  
 ```
-pip install --user pipenv
+sudo apt-get install pipx
+pipx ensurepath
+```
+Install ```pipenv``` via ```pipx``` using command
+```
+pipx install pipenv
 ``` 
+**IMPORTANT: Close the terminal and open a new terminal. The changes to your PATH to use ```pipenv``` take only effect when a new terminal session is started.**
 
-#### Install Docker
+### Install Docker
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/). 
 
-#### Install  Visual Studio code [*optional*]
-Installing Visual Studio (VS) code is not a requirement but it facilitates while working with the tool. VS Code can be dowloaded [here](https://code.visualstudio.com/download).
+
 
 ## Cloning the dsp_bulk_sangerseq repository from GitHub
 Open the terminal and perform the following steps consecutively:
 
 1. Change to the desired directory using ```cd </absolute/path/to/project/folder>```.
-2. Clone the github repository using ```git clone https://github.com/biosustain/dsp_bulk-sangerseq.git```.
-3. Change to the project directory using ```cd </dsp_bulk-sangerseq>```.
-4. Install all dependencies from the Pipfile.lock using ```pipenv sync```.
 
-## Usage of the tool
+2. Clone the github repository:  
+To clone the latest version of the repository, use  
+```
+git clone https://github.com/biosustain/dsp_bulk-sangerseq.git
+```  
+If a specific release version of the code is intended to be used, use the below commands consecutively from within the local code repository ```dsp_bulk-sangerseq```.
+```
+git pull
+```
+and  
+```
+git checkout <release-tag>
+```  
+Replace <release-tag> by the desired release tag, e.g. ```v1```.
+
+3. Change to the project directory using  
+```
+cd dsp_bulk-sangerseq/
+```
+
+4. Install all dependencies from the Pipfile.lock using  
+```
+pipenv sync
+```
+
+## Using the dsp_bulk_sangerseq tool
 
 ### Prepare data and a samplesheet  
 The tool requires Sanger sequencing (.ab1) and reference files stored in a multifasta file (.fa) files.  
 
-Copy all .ab1 files and the multifasta file into the folder **data**. 
+Deposit all .ab1 files and the multifasta file into the folder **data**. 
 
 Prepare a **samplesheet** according to the template below and save it as .csv file. It is recommended to deposit the samplesheet.csv in the **data** folder. Here you can also find three templates in subfolder ```data/test_data_1```. The tool will read the samplesheet file automatically after specifying the path to it in the ```config.yaml``` file (see instructions below).  
 **Note**: 
-The tool analyses samples that were sequenced in either forward or reverse direction. Reverse sequencing is automatically detected by the tracy software, i.e. any input sequences do not need to be reverse-complemented prior to analysis. The output files will indicate if reverse-complementation was performed.  
+The tool analyses samples that were sequenced in either forward or reverse direction. Reverse sequencing is **automatically** detected by the tracy software, *i.e.* any input sequences do **not** need to be reverse-complemented prior to analysis. The output files will indicate if reverse-complementation was performed.  
 
 In the ```sample_id``` column, fill in the sample names. In the ```ab1_file``` column, fill in the name of the sequencing file including the .ab1 file extension.   
-The tool uses references stored in a multifasta file. Fill the ```reference_id``` column with reference names which must be the fasta header in the provided multifasta file. 
+The tool uses references stored in a multifasta file. Fill the ```reference_id``` column with reference names which **must be the fasta header in the provided multifasta file**. 
 
-The ```assembly_group``` column is used for sequence assembly, e.g. assembling DNA sequencing from forward and reverse sequencing of a gene of interest. A minimum of two sequences can be assembled, however, assembling more sequences is possible. Currently, only reference-guided assembly is implemented, i.e. a reference file must be provided. In the ```assembly_group```column the user has to specify which sequences should be assembled. This is done here using a ```1``` or ```2```. In the example below, samples_3 and sample_4 (assembly_group 1) will be assembled using reference_C whereas sample_5 and sample_6 (assembly_group 2) will be assembled separately using reference_D.  
+The ```assembly_group``` column is used for sequence assembly, e.g. assembling DNA sequencing from forward and reverse sequencing of a gene of interest. A minimum of two sequences can be assembled, however, assembling more sequences is possible. Currently, only reference-guided assembly is implemented, *i.e.* a reference file must be provided. In the ```assembly_group```column the user has to specify which sequences should be assembled. This is done here using a ```1``` or ```2```. In the example below, samples_3 and sample_4 (assembly_group 1) will be assembled using reference_C whereas sample_5 and sample_6 (assembly_group 2) will be assembled separately using reference_D.  
 If no assmebly of samples is desired, the fields in the ```assembly_group``` column have to be left blank (see sample_1 and sample_2 in below example).
 
 | sample_id       | ab1_file     | assembly_group  | reference_id  |
@@ -125,33 +125,165 @@ Note, that for standard analyses workflows, trimming stringency for ```decompose
 ```trimming_stringency_align``` (dtype: integer): Default is ```0```.  
 ```trimming_stringency_assemble``` (dtype: integer): Default is ```4```.  
 
-### Start the Docker daemon  
-Sequence analysis using tracy is done in Docker containers for which the Docker daemon has to be started using the following command. Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
+**Note**, that other ```tracy``` command line parameters are not accessible yet which will be implemented in future.  
+
+
+Change the following **variable to update the vuegen report type**.   
+
+```report_type```(dtype: string): Default is ```streamlit```
+
+The type of vuegen report can be chosen:  
+-  ```streamlit```. An interactive report is generated using the streamlit app. The report opens up automatically in an internet browser window after the analysis run is completed. **Note,** that for WSL users this doesn't work yet but a fix is underway.  
+    - After closing the streamlit app report, it can be generated again by running ```python3 -m bin.vuegen_report``` from the root of the directory (activate the virtual environment before using ```pipenv shell```)
+- ```html```. The report is saved as html file.
+- ```pdf```. The report is saved as pdf file.
+    - For the ```pdf``` report type, it is required to install ```tinytex```. System-wide installation is achieved using command ```quarto install tinytex```
+- Further vuegen report types can be found in the [vuegen documentation](https://github.com/Multiomics-Analytics-Group/vuegen).  
+
+
+### Run the dsp_bulk_sangerseq tool   
+
+If you use VS code, open the Ubuntu terminal, ```cd``` into the project directory and open VS code from the direcory using command  
+```
+code .
+```
+Make sure VS code is connected to WSL by selecting ```Connect to WSL``` from the bottom left button in VS Code. If connected, ```WSL:Ubuntu-24.04``` should be displayed.
+
+
+Perform the following steps consecutively.
+
+0. Add user to the docker group (only required once)  
+Sequence analysis using ```tracy``` is done in Docker containers. To execute python scripts without ```sudo``` preceeding commands (which can lead to other issues like accessed python installation), add your user to the docker group using command  
+```
+sudo usermod -aG docker $USER
+```
+**IMPORTANT: Close the terminal and open a new one to let the change take effect.**
+
+1. Start the Docker daemon 
+To use the tool, the Docker daemon has to be started using the following command (here ```sudo``` preceeding the command is still required). Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).  
 
 ```
 sudo systemctl start docker
 ```  
 
-### Run scripts of dsp_bulk_sangerseq consecutively    
-Perform all the following steps consecutively.
-1. In the project directory, activate the environment using command  
+2. In the project directory, activate the virtual environment using command  
 ```
 pipenv shell
 ```
 
-2. Perform Sanger sequencing analysis by running the below command:  
+3. Perform Sanger sequencing analysis using command  
 ```
-python3 tracy_bulk_docker_samplesheet.py
-```
+bash main.sh
+```  
 
-3. Perform post-processing of results by running the below command:  
-```
-python3 tracy_postprocessing.py
-```
+Once the analysis is completed, the streamlit report should open automatically in a browser window (if ```streamlit``` was selected as the report type). For WSL users, opening the report automatically might not work or might be delayed. If his is observed, hit ```Enter``` to open it.
 
-4. Generate Sanger trace images (interactive html files) by running the below command:  
+## Output of the tool
+
+### Structure of the output directory
 ```
-python3 tracy_render_align.py
+outdir
+├── align
+├── assemble
+├── decompose
+├── results_combined.csv
+├── sample_1.csv
+├── sample_2.csv
+└── vuegen_report
+```
+- ```align```: directory with results from the ```tracy align``` process  (sequence alignment of Sanger sequencing result against a reference)
+- ```assemble```: directory with results from the ```tracy assemble``` process (reference-guided asssembly of overlapping DNA sequences) 
+-  ```decompose```: directory with results from the ```tracy decompose``` process (detection of mutations and decomposition of double-peaks)  
+- ```sample_1.csv``` and ```sample_2.csv```: mutation detection results from ```tracy decompose``` process per sample
+- ```results_combined.csv```: consolidated mutation detection results from all samples (here ```sample_1.csv``` and ```sample_2.csv```)  
+
+#### Structure of the ```align``` subdirectory
+```
+outdir/align
+├── sample_1.abif
+├── sample_1.align.fa
+├── sample_1.html
+├── sample_1.json
+├── sample_1.txt
+├── sample_2.abif
+├── sample_2.align.fa
+├── sample_2.html
+├── sample_2.json
+└── sample_2.txt
+```  
+
+- ```.align.fa```: pairwise sequence alignment file (Sanger sequencing result against reference sequence)  
+- ```.txt```: pairwise sequence alignment (Sanger sequencing result against reference sequence)   
+- ```.html```: visualisation of Sanger sequencing result using ```Sage```  
+- ```.json```: all output from ```tracy align```process
+
+#### Structure of the ```decompose``` subdirectory
+```
+outdir/decompose
+├── sample_1.abif
+├── sample_1.align1
+├── sample_1.align2
+├── sample_1.align3
+├── sample_1.bcf
+├── sample_1.bcf.csi
+├── sample_1.decomp
+├── sample_1.html
+├── sample_1.json
+├── sample_2.abif
+├── sample_2.align1
+├── sample_2.align2
+├── sample_2.align3
+├── sample_2.bcf
+├── sample_2.bcf.csi
+├── sample_2.decomp
+├── sample_2.html
+└── sample_2.json
+```  
+- ```.align1.fa```: pairwise sequence alignment file of main signal against reference sequence  
+- ```.align2.fa```: pairwise sequence alignment file of minor signal against reference sequence  
+- ```.align3.fa```: pairwise sequence alignment file of major against minor signal  
+- ```.html```: visualisation of Sanger sequeencing result using ```Indigo```  
+- ```.bcf```: binary call format file; binary version of the variant calling file (VCF); can be converted to VCF using [bcftools](https://github.com/samtools/bcftools)
+- ```.json```: all output from ```tracy decompose``` process
+
+#### Structure of the ```assemble``` subdirectory
+```
+outdir/assemble
+├── sample_1_sample_2.align.fa
+├── sample_1_sample_2.cons.fa
+├── sample_1_sample_2.html
+├── sample_1_sample_2.json
+└── sample_1_sample_2.vertical
+```  
+- ```.align.fa```: multiple sequence alignment file of Sanger sequencing results against the reference sequence --> can be visualised using the 
+webtool [Sabre](https://www.gear-genomics.com/sabre/)  
+- ```.cons.fa```: consensus sequence generated from ```tracy assemble```  
+- ```.html``` (NOT IMPLEMENTED YET): visualisation of Sanger sequencing assembly result using ```Pearl```  
+- ```.json```: all output from ```tracy assemble``` process
+
+#### Structure of the ```vuegen_report``` subdirectory 
+```
+outdir/vuegen_report
+├── 01_Mutation_tables_decompose
+│   └── results_combined.csv
+├── 02_alignments_decompose
+│   ├── align1
+│   │   ├── sample_1.align1.md
+│   │   └── sample_2.align1.md
+│   ├── align2
+│   │   ├── sample_1.align2.md
+│   │   └── sample_2.align2.md
+│   └── align3
+│       ├── sample_1.align3.md
+│       └── sample_2.align3.md
+├── 03_alignments_align
+│   ├── sample_1.txt.md
+│   └── sample_2.txt.md
+└── 04_sequence_assembly_assemble
+    ├── alignments
+    │   └── sample_1_sample_2.align.fa.md
+    └── consensus_sequences
+        └── sample_1_sample_2.cons.fa.md
 ```
 
 ## Run the workflow with Nextflow
@@ -167,7 +299,7 @@ Common parameter overrides:
 ```bash
 nextflow run . -profile docker \
   --data_dir data/test_data_1 \
-  --samplesheet data/test_data_1/samplesheet_test_data_1_multi_ref_grouping.csv \
+  --samplesheet data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_9samples.csv \
   --reference_fasta data/test_data_1/references.fa \
   --outdir outdir
 ```

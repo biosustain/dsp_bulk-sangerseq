@@ -2,21 +2,13 @@
 paths:
   #folder paths on host machine
   data_host: './data/test_data_1'
-  outdir_host: './outdir'
-  samplesheet: './data/test_data_1/samplesheet_test_data_1_multi_ref_grouping.csv'
+  outdir_host: './outdir/test_data_1'
+  samplesheet: './data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv'
   reference_fasta: './data/test_data_1/references.fa'
 
   #paths in docker container
   data_docker: '/home/sanger_seq/data'
   outdir_docker: '/home/sanger_seq/outdir'
-
-
-## Docker configuration
-docker:
-  image: 'geargenomics/tracy'
-  version: 'latest'
-  platform: 'linux/amd64'
-
 
 ## Tracy software configuration
 tracy:
@@ -30,5 +22,23 @@ tracy:
   trim_stringency_decompose: 0
   trim_stringency_align: 0
   trim_stringency_assemble: 4
+
+## Vuegen report configuration
+vuegen:
+  # select one of the following report types: streamlit (default), html or pdf (note that the pdf report is not interactive)
+  report_type: 'streamlit'
+
+## Docker configuration
+docker:
+  image: 'geargenomics/tracy'
+  version: 'latest'
+  platform: 'linux/amd64'
+
+## HTML visualisation configuration
+visualisation:
+  image: 'ghcr.io/biosustain/tracy-visualisations'
+  tag: 'latest'
+  platform: 'linux/amd64'
+
 
 

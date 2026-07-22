@@ -4,7 +4,13 @@ data/*
 
 # outdirs
 outdir/*
-outdir/.gitkeep
+!outdir/test_data_1
+!outdir/.gitkeep
+
+# files and folders in entire repo
+__pycache__/
+**/.DS_Store
+docker_tests/
 
 # nextflow
 .nextflow*
