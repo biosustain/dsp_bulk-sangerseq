@@ -38,7 +38,9 @@ def main() -> None:
     trace_js_path = Path(args.trace_js_path)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(trace_js_path, output_path.parent / 'traceView.js')
+    trace_js_dest = output_path.parent / 'traceView.js'
+    if trace_js_path.resolve() != trace_js_dest.resolve():
+        shutil.copy2(trace_js_path, trace_js_dest)
 
     with json_path.open(encoding='utf-8') as handle:
         html_content = viewer_html_factory(handle.read())

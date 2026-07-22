@@ -55,7 +55,7 @@ workflow DSP_BULK_SANGERSEQ {
                 file(row.ab1_path, checkIfExists: true)
             )
         }
-        .join(reference_ch)
+        .combine(reference_ch, by: 0)
         .map { reference_id, sample_id, ab1_file, reference_file ->
             tuple(sample_id, ab1_file, reference_file)
         }
