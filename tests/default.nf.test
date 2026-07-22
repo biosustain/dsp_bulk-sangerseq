@@ -12,7 +12,8 @@ nextflow_pipeline {
     then {
       assertAll(
         { assert workflow.success },
-        { assert path("${outputDir}/pipeline_info/execution_report.html").exists() }
+        { assert workflow.trace.tasks().size() > 0 },
+        { assert path("${outputDir}/align").exists() }
       )
     }
   }

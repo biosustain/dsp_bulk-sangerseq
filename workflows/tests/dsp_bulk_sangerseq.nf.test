@@ -1,0 +1,104 @@
+nextflow_workflow {
+
+    name "Test Workflow DSP_BULK_SANGERSEQ"
+    script "workflows/dsp_bulk_sangerseq.nf"
+    workflow "DSP_BULK_SANGERSEQ"
+
+    tag "workflows"
+
+    test("Should run successfully with valid inputs") {
+
+        when {
+            params {
+                input           = "${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv"
+                reference_fasta = "${projectDir}/data/test_data_1/references.fa"
+                data_dir        = "${projectDir}/data/test_data_1"
+                outdir          = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().size() > 0 }
+            )
+        }
+    }
+
+    test("Should fail when no samplesheet or input is provided") {
+
+        when {
+            params {
+                input           = ""
+                samplesheet     = ""
+                reference_fasta = "${projectDir}/data/test_data_1/references.fa"
+                data_dir        = "${projectDir}/data/test_data_1"
+                outdir          = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.stdout.any { it.contains("Required parameter --samplesheet or --input was not provided") } }
+            )
+        }
+    }
+
+    test("Should fail when reference_fasta is missing") {
+
+        when {
+            params {
+                input           = "${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv"
+                reference_fasta = ""
+                data_dir        = "${projectDir}/data/test_data_1"
+                outdir          = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.stdout.any { it.contains("Required parameter --reference_fasta was not provided") } }
+            )
+        }
+    }
+
+    test("Should fail when the samplesheet file does not exist") {
+
+        when {
+            params {
+                input           = "${projectDir}/data/test_data_1/does_not_exist.csv"
+                reference_fasta = "${projectDir}/data/test_data_1/references.fa"
+                data_dir        = "${projectDir}/data/test_data_1"
+                outdir          = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.stdout.any { it.contains("Samplesheet not found") } }
+            )
+        }
+    }
+
+    test("Should fail when the reference FASTA does not exist") {
+
+        when {
+            params {
+                input           = "${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv"
+                reference_fasta = "${projectDir}/data/test_data_1/does_not_exist.fa"
+                data_dir        = "${projectDir}/data/test_data_1"
+                outdir          = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.stdout.any { it.contains("Reference FASTA not found") } }
+            )
+        }
+    }
+}

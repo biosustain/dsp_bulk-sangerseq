@@ -1,5 +1,5 @@
 process PREPARE_INPUTS {
-    container 'python:3.12-slim'
+    container 'python:3.12'
 
     input:
     path samplesheet_file

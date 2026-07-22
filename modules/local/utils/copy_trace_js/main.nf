@@ -1,5 +1,5 @@
 process COPY_TRACE_JS {
-    container 'python:3.12-slim'
+    container 'python:3.12'
 
     publishDir "${params.outdir}/align", mode: 'copy'
 

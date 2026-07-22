@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12
 
 ARG NXF_VER=25.10.4
 

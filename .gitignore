@@ -24,3 +24,6 @@ __pycache__/
 .local/
 
 .validation-out/
+
+.nf-test*
+nf-test

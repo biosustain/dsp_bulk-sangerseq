@@ -1,0 +1,46 @@
+nextflow_process {
+
+    name "Test Process TRACY_DECOMPOSE"
+    script "modules/local/tracy/decompose/main.nf"
+    process "TRACY_DECOMPOSE"
+
+    tag "modules"
+    tag "tracy"
+    tag "decompose"
+
+    setup {
+        run("PREPARE_INPUTS") {
+            script "modules/local/prepare/inputs/main.nf"
+            process {
+                """
+                input[0] = file("${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv")
+                input[1] = file("${projectDir}/data/test_data_1/references.fa")
+                """
+            }
+        }
+    }
+
+    test("Should decompose a sample against its reference") {
+
+        when {
+            params {
+                data_dir = "${projectDir}/data/test_data_1"
+            }
+            process {
+                """
+                input[0] = PREPARE_INPUTS.out.reference_files.map { ref ->
+                    tuple('sample_1', file("${projectDir}/data/test_data_1/sample_1.abi"), ref)
+                }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.decompose_results.size() == 1 },
+                { assert process.out.decompose_results.get(0).get(0) == 'sample_1' }
+            )
+        }
+    }
+}
