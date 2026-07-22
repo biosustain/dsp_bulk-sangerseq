@@ -4,8 +4,6 @@ process TRACY_ALIGN {
     container params.tracy_image
     containerOptions "--platform ${params.container_platform}"
 
-    publishDir "${params.outdir}/align", mode: 'copy', pattern: "${sample_id}*"
-
     input:
     tuple val(sample_id), path(ab1_file), path(reference_file)
 

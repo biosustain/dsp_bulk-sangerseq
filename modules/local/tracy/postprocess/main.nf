@@ -2,8 +2,6 @@ process TRACY_POSTPROCESS {
 
     container 'python:3.12'
 
-    publishDir "${params.outdir}", mode: 'copy', pattern: '*.csv'
-
     input:
     path json_files
 

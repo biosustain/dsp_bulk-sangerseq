@@ -3,8 +3,6 @@ process RENDER_ALIGN_VIEWER {
 
     container 'python:3.12'
 
-    publishDir "${params.outdir}/align", mode: 'copy', pattern: '*.html'
-
     input:
     tuple val(sample_id), path(json_file), path(trace_js_file)
 

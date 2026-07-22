@@ -33,14 +33,15 @@
         },
         "outdir": {
           "type": "string",
-          "description": "Output directory for published results.",
-          "default": "outdir"
+          "format": "directory-path",
+          "description": "Output directory for published results."
         }
       },
       "required": [
         "data_dir",
         "samplesheet",
-        "reference_fasta"
+        "reference_fasta",
+        "outdir"
       ]
     },
     "trimming_options": {

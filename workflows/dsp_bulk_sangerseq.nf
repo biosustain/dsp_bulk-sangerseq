@@ -43,9 +43,11 @@ workflow DSP_BULK_SANGERSEQ {
 
     PREPARE_INPUTS(samplesheet_ch, reference_fasta_ch)
 
-    def reference_ch = PREPARE_INPUTS.out.reference_files.map { reference_file ->
-        tuple(reference_file.baseName, reference_file)
-    }
+    def reference_ch = PREPARE_INPUTS.out.reference_files
+        .flatten()
+        .map { reference_file ->
+            tuple(reference_file.baseName, reference_file)
+        }
 
     def sample_tasks_ch = PREPARE_INPUTS.out.samples_tsv
         .splitCsv(header: true, sep: '\t')

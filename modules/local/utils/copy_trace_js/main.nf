@@ -1,8 +1,6 @@
 process COPY_TRACE_JS {
     container 'python:3.12'
 
-    publishDir "${params.outdir}/align", mode: 'copy'
-
     input:
     path trace_js_file
 
