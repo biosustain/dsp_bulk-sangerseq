@@ -1,0 +1,64 @@
+nextflow_process {
+
+    name "Test Process TRACY_POSTPROCESS"
+    script "modules/local/tracy/postprocess/main.nf"
+    process "TRACY_POSTPROCESS"
+
+    tag "modules"
+    tag "tracy"
+    tag "postprocess"
+
+    setup {
+        run("PREPARE_INPUTS") {
+            script "modules/local/prepare/inputs/main.nf"
+            process {
+                """
+                input[0] = file("${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv")
+                input[1] = file("${projectDir}/data/test_data_1/references.fa")
+                """
+            }
+        }
+
+        run("TRACY_DECOMPOSE") {
+            script "modules/local/tracy/decompose/main.nf"
+            process {
+                """
+                input[0] = PREPARE_INPUTS.out.reference_files.flatMap { ref ->
+                    [
+                        tuple('sample_1', file("${projectDir}/data/test_data_1/sample_1.abi"), ref),
+                        tuple('sample_2', file("${projectDir}/data/test_data_1/sample_2.abi"), ref)
+                    ]
+                }
+                """
+            }
+        }
+    }
+
+    test("Should consolidate decompose JSON results into per-sample and combined CSVs") {
+
+        when {
+            params {
+                data_dir = "${projectDir}/data/test_data_1"
+            }
+            process {
+                """
+                input[0] = TRACY_DECOMPOSE.out.json_results
+                    .map { sample_id, json -> json }
+                    .collect()
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                // per-sample tables + combined table (emitted as a single collected list)
+                { assert process.out.results.get(0).size() == 3 },
+                { assert process.out.combined.get(0).endsWith("results_combined.csv") },
+                // byte-for-byte match against the reference output from the main branch script
+                { assert path(process.out.combined.get(0)).md5 ==
+                    path("${projectDir}/outdir/test_data_1/results_combined.csv").md5 }
+            )
+        }
+    }
+}
