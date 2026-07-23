@@ -115,19 +115,19 @@ workflow DSP_BULK_SANGERSEQ {
     // needs (distinct extensions, so nothing clashes when staged flat) and
     // collected so the report is built once from all samples.
     def decompose_report_ch = TRACY_DECOMPOSE_POSTPROCESS.out.decompose_results
-        .flatMap { _sample_id, files -> files instanceof List ? files : [files] }
+        .flatMap { _sample_id, files -> (files instanceof List) ? files : [files] }
         .filter { f -> ['.align1', '.align2', '.align3'].any { f.name.endsWith(it) } }
         .collect()
         .ifEmpty([])
 
     def align_report_ch = TRACY_ALIGN.out.align_results
-        .flatMap { _sample_id, files -> files instanceof List ? files : [files] }
+        .flatMap { _sample_id, files -> (files instanceof List) ? files : [files] }
         .filter { f -> f.name.endsWith('.txt') }
         .collect()
         .ifEmpty([])
 
     def assemble_report_ch = TRACY_ASSEMBLE.out.assemble_results
-        .flatMap { _group, files -> files instanceof List ? files : [files] }
+        .flatMap { _group, files -> (files instanceof List) ? files : [files] }
         .filter { f -> f.name.endsWith('.align.fa') || f.name.endsWith('.cons.fa') }
         .collect()
         .ifEmpty([])
