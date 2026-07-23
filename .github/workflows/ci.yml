@@ -16,7 +16,7 @@ jobs:
       - name: Install dev dependencies
         run: pip install -r requirements-dev.txt
       - name: Lint
-        run: ruff check scripts tests
+        run: ruff check bin tests
       - name: Test
         run: pytest -q
 

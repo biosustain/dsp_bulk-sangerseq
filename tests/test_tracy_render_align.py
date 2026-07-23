@@ -15,7 +15,7 @@ def test_render_align_generates_html_and_copies_js(tmp_path: Path) -> None:
     result = subprocess.run(
         [
             sys.executable,
-            "scripts/tracy_render_align.py",
+            "bin/tracy_render_align.py",
             "--json",
             str(input_json),
             "--output",

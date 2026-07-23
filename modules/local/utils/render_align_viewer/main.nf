@@ -12,7 +12,7 @@ process RENDER_ALIGN_VIEWER {
 
     script:
     """
-    python ${projectDir}/scripts/tracy_render_align.py \\
+    tracy_render_align.py \\
         --json ${json_file} \\
         --output ${sample_id}.html \\
         --trace-js ${trace_js_file}

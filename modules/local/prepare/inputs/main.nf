@@ -13,7 +13,7 @@ process PREPARE_INPUTS {
     script:
     def data_dir_abs = file(params.data_dir).toRealPath().toString()
     """
-    python ${projectDir}/scripts/prepare_tracy_inputs.py \
+    prepare_tracy_inputs.py \
         --samplesheet ${samplesheet_file} \
         --reference-fasta ${reference_fasta} \
         --data-dir ${data_dir_abs} \

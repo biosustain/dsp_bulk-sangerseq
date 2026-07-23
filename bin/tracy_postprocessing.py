@@ -1,10 +1,10 @@
+#!/usr/bin/env python3
 """Post-process tracy decompose JSON results into consolidated report tables.
 
 Relevant variant results are extracted from each tracy ``decompose`` JSON output
-and consolidated into per-sample CSV tables plus a single combined table. This is
-the Nextflow-adapted port of the standalone ``tracy_postprocesssing.py`` script;
-it takes explicit input/output paths instead of reading ``config.yaml`` and does
-not perform the electropherogram plotting done by the legacy script.
+and consolidated into per-sample CSV tables plus a single combined table. The
+script takes explicit input/output paths (the files Nextflow has staged into the
+task work directory) and does not perform electropherogram plotting.
 """
 
 import argparse
