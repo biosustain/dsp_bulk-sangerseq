@@ -304,6 +304,42 @@ nextflow run . -profile docker \
   --outdir outdir
 ```
 
+### Pipeline diagram
+
+<!-- The diagram below was generated with [nf-mapper](https://github.com/Skitionek/nf-mapper), which converts the Nextflow pipeline into a Mermaid `gitGraph`: the longest processing path forms the `main` branch, parallel operations fork off into separate branches, and each process (commit) is tagged with the output file patterns it produces. Regenerate it with:
+
+```bash
+docker run --rm -v "$(pwd):/data" ghcr.io/skitionek/nf-mapper:main \
+  --title "dsp_bulk_sangerseq" --format md /data/workflows/dsp_bulk_sangerseq.nf
+``` -->
+
+```mermaid
+---
+title: dsp_bulk_sangerseq
+---
+%%{init: {'theme': 'base', 'themeVariables': {'git0': '#24B064', 'gitInv0': '#ffffff', 'git1': '#FA7F19', 'gitInv1': '#ffffff', 'git2': '#0570b0', 'gitInv2': '#ffffff', 'git3': '#e63946', 'gitInv3': '#ffffff', 'git4': '#9b59b6', 'gitInv4': '#ffffff', 'git5': '#f5c542', 'gitInv5': '#000000', 'git6': '#1abc9c', 'gitInv6': '#ffffff', 'git7': '#7b2d3b', 'gitInv7': '#ffffff'}, 'gitGraph': {'showBranches': true, 'parallelCommits': false}} }%%
+gitGraph LR:
+   checkout main
+   commit id: "PREPARE_INPUTS" tag: "samples.tsv" tag: "assemblies.tsv" tag: "+1 more"
+   branch COPY_TRACE_JS
+   checkout COPY_TRACE_JS
+   commit id: "COPY_TRACE_JS" tag: "traceView.js"
+   checkout main
+   branch TRACY_ALIGN
+   checkout TRACY_ALIGN
+   commit id: "TRACY_ALIGN"
+   commit id: "RENDER_ALIGN_VIEWER"
+   checkout main
+   commit id: "TRACY_ASSEMBLE"
+   merge TRACY_ALIGN
+   branch TRACY_DECOMPOSE
+   checkout TRACY_DECOMPOSE
+   commit id: "TRACY_DECOMPOSE"
+   commit id: "TRACY_POSTPROCESS" tag: "*.csv" tag: "results_combined.csv"
+   checkout main
+   merge TRACY_DECOMPOSE
+```
+
 ### Testing the Nextflow pipeline
 
 The pipeline is covered by [nf-test](https://www.nf-test.com). Tests run against the small dataset in `data/test_data_1` using the `docker,test` profile, so **Docker must be running** (the `geargenomics/tracy` and `python:3.12` images are pulled automatically).
