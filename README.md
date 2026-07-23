@@ -15,31 +15,33 @@ Windows users should first install ```Windows Subsystem for Linux (WSL)``` and `
 
 All the following steps assume you have Ubuntu-24.04 (noble) installed. Certain installation details might be different on other Ubuntu releases.
 
-### Install Python 3.12
-Update the ```apt-get``` package manager using the following command:
+The tool is run as a [Nextflow](https://www.nextflow.io) pipeline. All analysis
+software (Tracy, VueGen and the helper Python scripts) runs inside Docker
+containers that Nextflow pulls automatically, so the only software you need to
+install on the host is **Java**, **Nextflow** and **Docker**. There is no need to
+install Python or any Python dependencies manually.
+
+### Install Java
+Nextflow requires Java 17 or later. Update the ```apt-get``` package manager and
+install a JDK:
 
 ```
 sudo apt-get update
+sudo apt-get install default-jdk
 ```
 
-The bulk-sangerseq tool requires python version 3.12 (most tests were performed using python patch release 3.12.12). Install python 3.12 using the following command. More details can be found [here](https://docs.python-guide.org/starting/install3/linux/).
+Verify the installation with ```java -version```.
+
+### Install Nextflow
+Version 23.10.0 or later is required. Follow the [official installation
+instructions](https://www.nextflow.io/docs/latest/install.html) or run:
 
 ```
-sudo apt-get install python3.12
+curl -s https://get.nextflow.io | bash
 ```
 
-### Install pipenv
-Pipenv is a virtual environment management tool that can be installed using the following commands. Further details can be found [here](https://pypi.org/project/pipenv/).
-Install ```pipx``` first:
-```
-sudo apt-get install pipx
-pipx ensurepath
-```
-Install ```pipenv``` via ```pipx``` using command
-```
-pipx install pipenv
-```
-**IMPORTANT: Close the terminal and open a new terminal. The changes to your PATH to use ```pipenv``` take only effect when a new terminal session is started.**
+Move the resulting ```nextflow``` binary onto your ```PATH``` (e.g.
+```sudo mv nextflow /usr/local/bin/```) and verify with ```nextflow info```.
 
 ### Install Docker
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/).
@@ -71,10 +73,9 @@ Replace <release-tag> by the desired release tag, e.g. ```v1```.
 cd dsp_bulk-sangerseq/
 ```
 
-4. Install all dependencies from the Pipfile.lock using
-```
-pipenv sync
-```
+No further installation is required. On the first run Nextflow automatically
+pulls the Docker images used by the pipeline (```geargenomics/tracy``` and
+```python:3.12```), so there is no manual Python or dependency setup step.
 
 ## Using the dsp_bulk_sangerseq tool
 
@@ -83,12 +84,14 @@ The tool requires Sanger sequencing (.ab1) and reference files stored in a multi
 
 Deposit all .ab1 files and the multifasta file into the folder **data**.
 
-Prepare a **samplesheet** according to the template below and save it as .csv file. It is recommended to deposit the samplesheet.csv in the **data** folder. Here you can also find three templates in subfolder ```data/test_data_1```. The tool will read the samplesheet file automatically after specifying the path to it in the ```config.yaml``` file (see instructions below).
+Prepare a **samplesheet** according to the template below and save it as .csv file. It is recommended to deposit the samplesheet.csv in the **data** folder. Here you can also find three templates in subfolder ```data/test_data_1```. The path to the samplesheet is passed to the pipeline with the ```--samplesheet``` parameter (see the run instructions below).
 **Note**:
 The tool analyses samples that were sequenced in either forward or reverse direction. Reverse sequencing is **automatically** detected by the tracy software, *i.e.* any input sequences do **not** need to be reverse-complemented prior to analysis. The output files will indicate if reverse-complementation was performed.
 
 In the ```sample_id``` column, fill in the sample names. In the ```ab1_file``` column, fill in the name of the sequencing file including the .ab1 file extension.
 The tool uses references stored in a multifasta file. Fill the ```reference_id``` column with reference names which **must be the fasta header in the provided multifasta file**.
+
+The path to the samplesheet is passed to the pipeline with the ```--samplesheet``` parameter (see the run instructions below).
 
 The ```assembly_group``` column is used for sequence assembly, e.g. assembling DNA sequencing from forward and reverse sequencing of a gene of interest. A minimum of two sequences can be assembled, however, assembling more sequences is possible. Currently, only reference-guided assembly is implemented, *i.e.* a reference file must be provided. In the ```assembly_group```column the user has to specify which sequences should be assembled. This is done here using a ```1``` or ```2```. In the example below, samples_3 and sample_4 (assembly_group 1) will be assembled using reference_C whereas sample_5 and sample_6 (assembly_group 2) will be assembled separately using reference_D.
 If no assmebly of samples is desired, the fields in the ```assembly_group``` column have to be left blank (see sample_1 and sample_2 in below example).
@@ -102,43 +105,49 @@ If no assmebly of samples is desired, the fields in the ```assembly_group``` col
 | sample_name_5   | file_5.ab1   | 2               | reference_D   |
 | sample_name_6   | file_6.ab1   | 2               | reference_D   |
 
-### Modify the configuration file (config.yaml)
-Change the following **variables to update the paths**. In general, the use of absolute paths is recommmended but relative paths can be used too.
+### Configure the analysis (pipeline parameters)
 
-```data_host``` (dtype: string): relative or absolute path to the data directory on your computer.
-```outdir_host``` (dtype: string): relative or absolute path to the outdir directory on your computer. Default is ```./outdir```.
-```samplesheet``` (dtype: string): relative or absolute path to the samplesheet on your computer.
-```reference_fasta``` (dtype: string): relative or absolute path to the multi-fasta reference file on your computer.
+The pipeline is configured through Nextflow parameters rather than a configuration
+file. Parameters can be passed on the command line as ```--<parameter> <value>```
+or collected in a ```-params-file params.yaml```. Their defaults, types and
+validation rules are defined in [nextflow_schema.json](nextflow_schema.json).
 
+**Input/output paths.** Relative or absolute paths can be used.
 
-Change the following **variables to update tracy trimming parameters**.
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| ```--data_dir``` | Directory containing the ```.ab1``` files. | ```data/test_data_1``` |
+| ```--samplesheet``` | Path to the samplesheet ```.csv```. | (see schema) |
+| ```--reference_fasta``` | Path to the multi-fasta reference file. | (see schema) |
+| ```--outdir``` | Output directory for published results. **Required.** | *(none)* |
 
-Trimming of sequences can be adjusted using hardcoded values.
-```trim_left``` (dtype: integer): number of DNA bases to trim at the 5'-end. Default is ```50```.
-```trim_right``` (dtype: integer): number of DNA bases to trim at the 3'-end. Default is ```50```.
+**Tracy trimming parameters.**
 
-Trimming stringency can be used in combination with ```trim_left``` and ```trim_right``` to determine sequence trimming length automatically based on the sequencing quality.  Trimming stringency ranges from 1:9 with 1 being the lowest and 9 the highest stringency, 0: disable.
-Trimming stringency is handled separately for each of he tracy commands ```decompose```, ```align``` and ```assemble```.
-Note, that for standard analyses workflows, trimming stringency for ```decompose``` and ```align``` should be identical values.
+```trim_left``` and ```trim_right``` set the number of DNA bases to trim at the
+5'-end and 3'-end respectively. Trimming stringency can be used in combination
+with them to determine the trimming length automatically based on the sequencing
+quality. Stringency ranges from 1 (lowest) to 9 (highest); ```0``` disables it.
+It is handled separately for each of the tracy commands ```decompose```,
+```align``` and ```assemble```. For standard analysis workflows the stringency
+for ```decompose``` and ```align``` should be identical.
 
-```trimming_stringency_decompose``` (dtype: integer): Default is ```0```.
-```trimming_stringency_align``` (dtype: integer): Default is ```0```.
-```trimming_stringency_assemble``` (dtype: integer): Default is ```4```.
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| ```--trim_left``` | Bases to trim at the 5'-end. | ```50``` |
+| ```--trim_right``` | Bases to trim at the 3'-end. | ```50``` |
+| ```--trim_stringency_decompose``` | Trim stringency for ```decompose``` (0-9). | ```0``` |
+| ```--trim_stringency_align``` | Trim stringency for ```align``` (0-9). | ```0``` |
+| ```--trim_stringency_assemble``` | Trim stringency for ```assemble``` (0-9). | ```4``` |
 
-**Note**, that other ```tracy``` command line parameters are not accessible yet which will be implemented in future.
+**Note**, that other ```tracy``` command line parameters are not accessible yet, which will be implemented in future.
 
+**VueGen report type.**
 
-Change the following **variable to update the vuegen report type**.
-
-```report_type```(dtype: string): Default is ```streamlit```
-
-The type of vuegen report can be chosen:
--  ```streamlit```. An interactive report is generated using the streamlit app. The report opens up automatically in an internet browser window after the analysis run is completed. **Note,** that for WSL users this doesn't work yet but a fix is underway.
-    - After closing the streamlit app report, it can be generated again by running ```python3 -m bin.vuegen_report``` from the root of the directory (activate the virtual environment before using ```pipenv shell```)
-- ```html```. The report is saved as html file.
-- ```pdf```. The report is saved as pdf file.
-    - For the ```pdf``` report type, it is required to install ```tinytex```. System-wide installation is achieved using command ```quarto install tinytex```
-- Further vuegen report types can be found in the [vuegen documentation](https://github.com/Multiomics-Analytics-Group/vuegen).
+```--vuegen_report_type``` selects the type of report generated with VueGen
+(default ```html```). Supported values are ```html```, ```streamlit```, ```pdf```,
+```docx```, ```revealjs```, ```pptx``` and ```jupyter```. For the ```pdf``` report
+type ```tinytex``` is required (installed with ```quarto install tinytex```).
+Further details can be found in the [vuegen documentation](https://github.com/Multiomics-Analytics-Group/vuegen).
 
 
 ### Run the dsp_bulk_sangerseq tool
@@ -166,17 +175,27 @@ To use the tool, the Docker daemon has to be started using the following command
 sudo systemctl start docker
 ```
 
-2. In the project directory, activate the virtual environment using command
+2. Run the pipeline from the project directory with the ```docker``` profile.
+To run against the bundled test dataset, use the ```test``` profile:
 ```
-pipenv shell
-```
-
-3. Perform Sanger sequencing analysis using command
-```
-bash main.sh
+nextflow run . -profile docker,test
 ```
 
-Once the analysis is completed, the streamlit report should open automatically in a browser window (if ```streamlit``` was selected as the report type). For WSL users, opening the report automatically might not work or might be delayed. If his is observed, hit ```Enter``` to open it.
+To run on your own data, pass the input paths and the required ```--outdir```:
+```
+nextflow run . -profile docker \
+  --data_dir data/test_data_1 \
+  --samplesheet data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_9samples.csv \
+  --reference_fasta data/test_data_1/references.fa \
+  --outdir outdir
+```
+
+Add any of the configuration parameters described above (e.g.
+```--trim_left```, ```--vuegen_report_type```) to the same command to override
+their defaults.
+
+Once the analysis has completed, all results are written to the directory given by
+```--outdir```, including the VueGen report under ```vuegen_report/``` (see below).
 
 ## Output of the tool
 
@@ -186,6 +205,7 @@ outdir
 ├── align
 ├── assemble
 ├── decompose
+├── pipeline_info
 ├── results_combined.csv
 ├── sample_1.csv
 ├── sample_2.csv
@@ -196,6 +216,7 @@ outdir
 -  ```decompose```: directory with results from the ```tracy decompose``` process (detection of mutations and decomposition of double-peaks)
 - ```sample_1.csv``` and ```sample_2.csv```: mutation detection results from ```tracy decompose``` process per sample
 - ```results_combined.csv```: consolidated mutation detection results from all samples (here ```sample_1.csv``` and ```sample_2.csv```)
+- ```pipeline_info```: Nextflow execution reports (timeline, report, trace and DAG) for the run
 
 #### Structure of the ```align``` subdirectory
 ```
@@ -286,23 +307,17 @@ outdir/vuegen_report
         └── sample_1_sample_2.cons.fa.md
 ```
 
-## Run the workflow with Nextflow
+## The Nextflow pipeline
 
-The repository also contains a Nextflow pipeline that mirrors the current samplesheet-driven Tracy workflow.
+The analysis is implemented as a Nextflow DSL2 pipeline (see the run instructions
+above). Its structure follows nf-core-inspired conventions:
 
-```bash
-nextflow run . -profile docker,test
-```
-
-Common parameter overrides:
-
-```bash
-nextflow run . -profile docker \
-  --data_dir data/test_data_1 \
-  --samplesheet data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_9samples.csv \
-  --reference_fasta data/test_data_1/references.fa \
-  --outdir outdir
-```
+- Thin entrypoint in [main.nf](main.nf)
+- Pipeline orchestration in [workflows/dsp_bulk_sangerseq.nf](workflows/dsp_bulk_sangerseq.nf)
+- Process modules in [modules/local](modules/local)
+- Layered configs in [conf/base.config](conf/base.config) and [conf/test.config](conf/test.config)
+- Parameter schema in [nextflow_schema.json](nextflow_schema.json)
+- Usage and output reference under [docs/usage.md](docs/usage.md) and [docs/output.md](docs/output.md)
 
 ### Pipeline diagram
 
@@ -324,7 +339,7 @@ gitGraph LR:
    branch TRACY_ALIGN
    checkout TRACY_ALIGN
    commit id: "TRACY_ALIGN"
-   commit id: "RENDER_ALIGN_VIEWER" tag: "traceView.js"
+   commit id: "RENDER_ALIGN_VIEWER" tag: "*.html"
    checkout main
    commit id: "TRACY_ASSEMBLE"
    merge TRACY_ALIGN
@@ -334,6 +349,7 @@ gitGraph LR:
    commit id: "TRACY_POSTPROCESS" tag: "*.csv" tag: "results_combined.csv"
    checkout main
    merge TRACY_DECOMPOSE
+   commit id: "VUEGEN_REPORT" tag: "vuegen_report"
 ```
 
 ### Testing the Nextflow pipeline
@@ -361,6 +377,7 @@ The suite consists of:
 | `workflows/tests/dsp_bulk_sangerseq.nf.test` | `DSP_BULK_SANGERSEQ` workflow, including input-validation failure cases |
 | `modules/local/prepare/inputs/tests/main.nf.test` | `PREPARE_INPUTS` |
 | `modules/local/tracy/{align,decompose,assemble}/tests/main.nf.test` | `TRACY_ALIGN`, `TRACY_DECOMPOSE`, `TRACY_ASSEMBLE` |
-| `modules/local/utils/{copy_trace_js,render_align_viewer}/tests/main.nf.test` | `COPY_TRACE_JS`, `RENDER_ALIGN_VIEWER` |
+| `modules/local/utils/render_align_viewer/tests/main.nf.test` | `RENDER_ALIGN_VIEWER` |
+| `modules/local/vuegen/report/tests/main.nf.test` | `VUEGEN_REPORT` |
 
 Test configuration lives in `nf-test.config` (profiles, work dir) and `tests/nextflow.config`; the test dataset paths are defined once in `conf/test.config`.

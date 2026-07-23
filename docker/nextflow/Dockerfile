@@ -13,8 +13,6 @@ RUN apt-get update \
 RUN curl -fsSL https://github.com/nextflow-io/nextflow/releases/download/v${NXF_VER}/nextflow -o /opt/nextflow/nextflow \
     && chmod +x /opt/nextflow/nextflow
 
-RUN pip install --no-cache-dir pipenv==2025.0.4
-
 WORKDIR /workspace
 
 CMD ["nextflow", "-version"]

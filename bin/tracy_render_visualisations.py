@@ -1,104 +1,53 @@
-import logging
-import subprocess
-import sys
+#!/usr/bin/env python3
+import argparse
+import json
 from pathlib import Path
 
-import yaml
 
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
-
-# %% Read yaml configuration file
-with open('./config.yaml', 'r', encoding='utf-8') as file:
-    cfg = yaml.safe_load(file)
-
-outdir_host = Path(cfg['paths']['outdir_host']).resolve()
-if not outdir_host.exists():
-    raise FileNotFoundError(f'Output directory does not exist: {outdir_host}')
-
-visualisation_cfg = cfg.get('visualisation', {})
-visualisation_image = visualisation_cfg.get(
-    'image',
-    'ghcr.io/biosustain/tracy-visualisations',
-)
-visualisation_tag = str(visualisation_cfg.get('tag', 'latest'))
-docker_platform = visualisation_cfg.get(
-    'platform',
-    cfg.get('docker', {}).get('platform', 'linux/amd64'),
-)
-visualisation_image_ref = f'{visualisation_image}:{visualisation_tag}'
+def viewer_html_factory(json_content: str, trace_js: str) -> str:
+    # The trace-viewer script is inlined so each HTML is self-contained.
+    payload = json.dumps(json.loads(json_content))
+    return f"""<!DOCTYPE html>
+<html>
+<head>
+    <title>Trace Viewer</title>
+</head>
+<body>
+    <div id="traceView"></div>
+    <script>
+{trace_js}
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => displayData({payload}));
+    </script>
+</body>
+</html>
+"""
 
 
-def render_with_docker(json_file: Path, html_file: Path) -> None:
-    """Render HTML using the published GHCR image."""
-    output_dir = json_file.parent.resolve()
-    docker_cmd = [
-        'docker',
-        'run',
-        '--rm',
-        '--platform',
-        docker_platform,
-        '-v',
-        f'{output_dir}:/work',
-        visualisation_image_ref,
-        json_file.name,
-        html_file.name,
-    ]
-    subprocess.run(docker_cmd, check=True)
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--json", required=True, dest="json_path")
+    parser.add_argument("--output", required=True, dest="output_path")
+    parser.add_argument("--trace-js", required=True, dest="trace_js_path")
+    return parser.parse_args()
 
 
-def render_with_local_package(json_file: Path, html_file: Path) -> None:
-    """Fallback renderer using the local tracy-visualisations checkout."""
-    local_package_src = (
-        Path(__file__).resolve().parent.parent / 'tracy-visualisations' / 'src'
-    )
-    if local_package_src.exists() and str(local_package_src) not in sys.path:
-        sys.path.insert(0, str(local_package_src))
+def main() -> None:
+    args = parse_args()
 
-    from tracy_visualisations.bundler import bundle
+    json_path = Path(args.json_path)
+    output_path = Path(args.output_path)
+    trace_js_path = Path(args.trace_js_path)
 
-    bundle(json_file, html_file)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
+    trace_js = trace_js_path.read_text(encoding="utf-8")
+    with json_path.open(encoding="utf-8") as handle:
+        html_content = viewer_html_factory(handle.read(), trace_js)
 
-# %% Pull tracy-visualisations Docker image
-use_docker_visualisation = True
-try:
-    subprocess.run(
-        [
-            'docker',
-            'pull',
-            '--platform',
-            docker_platform,
-            visualisation_image_ref,
-        ],
-        check=True,
-    )
-except subprocess.CalledProcessError as e:
-    use_docker_visualisation = False
-    logging.warning(
-        'Could not access Docker image %s (%s). Falling back to the local '
-        'tracy-visualisations checkout.',
-        visualisation_image_ref,
-        e,
-    )
+    output_path.write_text(html_content, encoding="utf-8")
 
 
-# %% Render self-contained HTML visualisations for all Tracy JSON outputs
-json_files = sorted(outdir_host.rglob('*.json'))
-if not json_files:
-    logging.warning('No Tracy JSON files found under %s', outdir_host)
-
-for json_file in json_files:
-    html_file = json_file.with_suffix('.html')
-    logging.info('Rendering HTML visualisation for %s', json_file)
-
-    try:
-        if use_docker_visualisation:
-            render_with_docker(json_file, html_file)
-        else:
-            render_with_local_package(json_file, html_file)
-    except (subprocess.CalledProcessError, ImportError, FileNotFoundError) as e:
-        logging.error(
-            'Error rendering visualisation for %s: %s',
-            json_file,
-            e,
-        )
+if __name__ == "__main__":
+    main()

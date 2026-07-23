@@ -17,7 +17,7 @@ process VUEGEN_REPORT {
     pip install --quiet --no-input --disable-pip-version-check \\
         vuegen==${params.vuegen_version}
 
-    python ${projectDir}/scripts/build_vuegen_report.py \\
+    build_vuegen_report.py \\
         --combined ${combined_csv} \\
         --indir . \\
         --report-dir vuegen_report \\

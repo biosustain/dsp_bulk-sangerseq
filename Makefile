@@ -6,7 +6,7 @@ install-dev:
 	$(PYTHON) -m pip install -r requirements-dev.txt
 
 lint:
-	$(PYTHON) -m ruff check scripts tests
+	$(PYTHON) -m ruff check bin tests
 
 test:
 	$(PYTHON) -m pytest -q

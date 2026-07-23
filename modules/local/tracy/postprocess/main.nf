@@ -11,7 +11,7 @@ process TRACY_POSTPROCESS {
 
     script:
     """
-    python ${projectDir}/scripts/tracy_postprocessing.py \\
+    tracy_postprocessing.py \\
         --json ${json_files} \\
         --outdir .
     """
