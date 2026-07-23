@@ -1,8 +1,8 @@
 nextflow_process {
 
-    name "Test Process TRACY_DECOMPOSE"
+    name "Test Process TRACY_DECOMPOSE_POSTPROCESS"
     script "modules/local/tracy/decompose/main.nf"
-    process "TRACY_DECOMPOSE"
+    process "TRACY_DECOMPOSE_POSTPROCESS"
 
     tag "modules"
     tag "tracy"

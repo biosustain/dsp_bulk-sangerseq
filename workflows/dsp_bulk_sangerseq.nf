@@ -1,5 +1,5 @@
 include { PREPARE_INPUTS } from '../modules/local/prepare/inputs/main'
-include { TRACY_DECOMPOSE } from '../modules/local/tracy/decompose/main'
+include { TRACY_DECOMPOSE_POSTPROCESS } from '../modules/local/tracy/decompose/main'
 include { TRACY_POSTPROCESS } from '../modules/local/tracy/postprocess/main'
 include { TRACY_ALIGN } from '../modules/local/tracy/align/main'
 include { TRACY_ASSEMBLE } from '../modules/local/tracy/assemble/main'
@@ -68,10 +68,10 @@ workflow DSP_BULK_SANGERSEQ {
         }
         .set { sample_branched }
 
-    TRACY_DECOMPOSE(sample_branched.decompose)
+    TRACY_DECOMPOSE_POSTPROCESS(sample_branched.decompose)
     TRACY_ALIGN(sample_branched.align)
 
-    TRACY_DECOMPOSE.out.json_results
+    TRACY_DECOMPOSE_POSTPROCESS.out.json_results
         .map { sample_id, json_file -> json_file }
         .collect()
         .set { postprocess_ch }
@@ -114,7 +114,7 @@ workflow DSP_BULK_SANGERSEQ {
     // upstream channel is filtered down to just the text files that section
     // needs (distinct extensions, so nothing clashes when staged flat) and
     // collected so the report is built once from all samples.
-    def decompose_report_ch = TRACY_DECOMPOSE.out.decompose_results
+    def decompose_report_ch = TRACY_DECOMPOSE_POSTPROCESS.out.decompose_results
         .flatMap { _sample_id, files -> files instanceof List ? files : [files] }
         .filter { f -> ['.align1', '.align2', '.align3'].any { f.name.endsWith(it) } }
         .collect()

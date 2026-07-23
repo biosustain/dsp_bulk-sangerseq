@@ -343,12 +343,12 @@ gitGraph LR:
    checkout main
    commit id: "TRACY_ASSEMBLE"
    merge TRACY_ALIGN
-   branch TRACY_DECOMPOSE
-   checkout TRACY_DECOMPOSE
-   commit id: "TRACY_DECOMPOSE"
+   branch TRACY_DECOMPOSE_POSTPROCESS
+   checkout TRACY_DECOMPOSE_POSTPROCESS
+   commit id: "TRACY_DECOMPOSE_POSTPROCESS"
    commit id: "TRACY_POSTPROCESS" tag: "*.csv" tag: "results_combined.csv"
    checkout main
-   merge TRACY_DECOMPOSE
+   merge TRACY_DECOMPOSE_POSTPROCESS
    commit id: "VUEGEN_REPORT" tag: "vuegen_report"
 ```
 
@@ -376,7 +376,7 @@ The suite consists of:
 | `tests/default.nf.test` | End-to-end pipeline run on the test dataset |
 | `workflows/tests/dsp_bulk_sangerseq.nf.test` | `DSP_BULK_SANGERSEQ` workflow, including input-validation failure cases |
 | `modules/local/prepare/inputs/tests/main.nf.test` | `PREPARE_INPUTS` |
-| `modules/local/tracy/{align,decompose,assemble}/tests/main.nf.test` | `TRACY_ALIGN`, `TRACY_DECOMPOSE`, `TRACY_ASSEMBLE` |
+| `modules/local/tracy/{align,decompose,assemble}/tests/main.nf.test` | `TRACY_ALIGN`, `TRACY_DECOMPOSE_POSTPROCESS`, `TRACY_ASSEMBLE` |
 | `modules/local/utils/render_align_viewer/tests/main.nf.test` | `RENDER_ALIGN_VIEWER` |
 | `modules/local/vuegen/report/tests/main.nf.test` | `VUEGEN_REPORT` |
 

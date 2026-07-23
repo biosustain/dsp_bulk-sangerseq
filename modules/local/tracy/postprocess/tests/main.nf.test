@@ -19,7 +19,7 @@ nextflow_process {
             }
         }
 
-        run("TRACY_DECOMPOSE") {
+        run("TRACY_DECOMPOSE_POSTPROCESS") {
             script "modules/local/tracy/decompose/main.nf"
             process {
                 """
@@ -42,7 +42,7 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = TRACY_DECOMPOSE.out.json_results
+                input[0] = TRACY_DECOMPOSE_POSTPROCESS.out.json_results
                     .map { sample_id, json -> json }
                     .collect()
                 """

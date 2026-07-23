@@ -1,4 +1,4 @@
-process TRACY_DECOMPOSE {
+process TRACY_DECOMPOSE_POSTPROCESS {
     tag "${sample_id}"
 
     container params.tracy_image

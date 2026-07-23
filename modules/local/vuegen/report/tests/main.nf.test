@@ -18,7 +18,7 @@ nextflow_process {
             }
         }
 
-        run("TRACY_DECOMPOSE") {
+        run("TRACY_DECOMPOSE_POSTPROCESS") {
             script "modules/local/tracy/decompose/main.nf"
             process {
                 """
@@ -69,7 +69,7 @@ nextflow_process {
             script "modules/local/tracy/postprocess/main.nf"
             process {
                 """
-                input[0] = TRACY_DECOMPOSE.out.json_results
+                input[0] = TRACY_DECOMPOSE_POSTPROCESS.out.json_results
                     .map { sample_id, json -> json }
                     .collect()
                 """
@@ -86,7 +86,7 @@ nextflow_process {
             process {
                 """
                 input[0] = TRACY_POSTPROCESS.out.combined
-                input[1] = TRACY_DECOMPOSE.out.decompose_results
+                input[1] = TRACY_DECOMPOSE_POSTPROCESS.out.decompose_results
                     .flatMap { id, files -> files instanceof List ? files : [files] }
                     .filter { f -> ['.align1', '.align2', '.align3'].any { f.name.endsWith(it) } }
                     .collect()
