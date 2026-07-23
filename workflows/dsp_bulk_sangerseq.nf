@@ -3,7 +3,6 @@ include { TRACY_DECOMPOSE } from '../modules/local/tracy/decompose/main'
 include { TRACY_POSTPROCESS } from '../modules/local/tracy/postprocess/main'
 include { TRACY_ALIGN } from '../modules/local/tracy/align/main'
 include { TRACY_ASSEMBLE } from '../modules/local/tracy/assemble/main'
-include { COPY_TRACE_JS } from '../modules/local/utils/copy_trace_js/main'
 include { RENDER_ALIGN_VIEWER } from '../modules/local/utils/render_align_viewer/main'
 include { VUEGEN_REPORT } from '../modules/local/vuegen/report/main'
 
@@ -101,7 +100,6 @@ workflow DSP_BULK_SANGERSEQ {
         }
 
     TRACY_ASSEMBLE(assembly_tasks_ch)
-    COPY_TRACE_JS(trace_js_ch)
 
     TRACY_ALIGN.out.json_results
         .combine(trace_js_ch)

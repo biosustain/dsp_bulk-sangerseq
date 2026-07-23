@@ -8,6 +8,7 @@ process RENDER_ALIGN_VIEWER {
 
     output:
     path "${sample_id}.html", emit: html_viewer
+    path 'traceView.js',      emit: trace_js
 
     script:
     """
