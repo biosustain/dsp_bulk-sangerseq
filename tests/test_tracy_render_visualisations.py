@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 
-def test_render_align_generates_html_and_copies_js(tmp_path: Path) -> None:
+def test_render_inlines_js_into_self_contained_html(tmp_path: Path) -> None:
     input_json = tmp_path / "sample.json"
     trace_js = tmp_path / "traceView.js"
     output_html = tmp_path / "viewer" / "sample.html"
@@ -15,7 +15,7 @@ def test_render_align_generates_html_and_copies_js(tmp_path: Path) -> None:
     result = subprocess.run(
         [
             sys.executable,
-            "bin/tracy_render_align.py",
+            "bin/tracy_render_visualisations.py",
             "--json",
             str(input_json),
             "--output",
@@ -30,8 +30,12 @@ def test_render_align_generates_html_and_copies_js(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stderr
     assert output_html.exists()
-    assert (output_html.parent / "traceView.js").exists()
+    # The JS is inlined, so no separate traceView.js is written alongside.
+    assert not (output_html.parent / "traceView.js").exists()
 
     html_content = output_html.read_text(encoding="utf-8")
     assert "displayData" in html_content
     assert "\"k\": \"v\"" in html_content
+    # The trace-viewer script content is embedded directly in the HTML.
+    assert "console.log('trace');" in html_content
+    assert 'src="./traceView.js"' not in html_content

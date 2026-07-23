@@ -339,7 +339,7 @@ gitGraph LR:
    branch TRACY_ALIGN
    checkout TRACY_ALIGN
    commit id: "TRACY_ALIGN"
-   commit id: "RENDER_ALIGN_VIEWER" tag: "traceView.js"
+   commit id: "RENDER_ALIGN_VIEWER" tag: "*.html"
    checkout main
    commit id: "TRACY_ASSEMBLE"
    merge TRACY_ALIGN
@@ -349,6 +349,7 @@ gitGraph LR:
    commit id: "TRACY_POSTPROCESS" tag: "*.csv" tag: "results_combined.csv"
    checkout main
    merge TRACY_DECOMPOSE
+   commit id: "VUEGEN_REPORT" tag: "vuegen_report"
 ```
 
 ### Testing the Nextflow pipeline
@@ -376,6 +377,7 @@ The suite consists of:
 | `workflows/tests/dsp_bulk_sangerseq.nf.test` | `DSP_BULK_SANGERSEQ` workflow, including input-validation failure cases |
 | `modules/local/prepare/inputs/tests/main.nf.test` | `PREPARE_INPUTS` |
 | `modules/local/tracy/{align,decompose,assemble}/tests/main.nf.test` | `TRACY_ALIGN`, `TRACY_DECOMPOSE`, `TRACY_ASSEMBLE` |
-| `modules/local/utils/{copy_trace_js,render_align_viewer}/tests/main.nf.test` | `COPY_TRACE_JS`, `RENDER_ALIGN_VIEWER` |
+| `modules/local/utils/render_align_viewer/tests/main.nf.test` | `RENDER_ALIGN_VIEWER` |
+| `modules/local/vuegen/report/tests/main.nf.test` | `VUEGEN_REPORT` |
 
 Test configuration lives in `nf-test.config` (profiles, work dir) and `tests/nextflow.config`; the test dataset paths are defined once in `conf/test.config`.

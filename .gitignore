@@ -4,7 +4,6 @@ data/*
 
 # outdirs
 outdir/*
-!outdir/test_data_1
 !outdir/.gitkeep
 
 # files and folders in entire repo
@@ -15,6 +14,8 @@ docker_tests/
 # nextflow
 .nextflow*
 work/*
+# vendored launcher at the repo root (not docker/nextflow/)
+/nextflow
 
 # python caches
 __pycache__/

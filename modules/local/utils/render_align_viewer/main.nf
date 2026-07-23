@@ -8,11 +8,10 @@ process RENDER_ALIGN_VIEWER {
 
     output:
     path "${sample_id}.html", emit: html_viewer
-    path 'traceView.js',      emit: trace_js
 
     script:
     """
-    tracy_render_align.py \\
+    tracy_render_visualisations.py \\
         --json ${json_file} \\
         --output ${sample_id}.html \\
         --trace-js ${trace_js_file}
