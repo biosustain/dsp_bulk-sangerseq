@@ -1,0 +1,120 @@
+nextflow_process {
+
+    name "Test Process VUEGEN_REPORT"
+    script "modules/local/vuegen/report/main.nf"
+    process "VUEGEN_REPORT"
+
+    tag "modules"
+    tag "vuegen"
+
+    setup {
+        run("PREPARE_INPUTS") {
+            script "modules/local/prepare/inputs/main.nf"
+            process {
+                """
+                input[0] = file("${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv")
+                input[1] = file("${projectDir}/data/test_data_1/references.fa")
+                """
+            }
+        }
+
+        run("TRACY_DECOMPOSE") {
+            script "modules/local/tracy/decompose/main.nf"
+            process {
+                """
+                input[0] = PREPARE_INPUTS.out.reference_files.flatMap { ref ->
+                    [
+                        tuple('sample_1', file("${projectDir}/data/test_data_1/sample_1.abi"), ref),
+                        tuple('sample_2', file("${projectDir}/data/test_data_1/sample_2.abi"), ref)
+                    ]
+                }
+                """
+            }
+        }
+
+        run("TRACY_ALIGN") {
+            script "modules/local/tracy/align/main.nf"
+            process {
+                """
+                input[0] = PREPARE_INPUTS.out.reference_files.flatMap { ref ->
+                    [
+                        tuple('sample_1', file("${projectDir}/data/test_data_1/sample_1.abi"), ref),
+                        tuple('sample_2', file("${projectDir}/data/test_data_1/sample_2.abi"), ref)
+                    ]
+                }
+                """
+            }
+        }
+
+        run("TRACY_ASSEMBLE") {
+            script "modules/local/tracy/assemble/main.nf"
+            process {
+                """
+                input[0] = PREPARE_INPUTS.out.reference_files.map { ref ->
+                    tuple(
+                        '1',
+                        'sample_1_sample_2',
+                        ref,
+                        [
+                            file("${projectDir}/data/test_data_1/sample_1.abi"),
+                            file("${projectDir}/data/test_data_1/sample_2.abi")
+                        ]
+                    )
+                }
+                """
+            }
+        }
+
+        run("TRACY_POSTPROCESS") {
+            script "modules/local/tracy/postprocess/main.nf"
+            process {
+                """
+                input[0] = TRACY_DECOMPOSE.out.json_results
+                    .map { sample_id, json -> json }
+                    .collect()
+                """
+            }
+        }
+    }
+
+    test("Should build the VueGen report tree and render the report") {
+
+        when {
+            params {
+                data_dir = "${projectDir}/data/test_data_1"
+            }
+            process {
+                """
+                input[0] = TRACY_POSTPROCESS.out.combined
+                input[1] = TRACY_DECOMPOSE.out.decompose_results
+                    .flatMap { id, files -> files instanceof List ? files : [files] }
+                    .filter { f -> ['.align1', '.align2', '.align3'].any { f.name.endsWith(it) } }
+                    .collect()
+                input[2] = TRACY_ALIGN.out.align_results
+                    .flatMap { id, files -> files instanceof List ? files : [files] }
+                    .filter { f -> f.name.endsWith('.txt') }
+                    .collect()
+                input[3] = TRACY_ASSEMBLE.out.assemble_results
+                    .flatMap { grp, files -> files instanceof List ? files : [files] }
+                    .filter { f -> f.name.endsWith('.align.fa') || f.name.endsWith('.cons.fa') }
+                    .collect()
+                """
+            }
+        }
+
+        then {
+            def report = process.out.report.get(0)
+            assertAll(
+                { assert process.success },
+                // The combined mutation table is copied into section 01.
+                { assert path("${report}/01_Mutation_tables_decompose/results_combined.csv").exists() },
+                // Decompose alignments were converted to fenced-code markdown.
+                { assert path("${report}/02_alignments_decompose/align1/sample_1.align1.md").exists() },
+                { assert path("${report}/03_alignments_align/sample_1.txt.md").exists() },
+                { assert path("${report}/04_sequence_assembly_assemble/consensus_sequences/sample_1_sample_2.cons.fa.md").exists() },
+                // The rendered html report was produced under the report dir.
+                { assert path("${report}/rendered_report/quarto_report/quarto_report.html").exists() }
+            )
+        }
+    }
+}
