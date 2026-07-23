@@ -5,6 +5,7 @@ include { TRACY_ALIGN } from '../modules/local/tracy/align/main'
 include { TRACY_ASSEMBLE } from '../modules/local/tracy/assemble/main'
 include { COPY_TRACE_JS } from '../modules/local/utils/copy_trace_js/main'
 include { RENDER_ALIGN_VIEWER } from '../modules/local/utils/render_align_viewer/main'
+include { VUEGEN_REPORT } from '../modules/local/vuegen/report/main'
 
 workflow DSP_BULK_SANGERSEQ {
     def input_samplesheet = params.input ?: params.samplesheet
@@ -110,4 +111,33 @@ workflow DSP_BULK_SANGERSEQ {
         .set { viewer_tasks_ch }
 
     RENDER_ALIGN_VIEWER(viewer_tasks_ch)
+
+    // Assemble the VueGen report from the per-section tracy outputs. Each
+    // upstream channel is filtered down to just the text files that section
+    // needs (distinct extensions, so nothing clashes when staged flat) and
+    // collected so the report is built once from all samples.
+    def decompose_report_ch = TRACY_DECOMPOSE.out.decompose_results
+        .flatMap { _sample_id, files -> files instanceof List ? files : [files] }
+        .filter { f -> ['.align1', '.align2', '.align3'].any { f.name.endsWith(it) } }
+        .collect()
+        .ifEmpty([])
+
+    def align_report_ch = TRACY_ALIGN.out.align_results
+        .flatMap { _sample_id, files -> files instanceof List ? files : [files] }
+        .filter { f -> f.name.endsWith('.txt') }
+        .collect()
+        .ifEmpty([])
+
+    def assemble_report_ch = TRACY_ASSEMBLE.out.assemble_results
+        .flatMap { _group, files -> files instanceof List ? files : [files] }
+        .filter { f -> f.name.endsWith('.align.fa') || f.name.endsWith('.cons.fa') }
+        .collect()
+        .ifEmpty([])
+
+    VUEGEN_REPORT(
+        TRACY_POSTPROCESS.out.combined,
+        decompose_report_ch,
+        align_report_ch,
+        assemble_report_ch,
+    )
 }

@@ -96,6 +96,28 @@
           "type": "string",
           "description": "Container platform passed to runtime.",
           "default": "linux/amd64"
+        },
+        "vuegen_image": {
+          "type": "string",
+          "description": "Base container image for the VueGen report step (vuegen is pip-installed into it at runtime).",
+          "default": "python:3.12"
+        }
+      }
+    },
+    "report_options": {
+      "title": "Report options",
+      "type": "object",
+      "properties": {
+        "vuegen_version": {
+          "type": "string",
+          "description": "VueGen version pip-installed at runtime for the report step.",
+          "default": "0.6.0"
+        },
+        "vuegen_report_type": {
+          "type": "string",
+          "description": "VueGen report type to render.",
+          "enum": ["html", "streamlit", "pdf", "docx", "revealjs", "pptx", "jupyter"],
+          "default": "html"
         }
       }
     },
@@ -125,6 +147,9 @@
     },
     {
       "$ref": "#/$defs/container_options"
+    },
+    {
+      "$ref": "#/$defs/report_options"
     },
     {
       "$ref": "#/$defs/institutional_config_options"
