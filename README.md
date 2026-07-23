@@ -321,14 +321,10 @@ title: dsp_bulk_sangerseq
 gitGraph LR:
    checkout main
    commit id: "PREPARE_INPUTS" tag: "samples.tsv" tag: "assemblies.tsv" tag: "+1 more"
-   branch COPY_TRACE_JS
-   checkout COPY_TRACE_JS
-   commit id: "COPY_TRACE_JS" tag: "traceView.js"
-   checkout main
    branch TRACY_ALIGN
    checkout TRACY_ALIGN
    commit id: "TRACY_ALIGN"
-   commit id: "RENDER_ALIGN_VIEWER"
+   commit id: "RENDER_ALIGN_VIEWER" tag: "traceView.js"
    checkout main
    commit id: "TRACY_ASSEMBLE"
    merge TRACY_ALIGN
