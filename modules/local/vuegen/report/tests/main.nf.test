@@ -87,15 +87,15 @@ nextflow_process {
                 """
                 input[0] = TRACY_DECOMPOSE_POSTPROCESS.out.combined
                 input[1] = TRACY_DECOMPOSE.out.decompose_results
-                    .flatMap { id, files -> files instanceof List ? files : [files] }
+                    .flatMap { id, files -> (files instanceof List) ? files : [files] }
                     .filter { f -> ['.align1', '.align2', '.align3'].any { f.name.endsWith(it) } }
                     .collect()
                 input[2] = TRACY_ALIGN.out.align_results
-                    .flatMap { id, files -> files instanceof List ? files : [files] }
+                    .flatMap { id, files -> (files instanceof List) ? files : [files] }
                     .filter { f -> f.name.endsWith('.txt') }
                     .collect()
                 input[3] = TRACY_ASSEMBLE.out.assemble_results
-                    .flatMap { grp, files -> files instanceof List ? files : [files] }
+                    .flatMap { grp, files -> (files instanceof List) ? files : [files] }
                     .filter { f -> f.name.endsWith('.align.fa') || f.name.endsWith('.cons.fa') }
                     .collect()
                 """

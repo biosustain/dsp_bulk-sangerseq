@@ -10,15 +10,15 @@ workflow DSP_BULK_SANGERSEQ {
     def input_samplesheet = params.input ?: params.samplesheet
 
     if (!input_samplesheet) {
-        error 'Required parameter --samplesheet or --input was not provided'
+        error('Required parameter --samplesheet or --input was not provided')
     }
 
     if (!params.reference_fasta) {
-        error 'Required parameter --reference_fasta was not provided'
+        error('Required parameter --reference_fasta was not provided')
     }
 
     if (!params.data_dir) {
-        error 'Required parameter --data_dir was not provided'
+        error('Required parameter --data_dir was not provided')
     }
 
     def samplesheet_file = file(input_samplesheet)
@@ -26,15 +26,15 @@ workflow DSP_BULK_SANGERSEQ {
     def data_dir = file(params.data_dir)
 
     if (!samplesheet_file.exists()) {
-        error "Samplesheet not found: ${input_samplesheet}"
+        error("Samplesheet not found: ${input_samplesheet}")
     }
 
     if (!reference_fasta_file.exists()) {
-        error "Reference FASTA not found: ${params.reference_fasta}"
+        error("Reference FASTA not found: ${params.reference_fasta}")
     }
 
     if (!data_dir.exists()) {
-        error "Data directory not found: ${params.data_dir}"
+        error("Data directory not found: ${params.data_dir}")
     }
 
     Channel.fromPath(input_samplesheet, checkIfExists: true).set { samplesheet_ch }
@@ -55,7 +55,7 @@ workflow DSP_BULK_SANGERSEQ {
             tuple(
                 row.reference_id,
                 row.sample_id,
-                file(row.ab1_path, checkIfExists: true)
+                file(row.ab1_path, checkIfExists: true),
             )
         }
         .combine(reference_ch, by: 0)
@@ -91,7 +91,7 @@ workflow DSP_BULK_SANGERSEQ {
                 row.reference_id,
                 row.assembly_group,
                 row.sample_id_joined,
-                ab1_files
+                ab1_files,
             )
         }
         .join(reference_ch)
@@ -115,19 +115,19 @@ workflow DSP_BULK_SANGERSEQ {
     // needs (distinct extensions, so nothing clashes when staged flat) and
     // collected so the report is built once from all samples.
     def decompose_report_ch = TRACY_DECOMPOSE.out.decompose_results
-        .flatMap { _sample_id, files -> files instanceof List ? files : [files] }
+        .flatMap { _sample_id, files -> (files instanceof List) ? files : [files] }
         .filter { f -> ['.align1', '.align2', '.align3'].any { f.name.endsWith(it) } }
         .collect()
         .ifEmpty([])
 
     def align_report_ch = TRACY_ALIGN.out.align_results
-        .flatMap { _sample_id, files -> files instanceof List ? files : [files] }
+        .flatMap { _sample_id, files -> (files instanceof List) ? files : [files] }
         .filter { f -> f.name.endsWith('.txt') }
         .collect()
         .ifEmpty([])
 
     def assemble_report_ch = TRACY_ASSEMBLE.out.assemble_results
-        .flatMap { _group, files -> files instanceof List ? files : [files] }
+        .flatMap { _group, files -> (files instanceof List) ? files : [files] }
         .filter { f -> f.name.endsWith('.align.fa') || f.name.endsWith('.cons.fa') }
         .collect()
         .ifEmpty([])
