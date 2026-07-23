@@ -346,7 +346,7 @@ gitGraph LR:
    branch TRACY_DECOMPOSE
    checkout TRACY_DECOMPOSE
    commit id: "TRACY_DECOMPOSE"
-   commit id: "TRACY_POSTPROCESS" tag: "*.csv" tag: "results_combined.csv"
+   commit id: "TRACY_DECOMPOSE_POSTPROCESS" tag: "*.csv" tag: "results_combined.csv"
    checkout main
    merge TRACY_DECOMPOSE
    commit id: "VUEGEN_REPORT" tag: "vuegen_report"

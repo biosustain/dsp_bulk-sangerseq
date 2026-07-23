@@ -1,6 +1,6 @@
 include { PREPARE_INPUTS } from '../modules/local/prepare/inputs/main'
 include { TRACY_DECOMPOSE } from '../modules/local/tracy/decompose/main'
-include { TRACY_POSTPROCESS } from '../modules/local/tracy/postprocess/main'
+include { TRACY_DECOMPOSE_POSTPROCESS } from '../modules/local/tracy/postprocess/main'
 include { TRACY_ALIGN } from '../modules/local/tracy/align/main'
 include { TRACY_ASSEMBLE } from '../modules/local/tracy/assemble/main'
 include { RENDER_ALIGN_VIEWER } from '../modules/local/utils/render_align_viewer/main'
@@ -76,7 +76,7 @@ workflow DSP_BULK_SANGERSEQ {
         .collect()
         .set { postprocess_ch }
 
-    TRACY_POSTPROCESS(postprocess_ch)
+    TRACY_DECOMPOSE_POSTPROCESS(postprocess_ch)
 
     def assembly_tasks_ch = PREPARE_INPUTS.out.assemblies_tsv
         .splitCsv(header: true, sep: '\t')
@@ -133,7 +133,7 @@ workflow DSP_BULK_SANGERSEQ {
         .ifEmpty([])
 
     VUEGEN_REPORT(
-        TRACY_POSTPROCESS.out.combined,
+        TRACY_DECOMPOSE_POSTPROCESS.out.combined,
         decompose_report_ch,
         align_report_ch,
         assemble_report_ch,

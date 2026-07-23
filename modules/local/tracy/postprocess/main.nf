@@ -1,4 +1,4 @@
-process TRACY_POSTPROCESS {
+process TRACY_DECOMPOSE_POSTPROCESS {
 
     container 'python:3.12'
 
