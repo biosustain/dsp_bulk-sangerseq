@@ -1,0 +1,58 @@
+nextflow_process {
+
+    name "Test Process TRACY_RENDER_VISUALISATIONS"
+    script "modules/local/tracy/render_visualisations/main.nf"
+    process "TRACY_RENDER_VISUALISATIONS"
+
+    tag "modules"
+    tag "tracy"
+
+    setup {
+        run("PREPARE_INPUTS") {
+            script "modules/local/prepare/inputs/main.nf"
+            process {
+                """
+                input[0] = file("${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv")
+                input[1] = file("${projectDir}/data/test_data_1/references.fa")
+                """
+            }
+        }
+
+        run("TRACY_ALIGN") {
+            script "modules/local/tracy/align/main.nf"
+            process {
+                """
+                input[0] = PREPARE_INPUTS.out.reference_files.map { ref ->
+                    tuple('sample_1', file("${projectDir}/data/test_data_1/sample_1.abi"), ref)
+                }
+                """
+            }
+        }
+    }
+
+    test("Should render an HTML viewer from a tracy align JSON") {
+
+        when {
+            params {
+                data_dir = "${projectDir}/data/test_data_1"
+            }
+            process {
+                """
+                input[0] = TRACY_ALIGN.out.json_results.map { sample_id, json ->
+                    tuple(sample_id, 'align', json)
+                }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.html_viewer.size() == 1 },
+                { assert process.out.html_viewer.get(0).get(0) == 'align' },
+                { assert process.out.html_viewer.get(0).get(1).endsWith("sample_1.html") },
+                { assert path(process.out.html_viewer.get(0).get(1)).exists() }
+            )
+        }
+    }
+}

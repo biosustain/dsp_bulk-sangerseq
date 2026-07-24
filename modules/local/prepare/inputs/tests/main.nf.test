@@ -1,0 +1,34 @@
+nextflow_process {
+
+    name "Test Process PREPARE_INPUTS"
+    script "modules/local/prepare/inputs/main.nf"
+    process "PREPARE_INPUTS"
+
+    tag "modules"
+    tag "prepare"
+
+    test("Should prepare Tracy inputs from samplesheet and reference") {
+
+        when {
+            params {
+                data_dir = "${projectDir}/data/test_data_1"
+            }
+            process {
+                """
+                input[0] = file("${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv")
+                input[1] = file("${projectDir}/data/test_data_1/references.fa")
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.samples_tsv.get(0)).exists() },
+                { assert process.out.samples_tsv.get(0).endsWith("samples.tsv") },
+                { assert path(process.out.assemblies_tsv.get(0)).exists() },
+                { assert process.out.reference_files.size() > 0 }
+            )
+        }
+    }
+}

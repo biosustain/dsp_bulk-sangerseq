@@ -4,10 +4,27 @@ data/*
 
 # outdirs
 outdir/*
-!outdir/test_data_1
 !outdir/.gitkeep
 
 # files and folders in entire repo
 __pycache__/
 **/.DS_Store
 docker_tests/
+
+# nextflow
+.nextflow*
+work/*
+# vendored launcher at the repo root (not docker/nextflow/)
+/nextflow
+
+# python caches
+__pycache__/
+.pytest_cache/
+
+# local tools
+.local/
+
+.validation-out/
+
+.nf-test*
+nf-test

@@ -1,0 +1,20 @@
+nextflow_pipeline {
+  name "default"
+  script "main.nf"
+  config "tests/nextflow.config"
+
+  test("default") {
+    when {
+      params {
+        outdir = "$outputDir"
+      }
+    }
+    then {
+      assertAll(
+        { assert workflow.success },
+        { assert workflow.trace.tasks().size() > 0 },
+        { assert path("${outputDir}/align").exists() }
+      )
+    }
+  }
+}

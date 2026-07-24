@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/biosustain/dsp_bulk-sangerseq/master/nextflow_schema.json",
+  "title": "biosustain/dsp_bulk-sangerseq pipeline parameters",
+  "description": "Schema for the dsp_bulk-sangerseq Nextflow parameters.",
+  "type": "object",
+  "$defs": {
+    "input_output_options": {
+      "title": "Input/output options",
+      "type": "object",
+      "properties": {
+        "data_dir": {
+          "type": "string",
+          "description": "Directory containing AB1 input files.",
+          "default": "data/test_data_1"
+        },
+        "samplesheet": {
+          "type": "string",
+          "description": "CSV samplesheet with columns: sample_id, ab1_file, assembly_group, reference_id.",
+          "mimetype": "text/csv",
+          "default": "data/test_data_1/samplesheet_test_data_1_multi_ref_grouping.csv"
+        },
+        "input": {
+          "type": "string",
+          "description": "Alias for samplesheet input path.",
+          "mimetype": "text/csv",
+          "default": "data/test_data_1/samplesheet_test_data_1_multi_ref_grouping.csv"
+        },
+        "reference_fasta": {
+          "type": "string",
+          "description": "FASTA file containing all reference sequences.",
+          "default": "data/test_data_1/references.fa"
+        },
+        "outdir": {
+          "type": "string",
+          "format": "directory-path",
+          "description": "Output directory for published results."
+        }
+      },
+      "required": [
+        "data_dir",
+        "samplesheet",
+        "reference_fasta",
+        "outdir"
+      ]
+    },
+    "trimming_options": {
+      "title": "Trimming options",
+      "type": "object",
+      "properties": {
+        "trim_left": {
+          "type": "integer",
+          "description": "Number of bases to trim from the 5' end.",
+          "minimum": 0,
+          "default": 50
+        },
+        "trim_right": {
+          "type": "integer",
+          "description": "Number of bases to trim from the 3' end.",
+          "minimum": 0,
+          "default": 50
+        },
+        "trim_stringency_decompose": {
+          "type": "integer",
+          "description": "Tracy trim stringency for decompose (0-9).",
+          "minimum": 0,
+          "maximum": 9,
+          "default": 0
+        },
+        "trim_stringency_align": {
+          "type": "integer",
+          "description": "Tracy trim stringency for align (0-9).",
+          "minimum": 0,
+          "maximum": 9,
+          "default": 0
+        },
+        "trim_stringency_assemble": {
+          "type": "integer",
+          "description": "Tracy trim stringency for assemble (0-9).",
+          "minimum": 0,
+          "maximum": 9,
+          "default": 4
+        }
+      }
+    },
+    "container_options": {
+      "title": "Container options",
+      "type": "object",
+      "properties": {
+        "tracy_image": {
+          "type": "string",
+          "description": "Container image for Tracy commands.",
+          "default": "geargenomics/tracy:latest"
+        },
+        "visualisation_image": {
+          "type": "string",
+          "description": "Container image that bundles Tracy JSON outputs into self-contained HTML viewers (tracy-visualisations).",
+          "default": "ghcr.io/biosustain/tracy-visualisations:latest"
+        },
+        "container_platform": {
+          "type": "string",
+          "description": "Container platform passed to runtime.",
+          "default": "linux/amd64"
+        },
+        "vuegen_image": {
+          "type": "string",
+          "description": "Base container image for the VueGen report step (vuegen is pip-installed into it at runtime).",
+          "default": "python:3.12"
+        }
+      }
+    },
+    "report_options": {
+      "title": "Report options",
+      "type": "object",
+      "properties": {
+        "vuegen_version": {
+          "type": "string",
+          "description": "VueGen version pip-installed at runtime for the report step.",
+          "default": "0.6.0"
+        },
+        "vuegen_report_type": {
+          "type": "string",
+          "description": "VueGen report type to render.",
+          "enum": ["html", "streamlit", "pdf", "docx", "revealjs", "pptx", "jupyter"],
+          "default": "html"
+        }
+      }
+    },
+    "institutional_config_options": {
+      "title": "Institutional config options",
+      "type": "object",
+      "properties": {
+        "custom_config_version": {
+          "type": "string",
+          "description": "biosustain/configs branch or tag.",
+          "default": "master"
+        },
+        "custom_config_base": {
+          "type": "string",
+          "description": "Base URL for biosustain institutional configs.",
+          "default": "https://raw.githubusercontent.com/biosustain/configs/master"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/$defs/input_output_options"
+    },
+    {
+      "$ref": "#/$defs/trimming_options"
+    },
+    {
+      "$ref": "#/$defs/container_options"
+    },
+    {
+      "$ref": "#/$defs/report_options"
+    },
+    {
+      "$ref": "#/$defs/institutional_config_options"
+    }
+  ]
+}
