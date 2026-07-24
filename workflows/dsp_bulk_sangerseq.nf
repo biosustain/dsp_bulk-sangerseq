@@ -3,7 +3,8 @@ include { TRACY_DECOMPOSE } from '../modules/local/tracy/decompose/main'
 include { TRACY_DECOMPOSE_POSTPROCESS } from '../modules/local/tracy/postprocess/main'
 include { TRACY_ALIGN } from '../modules/local/tracy/align/main'
 include { TRACY_ASSEMBLE } from '../modules/local/tracy/assemble/main'
-include { RENDER_ALIGN_VIEWER } from '../modules/local/utils/render_align_viewer/main'
+include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_ALIGN } from '../modules/local/tracy/render_visualisations/main'
+include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_DECOMPOSE } from '../modules/local/tracy/render_visualisations/main'
 include { VUEGEN_REPORT } from '../modules/local/vuegen/report/main'
 
 workflow DSP_BULK_SANGERSEQ {
@@ -39,7 +40,6 @@ workflow DSP_BULK_SANGERSEQ {
 
     Channel.fromPath(input_samplesheet, checkIfExists: true).set { samplesheet_ch }
     Channel.fromPath(params.reference_fasta, checkIfExists: true).set { reference_fasta_ch }
-    Channel.fromPath("${projectDir}/static/traceView.js", checkIfExists: true).set { trace_js_ch }
 
     PREPARE_INPUTS(samplesheet_ch, reference_fasta_ch)
 
@@ -102,13 +102,15 @@ workflow DSP_BULK_SANGERSEQ {
     TRACY_ASSEMBLE(assembly_tasks_ch)
 
     TRACY_ALIGN.out.json_results
-        .combine(trace_js_ch)
-        .map { sample_id, json_file, trace_js_file ->
-            tuple(sample_id, json_file, trace_js_file)
-        }
-        .set { viewer_tasks_ch }
+        .map { sample_id, json_file -> tuple(sample_id, 'align', json_file) }
+        .set { align_viewer_ch }
+    TRACY_RENDER_ALIGN(align_viewer_ch)
 
-    RENDER_ALIGN_VIEWER(viewer_tasks_ch)
+    TRACY_DECOMPOSE.out.json_results
+        .map { sample_id, json_file -> tuple(sample_id, 'decompose', json_file) }
+        .set { decompose_viewer_ch }
+
+    TRACY_RENDER_DECOMPOSE(decompose_viewer_ch)
 
     // Assemble the VueGen report from the per-section tracy outputs. Each
     // upstream channel is filtered down to just the text files that section

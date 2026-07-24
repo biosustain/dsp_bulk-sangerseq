@@ -92,6 +92,11 @@
           "description": "Container image for Tracy commands.",
           "default": "geargenomics/tracy:latest"
         },
+        "visualisation_image": {
+          "type": "string",
+          "description": "Container image that bundles Tracy JSON outputs into self-contained HTML viewers (tracy-visualisations).",
+          "default": "ghcr.io/biosustain/tracy-visualisations:latest"
+        },
         "container_platform": {
           "type": "string",
           "description": "Container platform passed to runtime.",

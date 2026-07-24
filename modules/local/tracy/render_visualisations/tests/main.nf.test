@@ -1,11 +1,11 @@
 nextflow_process {
 
-    name "Test Process RENDER_ALIGN_VIEWER"
-    script "modules/local/utils/render_align_viewer/main.nf"
-    process "RENDER_ALIGN_VIEWER"
+    name "Test Process TRACY_RENDER_VISUALISATIONS"
+    script "modules/local/tracy/render_visualisations/main.nf"
+    process "TRACY_RENDER_VISUALISATIONS"
 
     tag "modules"
-    tag "utils"
+    tag "tracy"
 
     setup {
         run("PREPARE_INPUTS") {
@@ -39,7 +39,7 @@ nextflow_process {
             process {
                 """
                 input[0] = TRACY_ALIGN.out.json_results.map { sample_id, json ->
-                    tuple(sample_id, json, file("${projectDir}/static/traceView.js"))
+                    tuple(sample_id, 'align', json)
                 }
                 """
             }
@@ -49,8 +49,9 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert process.out.html_viewer.size() == 1 },
-                { assert process.out.html_viewer.get(0).endsWith("sample_1.html") },
-                { assert path(process.out.html_viewer.get(0)).exists() }
+                { assert process.out.html_viewer.get(0).get(0) == 'align' },
+                { assert process.out.html_viewer.get(0).get(1).endsWith("sample_1.html") },
+                { assert path(process.out.html_viewer.get(0).get(1)).exists() }
             )
         }
     }
