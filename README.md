@@ -74,8 +74,9 @@ cd dsp_bulk-sangerseq/
 ```
 
 No further installation is required. On the first run Nextflow automatically
-pulls the Docker images used by the pipeline (```geargenomics/tracy``` and
-```python:3.12```), so there is no manual Python or dependency setup step.
+pulls the Docker images used by the pipeline (```geargenomics/tracy```,
+```ghcr.io/biosustain/tracy-visualisations``` and ```python:3.12```), so there
+is no manual Python or dependency setup step.
 
 ## Using the dsp_bulk_sangerseq tool
 
@@ -339,13 +340,14 @@ gitGraph LR:
    branch TRACY_ALIGN
    checkout TRACY_ALIGN
    commit id: "TRACY_ALIGN"
-   commit id: "RENDER_ALIGN_VIEWER" tag: "*.html"
+   commit id: "TRACY_RENDER_ALIGN" tag: "*.html"
    checkout main
    commit id: "TRACY_ASSEMBLE"
    merge TRACY_ALIGN
    branch TRACY_DECOMPOSE
    checkout TRACY_DECOMPOSE
    commit id: "TRACY_DECOMPOSE"
+   commit id: "TRACY_RENDER_DECOMPOSE" tag: "*.html"
    commit id: "TRACY_DECOMPOSE_POSTPROCESS" tag: "*.csv" tag: "results_combined.csv"
    checkout main
    merge TRACY_DECOMPOSE
@@ -354,7 +356,7 @@ gitGraph LR:
 
 ### Testing the Nextflow pipeline
 
-The pipeline is covered by [nf-test](https://www.nf-test.com). Tests run against the small dataset in `data/test_data_1` using the `docker,test` profile, so **Docker must be running** (the `geargenomics/tracy` and `python:3.12` images are pulled automatically).
+The pipeline is covered by [nf-test](https://www.nf-test.com). Tests run against the small dataset in `data/test_data_1` using the `docker,test` profile, so **Docker must be running** (the `geargenomics/tracy`, `ghcr.io/biosustain/tracy-visualisations` and `python:3.12` images are pulled automatically).
 
 Install nf-test once (it is git-ignored and not committed):
 
@@ -377,7 +379,7 @@ The suite consists of:
 | `workflows/tests/dsp_bulk_sangerseq.nf.test` | `DSP_BULK_SANGERSEQ` workflow, including input-validation failure cases |
 | `modules/local/prepare/inputs/tests/main.nf.test` | `PREPARE_INPUTS` |
 | `modules/local/tracy/{align,decompose,assemble}/tests/main.nf.test` | `TRACY_ALIGN`, `TRACY_DECOMPOSE`, `TRACY_ASSEMBLE` |
-| `modules/local/utils/render_align_viewer/tests/main.nf.test` | `RENDER_ALIGN_VIEWER` |
+| `modules/local/tracy/render_visualisations/tests/main.nf.test` | `TRACY_RENDER_VISUALISATIONS` |
 | `modules/local/vuegen/report/tests/main.nf.test` | `VUEGEN_REPORT` |
 
 Test configuration lives in `nf-test.config` (profiles, work dir) and `tests/nextflow.config`; the test dataset paths are defined once in `conf/test.config`.
