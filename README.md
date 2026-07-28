@@ -10,7 +10,7 @@ Combined analyses by assembling forward and reverse sequencing results is possib
 Currently, the tool supports only sequential analysis of multiple Sanger sequencing samples.
 
 ## Installing required software
-Installation instructions are specifically described for Linux users.  
+Installation instructions are specifically described for Linux users. Mac users can follow these [installation instructions](docs/installations_macos.md).  
 Windows users should first install ```Windows Subsystem for Linux (WSL)``` and ```git``` on their system. Installing a code editor like ```VS Code``` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).  
 
 All the following steps assume you have Ubuntu-24.04 (noble) installed. Certain installation details might be different on other Ubuntu releases.
