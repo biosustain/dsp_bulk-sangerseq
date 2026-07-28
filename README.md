@@ -152,7 +152,7 @@ Make sure VS code is connected to WSL by selecting ```Connect to WSL``` from the
 
 Perform the following steps consecutively.
 
-0. Add user to the docker group (only required once)  
+0. Add user to the docker group (only required once; NOT required for Mac users)
 Sequence analysis using ```tracy``` is done in Docker containers. To execute python scripts without ```sudo``` preceeding commands (which can lead to other issues like accessed python installation), add your user to the docker group using command  
 ```
 sudo usermod -aG docker $USER
@@ -165,6 +165,7 @@ To use the tool, the Docker daemon has to be started using the following command
 ```
 sudo systemctl start docker
 ```  
+Mac users can just open ```Docker Desktop``` manually or using command ```open -a Docker```.  
 
 2. In the project directory, activate the virtual environment using command  
 ```
