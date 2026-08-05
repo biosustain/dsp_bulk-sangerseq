@@ -40,8 +40,9 @@ workflow DSP_BULK_SANGERSEQ {
 
     Channel.fromPath(input_samplesheet, checkIfExists: true).set { samplesheet_ch }
     Channel.fromPath(params.reference_fasta, checkIfExists: true).set { reference_fasta_ch }
+    Channel.fromPath(params.data_dir, checkIfExists: true, type: 'dir').set { data_dir_ch }
 
-    PREPARE_INPUTS(samplesheet_ch, reference_fasta_ch)
+    PREPARE_INPUTS(samplesheet_ch, reference_fasta_ch, data_dir_ch)
 
     def reference_ch = PREPARE_INPUTS.out.reference_files
         .flatten()
