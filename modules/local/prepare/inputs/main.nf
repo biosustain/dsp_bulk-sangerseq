@@ -11,7 +11,7 @@ process PREPARE_INPUTS {
     path 'references/*.fa', emit: reference_files
 
     script:
-    def data_dir_abs = file(params.data_dir).toRealPath().toString()
+    def data_dir_abs = params.data_dir
     """
     prepare_tracy_inputs.py \
         --samplesheet ${samplesheet_file} \
