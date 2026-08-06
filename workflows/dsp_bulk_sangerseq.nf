@@ -51,23 +51,19 @@ workflow DSP_BULK_SANGERSEQ {
         }
 
     def sample_tasks_ch = PREPARE_INPUTS.out.samples_tsv
-        .splitCsv(header: true, sep: '\t')
-        .map { row ->
-            tuple(
-                row.reference_id,
-                row.sample_id,
-                file(row.ab1_path, checkIfExists: true),
-            )
-        }
-        .combine(reference_ch, by: 0)
-        .map { reference_id, sample_id, ab1_file, reference_file ->
-            tuple(sample_id, ab1_file, reference_file)
-        }
-        .multiMap { item ->
-            decompose: item
-            align: item
-        }
-        .set { sample_branched }
+    .splitCsv(header: true, sep: '\t')
+    .combine(PREPARE_INPUTS.out.staged_data_dir)
+    .map { row, data_dir ->
+        tuple(
+            row.reference_id,
+            row.sample_id,
+            data_dir.resolve(row.ab1_path),
+        )
+    }
+    .combine(reference_ch, by: 0)
+    .map { reference_id, sample_id, ab1_file, reference_file ->
+        tuple(sample_id, ab1_file, reference_file)
+    }
 
     TRACY_DECOMPOSE(sample_branched.decompose)
     TRACY_ALIGN(sample_branched.align)
@@ -80,25 +76,26 @@ workflow DSP_BULK_SANGERSEQ {
     TRACY_DECOMPOSE_POSTPROCESS(postprocess_ch)
 
     def assembly_tasks_ch = PREPARE_INPUTS.out.assemblies_tsv
-        .splitCsv(header: true, sep: '\t')
-        .filter { row -> row.sample_id_joined?.trim() }
-        .map { row ->
-            def ab1_files = row.ab1_paths
-                .split(';')
-                .findAll { it }
-                .collect { file(it, checkIfExists: true) }
+    .splitCsv(header: true, sep: '\t')
+    .filter { row -> row.sample_id_joined?.trim() }
+    .combine(PREPARE_INPUTS.out.staged_data_dir)
+    .map { row, data_dir ->
+        def ab1_files = row.ab1_paths
+            .split(';')
+            .findAll { it }
+            .collect { data_dir.resolve(it) }
 
-            tuple(
-                row.reference_id,
-                row.assembly_group,
-                row.sample_id_joined,
-                ab1_files,
-            )
-        }
-        .join(reference_ch)
-        .map { reference_id, assembly_group, sample_id_joined, ab1_files, reference_file ->
-            tuple(assembly_group, sample_id_joined, reference_file, ab1_files)
-        }
+        tuple(
+            row.reference_id,
+            row.assembly_group,
+            row.sample_id_joined,
+            ab1_files,
+        )
+    }
+    .combine(reference_ch, by: 0)
+    .map { reference_id, assembly_group, sample_id_joined, ab1_files, reference_file ->
+        tuple(assembly_group, sample_id_joined, reference_file, ab1_files)
+    }
 
     TRACY_ASSEMBLE(assembly_tasks_ch)
 
