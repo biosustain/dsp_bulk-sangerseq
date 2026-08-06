@@ -53,11 +53,11 @@ workflow DSP_BULK_SANGERSEQ {
     def sample_tasks_ch = PREPARE_INPUTS.out.samples_tsv
     .splitCsv(header: true, sep: '\t')
     .combine(PREPARE_INPUTS.out.staged_data_dir)
-    .map { row, data_dir ->
+    .map { row, staged_dir ->
         tuple(
             row.reference_id,
             row.sample_id,
-            data_dir.resolve(row.ab1_path),
+            staged_dir.resolve(row.ab1_path),
         )
     }
     .combine(reference_ch, by: 0)
@@ -79,11 +79,11 @@ workflow DSP_BULK_SANGERSEQ {
     .splitCsv(header: true, sep: '\t')
     .filter { row -> row.sample_id_joined?.trim() }
     .combine(PREPARE_INPUTS.out.staged_data_dir)
-    .map { row, data_dir ->
+    .map { row, staged_dir ->
         def ab1_files = row.ab1_paths
             .split(';')
             .findAll { it }
-            .collect { data_dir.resolve(it) }
+            .collect { staged_dir.resolve(it) }
 
         tuple(
             row.reference_id,
