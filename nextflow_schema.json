@@ -12,24 +12,24 @@
         "data_dir": {
           "type": "string",
           "description": "Directory containing AB1 input files.",
-          "default": "data/test_data_1"
+          "default": "${projectDir}/data/test_data_1"
         },
         "samplesheet": {
           "type": "string",
           "description": "CSV samplesheet with columns: sample_id, ab1_file, assembly_group, reference_id.",
           "mimetype": "text/csv",
-          "default": "data/test_data_1/samplesheet_test_data_1_multi_ref_grouping.csv"
+          "default": "${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping.csv"
         },
         "input": {
           "type": "string",
           "description": "Alias for samplesheet input path.",
           "mimetype": "text/csv",
-          "default": "data/test_data_1/samplesheet_test_data_1_multi_ref_grouping.csv"
+          "default": "${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping.csv"
         },
         "reference_fasta": {
           "type": "string",
           "description": "FASTA file containing all reference sequences.",
-          "default": "data/test_data_1/references.fa"
+          "default": "${projectDir}/data/test_data_1/references.fa"
         },
         "outdir": {
           "type": "string",
@@ -121,7 +121,15 @@
         "vuegen_report_type": {
           "type": "string",
           "description": "VueGen report type to render.",
-          "enum": ["html", "streamlit", "pdf", "docx", "revealjs", "pptx", "jupyter"],
+          "enum": [
+            "html",
+            "streamlit",
+            "pdf",
+            "docx",
+            "revealjs",
+            "pptx",
+            "jupyter"
+          ],
           "default": "html"
         }
       }
