@@ -10,6 +10,7 @@ process PREPARE_INPUTS {
     path 'samples.tsv', emit: samples_tsv
     path 'assemblies.tsv', emit: assemblies_tsv
     path 'references/*.fa', emit: reference_files
+    path data_dir, emit: staged_data_dir
 
     script:
     """
