@@ -64,6 +64,11 @@ workflow DSP_BULK_SANGERSEQ {
     .map { reference_id, sample_id, ab1_file, reference_file ->
         tuple(sample_id, ab1_file, reference_file)
     }
+    .multiMap { item ->
+        decompose: item
+        align: item
+    }
+    .set { sample_branched }
 
     TRACY_DECOMPOSE(sample_branched.decompose)
     TRACY_ALIGN(sample_branched.align)
