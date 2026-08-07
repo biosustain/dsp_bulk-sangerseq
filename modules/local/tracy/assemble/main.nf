@@ -2,7 +2,7 @@ process TRACY_ASSEMBLE {
     tag "${sample_id_joined}"
 
     container params.tracy_image
-    containerOptions "--platform ${params.container_platform}"
+    //containerOptions "--platform ${params.container_platform}"
 
     input:
     tuple val(assembly_group), val(sample_id_joined), path(reference_file), path(ab1_files)

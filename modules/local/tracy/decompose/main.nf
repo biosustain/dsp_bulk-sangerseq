@@ -2,7 +2,7 @@ process TRACY_DECOMPOSE {
     tag "${sample_id}"
 
     container params.tracy_image
-    containerOptions "--platform ${params.container_platform}"
+    //containerOptions "--platform ${params.container_platform}"
 
     input:
     tuple val(sample_id), path(ab1_file), path(reference_file)
