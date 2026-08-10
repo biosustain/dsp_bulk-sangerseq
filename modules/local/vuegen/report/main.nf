@@ -18,6 +18,8 @@ process VUEGEN_REPORT {
 
     script:
     """
+    export HOME=\$PWD
+
     pip install --quiet --no-input --disable-pip-version-check \\
         vuegen==${params.vuegen_version}
 
