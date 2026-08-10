@@ -1,7 +1,11 @@
 process VUEGEN_REPORT {
 
     container params.vuegen_image
-    containerOptions "--platform ${params.container_platform}"
+    // Azure Batch's TaskContainerSettings validation rejects a per-process
+    // containerOptions override outright (see TRACY_RENDER_VISUALISATIONS),
+    // so leave platform pinning to the global docker.runOptions for local
+    // (e.g. Apple Silicon) runs instead.
+    //containerOptions "--platform ${params.container_platform}"
 
     input:
     path combined_csv
