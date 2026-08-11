@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Assemble the VueGen report directory tree and render the report.
+"""Assemble the VueGen report directory tree.
 
-It takes explicit input
-paths (the files Nextflow has staged into the task work directory) and:
+It takes explicit input paths (the files Nextflow has staged into the task
+work directory) and builds the numbered ``vuegen_report/`` section tree
+expected by VueGen, copying the combined mutation table and converting the
+tracy alignment / assembly text outputs to fenced-code markdown.
 
-1. builds the numbered ``vuegen_report/`` section tree expected by VueGen,
-   copying the combined mutation table and converting the tracy alignment /
-   assembly text outputs to fenced-code markdown, and
-2. runs ``vuegen`` on that tree to render the report (html by default).
+Rendering the tree into a report is done separately by the nf-core VUEGEN
+module (see workflows/dsp_bulk_sangerseq.nf), which already ships a
+maintained container with vuegen and its report-type dependencies baked in.
 
 The section layout and markdown wrapping match the reference output produced by
 the original script byte-for-byte (```` ```\\n<content>\\n``` ````, no trailing
@@ -16,7 +17,6 @@ newline).
 
 import argparse
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 
@@ -52,12 +52,6 @@ def parse_args() -> argparse.Namespace:
         default="vuegen_report",
         dest="report_dir",
         help="Directory to build the VueGen section tree into.",
-    )
-    parser.add_argument(
-        "--report-type",
-        default="html",
-        dest="report_type",
-        help="VueGen report type (html, streamlit, pdf, ...).",
     )
     return parser.parse_args()
 
@@ -102,35 +96,9 @@ def build_tree(combined: Path, indir: Path, report_dir: Path) -> None:
         to_markdown(src, report_dir / SECTION_ASSEMBLE / ASSEMBLE_CONSENSUS)
 
 
-def render(report_dir: Path, report_type: str) -> None:
-    """Render the assembled tree with VueGen, nested inside the report dir.
-
-    VueGen derives the report title from the ``--directory`` name, so the tree
-    must live in a named directory (``vuegen_report``, not ``.``) or quarto
-    rejects the empty title. The rendered output is written to a
-    ``rendered_report/`` sub-directory so the whole report - section structure
-    plus rendered artifacts - is captured under the single ``report_dir`` the
-    Nextflow module publishes.
-    """
-    subprocess.run(
-        [
-            "vuegen",
-            "--directory",
-            str(report_dir),
-            "--report_type",
-            report_type,
-            "--output_directory",
-            str(report_dir / "rendered_report"),
-        ],
-        check=True,
-    )
-
-
 def main() -> int:
     args = parse_args()
-    report_dir = Path(args.report_dir)
-    build_tree(Path(args.combined), Path(args.indir), report_dir)
-    render(report_dir, args.report_type)
+    build_tree(Path(args.combined), Path(args.indir), Path(args.report_dir))
     return 0
 
 

@@ -351,12 +351,13 @@ gitGraph LR:
    commit id: "TRACY_DECOMPOSE_POSTPROCESS" tag: "*.csv" tag: "results_combined.csv"
    checkout main
    merge TRACY_DECOMPOSE
-   commit id: "VUEGEN_REPORT" tag: "vuegen_report"
+   commit id: "VUEGEN_PREPARE_TREE" tag: "vuegen_report"
+   commit id: "VUEGEN" tag: "vuegen_report"
 ```
 
 ### Testing the Nextflow pipeline
 
-The pipeline is covered by [nf-test](https://www.nf-test.com). Tests run against the small dataset in `data/test_data_1` using the `docker,test` profile, so **Docker must be running** (the `geargenomics/tracy`, `ghcr.io/biosustain/tracy-visualisations` and `python:3.12` images are pulled automatically).
+The pipeline is covered by [nf-test](https://www.nf-test.com). Tests run against the small dataset in `data/test_data_1` using the `docker,test` profile, so **Docker must be running** (the `geargenomics/tracy`, `ghcr.io/biosustain/tracy-visualisations`, `python:3.12` and the nf-core VUEGEN module's container images are pulled automatically).
 
 Install nf-test once (it is git-ignored and not committed):
 
@@ -380,6 +381,7 @@ The suite consists of:
 | `modules/local/prepare/inputs/tests/main.nf.test` | `PREPARE_INPUTS` |
 | `modules/local/tracy/{align,decompose,assemble}/tests/main.nf.test` | `TRACY_ALIGN`, `TRACY_DECOMPOSE`, `TRACY_ASSEMBLE` |
 | `modules/local/tracy/render_visualisations/tests/main.nf.test` | `TRACY_RENDER_VISUALISATIONS` |
-| `modules/local/vuegen/report/tests/main.nf.test` | `VUEGEN_REPORT` |
+| `modules/local/vuegen/prepare_tree/tests/main.nf.test` | `VUEGEN_PREPARE_TREE` |
+| `modules/nf-core/vuegen/tests/main.nf.test` | `VUEGEN` |
 
 Test configuration lives in `nf-test.config` (profiles, work dir) and `tests/nextflow.config`; the test dataset paths are defined once in `conf/test.config`.

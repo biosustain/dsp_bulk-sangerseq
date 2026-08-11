@@ -1,8 +1,8 @@
 nextflow_process {
 
-    name "Test Process VUEGEN_REPORT"
-    script "modules/local/vuegen/report/main.nf"
-    process "VUEGEN_REPORT"
+    name "Test Process VUEGEN_PREPARE_TREE"
+    script "modules/local/vuegen/prepare_tree/main.nf"
+    process "VUEGEN_PREPARE_TREE"
 
     tag "modules"
     tag "vuegen"
@@ -77,7 +77,7 @@ nextflow_process {
         }
     }
 
-    test("Should build the VueGen report tree and render the report") {
+    test("Should build the VueGen report tree") {
 
         when {
             params {
@@ -103,17 +103,15 @@ nextflow_process {
         }
 
         then {
-            def report = process.out.report.get(0)
+            def tree = process.out.tree.get(0)
             assertAll(
                 { assert process.success },
                 // The combined mutation table is copied into section 01.
-                { assert path("${report}/01_Mutation_tables_decompose/results_combined.csv").exists() },
+                { assert path("${tree}/01_Mutation_tables_decompose/results_combined.csv").exists() },
                 // Decompose alignments were converted to fenced-code markdown.
-                { assert path("${report}/02_alignments_decompose/align1/sample_1.align1.md").exists() },
-                { assert path("${report}/03_alignments_align/sample_1.txt.md").exists() },
-                { assert path("${report}/04_sequence_assembly_assemble/consensus_sequences/sample_1_sample_2.cons.fa.md").exists() },
-                // The rendered html report was produced under the report dir.
-                { assert path("${report}/rendered_report/quarto_report/quarto_report.html").exists() }
+                { assert path("${tree}/02_alignments_decompose/align1/sample_1.align1.md").exists() },
+                { assert path("${tree}/03_alignments_align/sample_1.txt.md").exists() },
+                { assert path("${tree}/04_sequence_assembly_assemble/consensus_sequences/sample_1_sample_2.cons.fa.md").exists() }
             )
         }
     }

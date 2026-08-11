@@ -1,5 +1,18 @@
 {
   "name": "biosustain/dsp_bulk-sangerseq",
   "homePage": "https://github.com/biosustain/dsp_bulk-sangerseq",
-  "repos": {}
+  "repos": {
+    "https://github.com/nf-core/modules.git": {
+      "modules": {
+        "nf-core": {
+          "vuegen": {
+            "branch": "master",
+            "git_sha": "4182cdf0c0ccdf775159422ad1b7e41dcc848b06",
+            "installed_by": ["modules"]
+          }
+        }
+      },
+      "subworkflows": {}
+    }
+  }
 }
