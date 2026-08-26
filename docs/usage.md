@@ -83,10 +83,11 @@ should be identical.
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `--vuegen_report_type` | VueGen report type: `html`, `streamlit`, `pdf`, `docx`, `revealjs`, `pptx`, `jupyter`. | `html` |
-| `--vuegen_version` | VueGen version pip-installed at runtime. | `0.6.0` |
 
-For the `pdf` report type, `tinytex` is required (`quarto install tinytex`). See
-the [VueGen documentation](https://github.com/Multiomics-Analytics-Group/vuegen)
+The report is rendered by the [nf-core VUEGEN
+module](https://nf-co.re/modules/vuegen/) (`modules/nf-core/vuegen`), whose
+container already bundles `tinytex` for the `pdf` report type. See the
+[VueGen documentation](https://github.com/Multiomics-Analytics-Group/vuegen)
 for details.
 
 ## Testing

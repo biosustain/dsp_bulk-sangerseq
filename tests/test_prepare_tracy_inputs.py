@@ -15,7 +15,7 @@ def run_prepare(
     return subprocess.run(
         [
             sys.executable,
-            "bin/prepare_tracy_inputs.py",
+            "modules/local/prepare/inputs/resources/usr/bin/prepare_tracy_inputs.py",
             "--samplesheet",
             str(samplesheet),
             "--reference-fasta",

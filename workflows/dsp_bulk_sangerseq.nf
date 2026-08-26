@@ -5,7 +5,8 @@ include { TRACY_ALIGN } from '../modules/local/tracy/align/main'
 include { TRACY_ASSEMBLE } from '../modules/local/tracy/assemble/main'
 include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_ALIGN } from '../modules/local/tracy/render_visualisations/main'
 include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_DECOMPOSE } from '../modules/local/tracy/render_visualisations/main'
-include { VUEGEN_REPORT } from '../modules/local/vuegen/report/main'
+include { VUEGEN_PREPARE_TREE } from '../modules/local/vuegen/prepare_tree/main'
+include { VUEGEN } from '../modules/nf-core/vuegen/main'
 
 workflow DSP_BULK_SANGERSEQ {
     def input_samplesheet = params.input ?: params.samplesheet
@@ -137,10 +138,16 @@ workflow DSP_BULK_SANGERSEQ {
         .collect()
         .ifEmpty([])
 
-    VUEGEN_REPORT(
+    VUEGEN_PREPARE_TREE(
         TRACY_DECOMPOSE_POSTPROCESS.out.combined,
         decompose_report_ch,
         align_report_ch,
         assemble_report_ch,
+    )
+
+    VUEGEN(
+        Channel.value('directory'),
+        VUEGEN_PREPARE_TREE.out.tree,
+        Channel.value(params.vuegen_report_type),
     )
 }
