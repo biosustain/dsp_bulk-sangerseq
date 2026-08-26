@@ -94,7 +94,7 @@ def main() -> None:
 
             normalized_row = {
                 'sample_id': sample_id,
-                'ab1_path': str(ab1_path),
+                'ab1_path': str(ab1_path.relative_to(data_dir)),
                 'assembly_group': assembly_group,
                 'reference_id': reference_id,
             }
