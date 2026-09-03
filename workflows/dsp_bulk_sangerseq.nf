@@ -79,7 +79,17 @@ workflow DSP_BULK_SANGERSEQ {
         .collect()
         .set { postprocess_ch }
 
-    TRACY_DECOMPOSE_POSTPROCESS(postprocess_ch)
+    // Base URL of the published Indigo viewers, added as a link column to the
+    // mutation tables so each mutation can be opened at its own position in the
+    // electropherogram. A local `outdir` becomes a `file://` URL so the links
+    // open straight off the filesystem; object storage keeps its own scheme.
+    def published_outdir = file(params.outdir)
+    def published_outdir_url = published_outdir.toUri().scheme == 'file'
+        ? "file://${published_outdir.toUriString()}"
+        : published_outdir.toUriString()
+    def indigo_link_base = params.indigo_link_base ?: "${published_outdir_url}/decompose"
+
+    TRACY_DECOMPOSE_POSTPROCESS(postprocess_ch, indigo_link_base)
 
     def assembly_tasks_ch = PREPARE_INPUTS.out.assemblies_tsv
     .splitCsv(header: true, sep: '\t')

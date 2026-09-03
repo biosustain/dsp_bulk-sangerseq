@@ -142,6 +142,20 @@ for ```decompose``` and ```align``` should be identical.
 
 **Note**, that other ```tracy``` command line parameters are not accessible yet, which will be implemented in future.
 
+**Indigo visualisation links.**
+
+```--indigo_link_base``` sets the base URL that the ```indigo_visualisation```
+column of the mutation tables is built from (see
+[Mutation tables and Indigo visualisation links](#mutation-tables-and-indigo-visualisation-links)
+below). By default it is derived from ```--outdir``` as ```<outdir>/decompose```,
+written as a ```file://``` URL so the links open straight off the filesystem. Set
+it explicitly when the results are reached through something else, for example a
+web server or a mounted network share.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| ```--indigo_link_base``` | Base URL of the published ```Indigo``` visualisations. | ```file://<outdir>/decompose``` |
+
 **VueGen report type.**
 
 ```--vuegen_report_type``` selects the type of report generated with VueGen
@@ -219,6 +233,37 @@ outdir
 - ```results_combined.csv```: consolidated mutation detection results from all samples (here ```sample_1.csv``` and ```sample_2.csv```)
 - ```pipeline_info```: Nextflow execution reports (timeline, report, trace and DAG) for the run
 
+#### Mutation tables and ```Indigo``` visualisation links
+
+Every row of a mutation table is a single mutation, so one sample can occupy
+several rows. Each row carries an ```indigo_visualisation``` column linking to
+that sample's ```Indigo``` visualisation in
+[outdir/decompose](#structure-of-the-decompose-subdirectory), opened on that
+row's mutation instead of the arbitrary region the visualisation otherwise
+opens at:
+
+```
+file:///path/to/outdir/decompose/sample_1.html?variants-table=0
+```
+
+The ```?variants-table=<n>``` parameter is the position of the mutation within
+that sample's variant list; the visualisation reads it from the URL and shows
+the mutation in the trace viewer, which otherwise has to be found by clicking
+the row's chart icon by hand. Clicking a row writes the same parameter back into
+the URL, so the address bar can be copied as a link to whatever is on screen,
+and the browser's back and forward buttons step through the mutations that were
+looked at.
+
+Browsers refuse to follow ```file://``` links out of a rendered page, so the
+links cannot be clicked inside the VueGen report — they have to be copied. Sort
+or filter the table (for example on ```successfully_edited```) down to the
+mutations of interest, copy their ```indigo_visualisation``` values, and paste
+them into a bulk URL opener such as the
+[Bulk URL Opener](https://chromewebstore.google.com/detail/bulk-url-opener-tab-manag/nipkhjpemhflobkeegjpflbfmplpndje)
+Chrome extension to open them all at once (which needs *Allow access to file
+URLs* enabled in the extension's Chrome settings). A single link can also be
+pasted straight into the browser's address bar.
+
 #### Structure of the ```align``` subdirectory
 ```
 outdir/align
@@ -264,7 +309,7 @@ outdir/decompose
 - ```.align1.fa```: pairwise sequence alignment file of main signal against reference sequence
 - ```.align2.fa```: pairwise sequence alignment file of minor signal against reference sequence
 - ```.align3.fa```: pairwise sequence alignment file of major against minor signal
-- ```.html```: visualisation of Sanger sequeencing result using ```Indigo```
+- ```.html```: visualisation of Sanger sequeencing result using ```Indigo```; accepts a ```?variants-table=<n>``` URL parameter to open on a specific mutation (see [Mutation tables and Indigo visualisation links](#mutation-tables-and-indigo-visualisation-links))
 - ```.bcf```: binary call format file; binary version of the variant calling file (VCF); can be converted to VCF using [bcftools](https://github.com/samtools/bcftools)
 - ```.json```: all output from ```tracy decompose``` process
 
@@ -287,6 +332,7 @@ webtool [Sabre](https://www.gear-genomics.com/sabre/)
 ```
 outdir/vuegen_report
 ├── 01_Mutation_tables_decompose
+│   ├── About_the_indigo_visualisation_links.md
 │   └── results_combined.csv
 ├── 02_alignments_decompose
 │   ├── align1
