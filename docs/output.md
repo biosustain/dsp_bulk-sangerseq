@@ -27,6 +27,32 @@ outdir
 - `vuegen_report/` — the [VueGen](https://github.com/Multiomics-Analytics-Group/vuegen)
   report and its section tree.
 
+## Mutation tables
+
+One row per detected mutation, so a sample can occupy several rows. Each row
+carries an `indigo_visualisation` column linking to that sample's Indigo viewer
+in [`decompose/`](#decompose), opened on that row's mutation:
+
+```
+file:///path/to/outdir/decompose/sample_1.html?variants-table=0
+```
+
+The `?variants-table=<n>` parameter is the mutation's position in the sample's
+variant list; the viewer reads it from the URL and shows that mutation in the
+trace. Without it the viewer opens at an arbitrary region of the trace and the
+mutation has to be found by clicking the row's chart icon — which writes the
+same parameter back into the URL, so the address bar is always a link to what is
+on screen and back/forward step through the mutations looked at. Point the links
+somewhere else than the local filesystem with `--indigo_link_base` (see
+[usage.md](usage.md#report)).
+
+Browsers refuse to follow `file://` links out of a rendered page, so the links
+cannot be clicked inside the VueGen report. Filter the table down to the
+mutations of interest, copy their `indigo_visualisation` values and paste them
+into a bulk URL opener such as the
+[Bulk URL Opener](https://chromewebstore.google.com/detail/bulk-url-opener-tab-manag/nipkhjpemhflobkeegjpflbfmplpndje)
+Chrome extension (which needs *Allow access to file URLs* enabled).
+
 ## `align/`
 
 ```
@@ -61,7 +87,8 @@ outdir/decompose
 - `.align1` — alignment of the main signal against the reference.
 - `.align2` — alignment of the minor signal against the reference.
 - `.align3` — alignment of the major against the minor signal.
-- `.html` — visualisation of the sequencing result (Indigo).
+- `.html` — visualisation of the sequencing result (Indigo); accepts a
+  `?variants-table=<n>` URL parameter to open on a specific mutation.
 - `.bcf` — binary variant-call file (convertible to VCF with
   [bcftools](https://github.com/samtools/bcftools)).
 - `.json` — full output of `tracy decompose`.
@@ -88,6 +115,7 @@ outdir/assemble
 ```
 outdir/vuegen_report
 ├── 01_Mutation_tables_decompose
+│   ├── About_the_indigo_visualisation_links.md
 │   └── results_combined.csv
 ├── 02_alignments_decompose
 │   ├── align1/

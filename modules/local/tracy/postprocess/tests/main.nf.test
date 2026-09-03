@@ -45,6 +45,7 @@ nextflow_process {
                 input[0] = TRACY_DECOMPOSE.out.json_results
                     .map { sample_id, json -> json }
                     .collect()
+                input[1] = ''
                 """
             }
         }
@@ -58,6 +59,38 @@ nextflow_process {
                 // byte-for-byte match against the reference output from the main branch script
                 { assert path(process.out.combined.get(0)).md5 ==
                     path("${projectDir}/outdir/test_data_1/results_combined.csv").md5 }
+            )
+        }
+    }
+
+    test("Should link every mutation to its position in the Indigo viewer") {
+
+        when {
+            params {
+                data_dir = "${projectDir}/data/test_data_1"
+            }
+            process {
+                """
+                input[0] = TRACY_DECOMPOSE.out.json_results
+                    .map { sample_id, json -> json }
+                    .collect()
+                input[1] = 'file:///results/decompose'
+                """
+            }
+        }
+
+        then {
+            def combined = path(process.out.combined.get(0)).readLines()
+
+            assertAll(
+                { assert process.success },
+                { assert combined.first().endsWith(',indigo_visualisation') },
+                // The link column carries the viewer of the row's own sample,
+                // addressed by the variant's index within that sample.
+                { assert combined[1].contains('file:///results/decompose/sample_1.html?variants-table=0') },
+                { assert combined.every { line ->
+                    line == combined.first() || line.contains('file:///results/decompose/')
+                } }
             )
         }
     }
