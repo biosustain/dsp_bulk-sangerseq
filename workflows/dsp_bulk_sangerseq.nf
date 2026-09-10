@@ -5,6 +5,8 @@ include { TRACY_ALIGN } from '../modules/local/tracy/align/main'
 include { TRACY_ASSEMBLE } from '../modules/local/tracy/assemble/main'
 include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_ALIGN } from '../modules/local/tracy/render_visualisations/main'
 include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_DECOMPOSE } from '../modules/local/tracy/render_visualisations/main'
+include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_ASSEMBLE_MSA } from '../modules/local/tracy/render_visualisations/main'
+include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_ASSEMBLE_EDITOR } from '../modules/local/tracy/render_visualisations/main'
 include { VUEGEN_PREPARE_TREE } from '../modules/local/vuegen/prepare_tree/main'
 include { VUEGEN } from '../modules/nf-core/vuegen/main'
 
@@ -115,6 +117,23 @@ workflow DSP_BULK_SANGERSEQ {
         .set { decompose_viewer_ch }
 
     TRACY_RENDER_DECOMPOSE(decompose_viewer_ch)
+
+    // `tracy assemble` writes two files worth rendering, so the assemble
+    // section gets two viewers per group. The multi-FASTA goes to sabre, which
+    // reads gapped FASTA directly and draws the alignment as text; the JSON
+    // goes to pearl, which reads its `gappedTraces` and draws the same
+    // assembly as an editable consensus with the electropherograms below it.
+    TRACY_ASSEMBLE.out.align_fa
+        .map { sample_id_joined, align_fa -> tuple("${sample_id_joined}.msa", 'assemble', align_fa) }
+        .set { assemble_msa_viewer_ch }
+
+    TRACY_RENDER_ASSEMBLE_MSA(assemble_msa_viewer_ch)
+
+    TRACY_ASSEMBLE.out.assembly_json
+        .map { sample_id_joined, json_file -> tuple("${sample_id_joined}.assembly", 'assemble', json_file) }
+        .set { assemble_editor_viewer_ch }
+
+    TRACY_RENDER_ASSEMBLE_EDITOR(assemble_editor_viewer_ch)
 
     // Assemble the VueGen report from the per-section tracy outputs. Each
     // upstream channel is filtered down to just the text files that section
