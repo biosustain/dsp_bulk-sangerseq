@@ -15,6 +15,7 @@ nextflow_process {
                 """
                 input[0] = file("${projectDir}/data/test_data_1/samplesheet_test_data_1_multi_ref_grouping_2samples.csv")
                 input[1] = file("${projectDir}/data/test_data_1/references.fa")
+                input[2] = file("${projectDir}/data/test_data_1", type: 'dir')
                 """
             }
         }
