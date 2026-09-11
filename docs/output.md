@@ -17,8 +17,8 @@ outdir
 - `align/` — results from the `tracy align` process (alignment of each Sanger
   read against its reference), including the generated HTML trace viewers.
 - `assemble/` — results from the `tracy assemble` process (reference-guided
-  assembly of overlapping reads), including the generated HTML alignment
-  browsers.
+  assembly of overlapping reads), including the generated HTML assembly and
+  alignment viewers.
 - `decompose/` — results from the `tracy decompose` process (mutation detection
   and decomposition of double peaks).
 - `<sample>.csv` — per-sample mutation-detection results from `tracy decompose`.
@@ -72,38 +72,26 @@ outdir/decompose
 ```
 outdir/assemble
 ├── <group>.align.fa
-├── <group>.assembly.html
 ├── <group>.cons.fa
+├── <group>.html
 ├── <group>.json
-├── <group>.msa.html
-└── <group>.vertical
+├── <group>.vertical
+└── <group>_alignment.html
 ```
 
 - `.align.fa` — multiple-sequence alignment of the reads against the reference.
-- `.assembly.html` — editable assembly viewer
-  ([Pearl](https://github.com/gear-genomics/pearl)), rendered from `.json`.
 - `.cons.fa` — consensus sequence from `tracy assemble`.
+- `.html` — assembly visualisation (Pearl), rendered by `TRACY_RENDER_ASSEMBLE`
+  from the `.json`.
 - `.json` — full output of `tracy assemble`.
-- `.msa.html` — browsable multiple-sequence alignment
-  ([Sabre](https://github.com/gear-genomics/sabre)), rendered from
-  `.align.fa`.
-- `.vertical` — column-wise dump of the multiple-sequence alignment.
+- `_alignment.html` — alignment browser
+  ([Sabre](https://www.gear-genomics.com/sabre/)) over the `.align.fa`,
+  rendered by `TRACY_RENDER_ASSEMBLE_ALIGNMENT`.
 
-`tracy assemble` is rendered twice because its two outputs show the assembly
-from different angles. `.msa.html` is the alignment as text; `.assembly.html`
-is the same assembly as a consensus track colour-coded by agreement, with
-"Jump to next conflict" and the electropherograms of every read covering the
-current position. Edits made there are downloaded from the page — the report
-is a single file with no server to save back to.
-
-The alignment browser colours each column by **consensus across the rows**,
-not against the reference — the reference is simply another row in the count.
-So where several reads agree against the reference it is the *reference* base
-that is marked as the mismatch, and where a single read disagrees with the
-reference the resulting 1-1 tie is shown as an ambiguous consensus rather
-than a mismatch. This is the opposite of `align/`, which is anchored on the
-reference. Sabre cannot show electropherograms; `.assembly.html` has them, as
-do the `align/` and `decompose/` viewers.
+The two viewers show different things. Pearl draws the assembly: one consensus
+line, colour-coded by how the reads agree at each position, with the trace peaks
+behind the position you select. Sabre draws the multiple-sequence alignment
+itself, read by read against the reference — which Pearl never shows.
 
 ## `vuegen_report/`
 
@@ -112,15 +100,24 @@ outdir/vuegen_report
 ├── 01_Mutation_tables_decompose
 │   └── results_combined.csv
 ├── 02_alignments_decompose
-│   ├── align1/
-│   ├── align2/
-│   └── align3/
+│   └── <sample>.html
 ├── 03_alignments_align
-│   └── <sample>.txt.md
+│   └── <sample>.html
 └── 04_sequence_assembly_assemble
-    ├── alignments/
-    └── consensus_sequences/
+    ├── <assembly group>.html
+    └── <assembly group>_alignment.html
 ```
+
+Sections `02`, `03` and `04` are the rendered trace viewers from
+[`decompose/`](#decompose), [`align/`](#align) and [`assemble/`](#assemble),
+copied in unchanged. They stand in for tracy's text reports rather than sitting
+beside them: the Indigo viewer already shows the `.align1` / `.align2` /
+`.align3` alignments as *Alt1*, *Alt2* and *Alt1 vs Alt2*, the Sage viewer shows
+the align step's `.txt` alignment, and the assemble section's two viewers show
+the assembly's consensus (Pearl) and the alignment it was called from
+(Sabre, over the `.align.fa`). All of those text outputs stay published under
+`align/`, `decompose/` and `assemble/` for anyone who wants to read them
+directly.
 
 The rendered report (e.g. `html`) is produced according to
 `--vuegen_report_type`.

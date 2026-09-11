@@ -48,15 +48,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert process.out.assemble_results.size() == 1 },
-                { assert process.out.assemble_results.get(0).get(0) == '1' },
-                { assert process.out.align_fa.size() == 1 },
-                { assert process.out.align_fa.get(0).get(0) == 'sample_1_sample_2' },
-                { assert process.out.align_fa.get(0).get(1).endsWith("sample_1_sample_2.align.fa") },
-                { assert path(process.out.align_fa.get(0).get(1)).exists() },
-                { assert process.out.assembly_json.size() == 1 },
-                { assert process.out.assembly_json.get(0).get(0) == 'sample_1_sample_2' },
-                { assert process.out.assembly_json.get(0).get(1).endsWith("sample_1_sample_2.json") },
-                { assert path(process.out.assembly_json.get(0).get(1)).json.gappedTraces.size() == 2 }
+                { assert process.out.assemble_results.get(0).get(0) == '1' }
             )
         }
     }

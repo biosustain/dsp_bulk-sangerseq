@@ -19,6 +19,17 @@ nextflow_process {
             }
         }
 
+        run("TRACY_ALIGN") {
+            script "modules/local/tracy/align/main.nf"
+            process {
+                """
+                input[0] = PREPARE_INPUTS.out.reference_files.map { ref ->
+                    tuple('sample_1', file("${projectDir}/data/test_data_1/sample_1.abi"), ref)
+                }
+                """
+            }
+        }
+
         run("TRACY_ASSEMBLE") {
             script "modules/local/tracy/assemble/main.nf"
             process {
@@ -36,45 +47,6 @@ nextflow_process {
                 }
                 """
             }
-        }
-
-        run("TRACY_ALIGN") {
-            script "modules/local/tracy/align/main.nf"
-            process {
-                """
-                input[0] = PREPARE_INPUTS.out.reference_files.map { ref ->
-                    tuple('sample_1', file("${projectDir}/data/test_data_1/sample_1.abi"), ref)
-                }
-                """
-            }
-        }
-    }
-
-    test("Should render an HTML viewer from an assembly alignment FASTA") {
-
-        when {
-            process {
-                """
-                input[0] = Channel.of(
-                    tuple(
-                        'sample_1_sample_2.msa',
-                        'assemble',
-                        file("${projectDir}/data/test_data_1/assembly_group_1.align.fa")
-                    )
-                )
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert process.success },
-                { assert process.out.html_viewer.size() == 1 },
-                { assert process.out.html_viewer.get(0).get(0) == 'assemble' },
-                { assert process.out.html_viewer.get(0).get(1).endsWith("sample_1_sample_2.msa.html") },
-                { assert path(process.out.html_viewer.get(0).get(1)).exists() },
-                { assert path(process.out.html_viewer.get(0).get(1)).text.contains('sabre-msa-view') }
-            )
         }
     }
 
@@ -104,7 +76,7 @@ nextflow_process {
         }
     }
 
-    test("Should render a pearl assembly editor from a tracy assemble JSON") {
+    test("Should render an alignment browser from a tracy assemble multi-FASTA") {
 
         when {
             params {
@@ -112,21 +84,56 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = TRACY_ASSEMBLE.out.assembly_json.map { group_id, json ->
-                    tuple(group_id + '.assembly', 'assemble', json)
-                }
+                input[0] = TRACY_ASSEMBLE.out.assemble_results
+                    .flatMap { grp, files -> (files instanceof List) ? files : [files] }
+                    .filter { f -> f.name.endsWith('.align.fa') }
+                    .map { align_fasta -> tuple('sample_1_sample_2_alignment', 'assemble', align_fasta) }
                 """
             }
         }
 
         then {
+            def viewer = process.out.html_viewer.get(0).get(1)
             assertAll(
                 { assert process.success },
                 { assert process.out.html_viewer.size() == 1 },
                 { assert process.out.html_viewer.get(0).get(0) == 'assemble' },
-                { assert process.out.html_viewer.get(0).get(1).endsWith("sample_1_sample_2.assembly.html") },
-                { assert path(process.out.html_viewer.get(0).get(1)).exists() },
-                { assert path(process.out.html_viewer.get(0).get(1)).text.contains('pearl-assembly-view') }
+                { assert viewer.endsWith("sample_1_sample_2_alignment.html") },
+                // tracy-vis picks the viewer from the file's content, so the
+                // multi-FASTA renders as Sabre's alignment browser rather than
+                // one of the JSON trace viewers.
+                { assert path(viewer).text.contains('Alignment Browser') }
+            )
+        }
+    }
+
+    test("Should render an assembly editor from a tracy assemble JSON") {
+
+        when {
+            params {
+                data_dir = "${projectDir}/data/test_data_1"
+            }
+            process {
+                """
+                input[0] = TRACY_ASSEMBLE.out.assemble_results
+                    .flatMap { grp, files -> (files instanceof List) ? files : [files] }
+                    .filter { f -> f.name.endsWith('.json') }
+                    .map { json_file -> tuple(json_file.baseName, 'assemble', json_file) }
+                """
+            }
+        }
+
+        then {
+            def viewer = process.out.html_viewer.get(0).get(1)
+            assertAll(
+                { assert process.success },
+                { assert process.out.html_viewer.size() == 1 },
+                { assert process.out.html_viewer.get(0).get(0) == 'assemble' },
+                { assert viewer.endsWith("sample_1_sample_2.html") },
+                // The same JSON's `gappedTraces` make it an assembly, so it
+                // renders as Pearl's editable assembly rather than a single
+                // trace view.
+                { assert path(viewer).text.contains('Assembly Editor') }
             )
         }
     }

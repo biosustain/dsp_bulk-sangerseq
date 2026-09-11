@@ -10,14 +10,19 @@ nextflow_pipeline {
       }
     }
     then {
+      // Null-safe, so a missing `assemble` directory fails the assertion below
+      // rather than throwing out of it.
+      def assembleFiles = new File("${outputDir}/assemble").listFiles() ?: []
+
       assertAll(
         { assert workflow.success },
         { assert workflow.trace.tasks().size() > 0 },
         { assert path("${outputDir}/align").exists() },
-        // `tracy assemble` gets two viewers: sabre's multiple-sequence
-        // alignment and pearl's editable assembly.
-        { assert new File("${outputDir}/assemble").listFiles().any { it.name.endsWith('.msa.html') } },
-        { assert new File("${outputDir}/assemble").listFiles().any { it.name.endsWith('.assembly.html') } }
+        // Every assembly group gets two viewers: pearl's editable assembly as
+        // `<group>.html` and sabre's multiple-sequence alignment as
+        // `<group>_alignment.html`.
+        { assert assembleFiles.any { it.name.endsWith('_alignment.html') } },
+        { assert assembleFiles.any { it.name.endsWith('.html') && !it.name.endsWith('_alignment.html') } }
       )
     }
   }

@@ -5,8 +5,8 @@ include { TRACY_ALIGN } from '../modules/local/tracy/align/main'
 include { TRACY_ASSEMBLE } from '../modules/local/tracy/assemble/main'
 include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_ALIGN } from '../modules/local/tracy/render_visualisations/main'
 include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_DECOMPOSE } from '../modules/local/tracy/render_visualisations/main'
-include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_ASSEMBLE_MSA } from '../modules/local/tracy/render_visualisations/main'
-include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_ASSEMBLE_EDITOR } from '../modules/local/tracy/render_visualisations/main'
+include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_ASSEMBLE } from '../modules/local/tracy/render_visualisations/main'
+include { TRACY_RENDER_VISUALISATIONS as TRACY_RENDER_ASSEMBLE_ALIGNMENT } from '../modules/local/tracy/render_visualisations/main'
 include { VUEGEN_PREPARE_TREE } from '../modules/local/vuegen/prepare_tree/main'
 include { VUEGEN } from '../modules/nf-core/vuegen/main'
 
@@ -118,50 +118,66 @@ workflow DSP_BULK_SANGERSEQ {
 
     TRACY_RENDER_DECOMPOSE(decompose_viewer_ch)
 
-    // `tracy assemble` writes two files worth rendering, so the assemble
-    // section gets two viewers per group. The multi-FASTA goes to sabre, which
-    // reads gapped FASTA directly and draws the alignment as text; the JSON
-    // goes to pearl, which reads its `gappedTraces` and draws the same
-    // assembly as an editable consensus with the electropherograms below it.
-    TRACY_ASSEMBLE.out.align_fa
-        .map { sample_id_joined, align_fa -> tuple("${sample_id_joined}.msa", 'assemble', align_fa) }
-        .set { assemble_msa_viewer_ch }
+    // tracy assemble writes two things worth looking at, so the group gets two
+    // viewers. The JSON carries the aligned traces and the consensus the Pearl
+    // viewer draws; the `.align.fa` is the gapped multi-FASTA of the reads
+    // against the reference, which Sabre draws read by read. Pearl does not
+    // show that - it colour-codes a single consensus line from the same
+    // alignment - so the two viewers complement rather than repeat each other.
+    def assemble_files_ch = TRACY_ASSEMBLE.out.assemble_results
+        .flatMap { _group, files -> (files instanceof List) ? files : [files] }
 
-    TRACY_RENDER_ASSEMBLE_MSA(assemble_msa_viewer_ch)
+    // The assembly group's joined sample id is taken from the output's own
+    // name, so the viewers are named like the rest of the group's outputs.
+    assemble_files_ch
+        .filter { assemble_file -> assemble_file.name.endsWith('.json') }
+        .map { json_file -> tuple(json_file.baseName, 'assemble', json_file) }
+        .set { assemble_viewer_ch }
 
-    TRACY_ASSEMBLE.out.assembly_json
-        .map { sample_id_joined, json_file -> tuple("${sample_id_joined}.assembly", 'assemble', json_file) }
-        .set { assemble_editor_viewer_ch }
+    assemble_files_ch
+        .filter { assemble_file -> assemble_file.name.endsWith('.align.fa') }
+        .map { align_fasta ->
+            def group_name = align_fasta.name - '.align.fa'
+            tuple("${group_name}_alignment", 'assemble', align_fasta)
+        }
+        .set { assemble_alignment_viewer_ch }
 
-    TRACY_RENDER_ASSEMBLE_EDITOR(assemble_editor_viewer_ch)
+    TRACY_RENDER_ASSEMBLE(assemble_viewer_ch)
+    TRACY_RENDER_ASSEMBLE_ALIGNMENT(assemble_alignment_viewer_ch)
 
     // Assemble the VueGen report from the per-section tracy outputs. Each
-    // upstream channel is filtered down to just the text files that section
-    // needs (distinct extensions, so nothing clashes when staged flat) and
-    // collected so the report is built once from all samples.
-    def decompose_report_ch = TRACY_DECOMPOSE.out.decompose_results
-        .flatMap { _sample_id, files -> (files instanceof List) ? files : [files] }
-        .filter { f -> ['.align1', '.align2', '.align3'].any { f.name.endsWith(it) } }
+    // upstream channel is filtered down to just the files that section needs
+    // and collected so the report is built once from all samples.
+    //
+    // Every section carries the rendered viewer rather than tracy's text
+    // reports: the Indigo viewer already shows the `.align1` / `.align2` /
+    // `.align3` alignments, the Sage viewer the align step's `.txt` alignment,
+    // and the assembly's two viewers its `.json` traces and `.align.fa`
+    // alignment. All of those text outputs stay published under `outdir/`.
+    def decompose_viewer_report_ch = TRACY_RENDER_DECOMPOSE.out.html_viewer
+        .map { _section, html_file -> html_file }
         .collect()
         .ifEmpty([])
 
-    def align_report_ch = TRACY_ALIGN.out.align_results
-        .flatMap { _sample_id, files -> (files instanceof List) ? files : [files] }
-        .filter { f -> f.name.endsWith('.txt') }
+    def align_viewer_report_ch = TRACY_RENDER_ALIGN.out.html_viewer
+        .map { _section, html_file -> html_file }
         .collect()
         .ifEmpty([])
 
-    def assemble_report_ch = TRACY_ASSEMBLE.out.assemble_results
-        .flatMap { _group, files -> (files instanceof List) ? files : [files] }
-        .filter { f -> f.name.endsWith('.align.fa') || f.name.endsWith('.cons.fa') }
+    // Both assembly viewers go into the same section: their file names differ
+    // (`<group>.html` for Pearl, `<group>_alignment.html` for Sabre), so they
+    // sit side by side without colliding.
+    def assemble_viewer_report_ch = TRACY_RENDER_ASSEMBLE.out.html_viewer
+        .mix(TRACY_RENDER_ASSEMBLE_ALIGNMENT.out.html_viewer)
+        .map { _section, html_file -> html_file }
         .collect()
         .ifEmpty([])
 
     VUEGEN_PREPARE_TREE(
         TRACY_DECOMPOSE_POSTPROCESS.out.combined,
-        decompose_report_ch,
-        align_report_ch,
-        assemble_report_ch,
+        decompose_viewer_report_ch,
+        align_viewer_report_ch,
+        assemble_viewer_report_ch,
     )
 
     VUEGEN(
