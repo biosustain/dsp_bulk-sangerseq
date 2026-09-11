@@ -272,18 +272,22 @@ outdir/decompose
 ```
 outdir/assemble
 ├── sample_1_sample_2.align.fa
-├── sample_1_sample_2.assembly.html
 ├── sample_1_sample_2.cons.fa
+├── sample_1_sample_2.html
 ├── sample_1_sample_2.json
-├── sample_1_sample_2.msa.html
-└── sample_1_sample_2.vertical
+├── sample_1_sample_2.vertical
+└── sample_1_sample_2_alignment.html
 ```
 - ```.align.fa```: multiple sequence alignment file of Sanger sequencing results against the reference sequence
-- ```.assembly.html```: editable assembly viewer rendered from ```.json``` with ```Pearl```; consensus track colour-coded by agreement, "jump to next conflict", and the electropherograms of every read covering the current position
 - ```.cons.fa```: consensus sequence generated from ```tracy assemble```
+- ```.html```: visualisation of Sanger sequencing assembly result using ```Pearl```, rendered from the ```.json```
 - ```.json```: all output from ```tracy assemble``` process
-- ```.msa.html```: browsable multiple sequence alignment of the reads against the reference, rendered from ```.align.fa``` with ```Sabre```
-- ```.vertical```: column-wise dump of the multiple sequence alignment
+- ```_alignment.html```: visualisation of the ```.align.fa``` multiple sequence alignment using [```Sabre```](https://www.gear-genomics.com/sabre/)
+
+The two viewers complement each other: Pearl draws a single consensus line,
+colour-coded by how the reads agree at each position, with the trace peaks
+behind the selected position; Sabre draws the multiple sequence alignment read
+by read, which Pearl never shows.
 
 #### Structure of the ```vuegen_report``` subdirectory
 ```
@@ -291,24 +295,30 @@ outdir/vuegen_report
 ├── 01_Mutation_tables_decompose
 │   └── results_combined.csv
 ├── 02_alignments_decompose
-│   ├── align1
-│   │   ├── sample_1.align1.md
-│   │   └── sample_2.align1.md
-│   ├── align2
-│   │   ├── sample_1.align2.md
-│   │   └── sample_2.align2.md
-│   └── align3
-│       ├── sample_1.align3.md
-│       └── sample_2.align3.md
+│   ├── sample_1.html
+│   └── sample_2.html
 ├── 03_alignments_align
-│   ├── sample_1.txt.md
-│   └── sample_2.txt.md
+│   ├── sample_1.html
+│   └── sample_2.html
 └── 04_sequence_assembly_assemble
-    ├── alignments
-    │   └── sample_1_sample_2.align.fa.md
-    └── consensus_sequences
-        └── sample_1_sample_2.cons.fa.md
+    ├── sample_1_sample_2.html
+    └── sample_1_sample_2_alignment.html
 ```
+
+Sections ```02```, ```03``` and ```04``` hold the rendered Indigo
+(```decompose```), Sage (```align```) and Pearl plus Sabre (```assemble```)
+viewers, embedded into the report itself. They stand in for tracy's text reports
+rather than sitting beside them: the Indigo viewer already shows the
+```.align1``` / ```.align2``` / ```.align3``` alignments as *Alt1*, *Alt2* and
+*Alt1 vs Alt2*, the Sage viewer shows the align step's ```.txt``` alignment, and
+the assemble section shows the assembly's consensus (Pearl) next to the
+multiple sequence alignment it was called from (Sabre, over the ```.align.fa```).
+All of those text outputs stay published under ```align/```, ```decompose/```
+and ```assemble/```.
+
+Every viewer is inlined rather than linked, which keeps the report
+self-contained and makes it substantially larger (roughly 15 MB for the
+nine-sample test dataset).
 
 ## The Nextflow pipeline
 
@@ -346,6 +356,7 @@ gitGraph LR:
    commit id: "TRACY_RENDER_ALIGN"
    checkout main
    commit id: "TRACY_ASSEMBLE"
+   commit id: "TRACY_RENDER_ASSEMBLE"
    merge TRACY_ALIGN
    branch TRACY_DECOMPOSE
    checkout TRACY_DECOMPOSE
@@ -361,13 +372,10 @@ gitGraph LR:
    checkout TRACY_RENDER_DECOMPOSE
    commit id: "TRACY_RENDER_DECOMPOSE"
    checkout main
-   branch TRACY_RENDER_ASSEMBLE_EDITOR
-   checkout TRACY_RENDER_ASSEMBLE_EDITOR
-   commit id: "TRACY_RENDER_ASSEMBLE_EDITOR"
-   checkout main
-   branch TRACY_RENDER_ASSEMBLE_MSA
-   checkout TRACY_RENDER_ASSEMBLE_MSA
-   commit id: "TRACY_RENDER_ASSEMBLE_MSA"
+   merge TRACY_RENDER_DECOMPOSE
+   branch TRACY_RENDER_ASSEMBLE_ALIGNMENT
+   checkout TRACY_RENDER_ASSEMBLE_ALIGNMENT
+   commit id: "TRACY_RENDER_ASSEMBLE_ALIGNMENT"
    checkout main
    commit id: "VUEGEN" tag: "*report"
 ```
@@ -397,7 +405,7 @@ The suite consists of:
 | `workflows/tests/dsp_bulk_sangerseq.nf.test` | `DSP_BULK_SANGERSEQ` workflow, including input-validation failure cases |
 | `modules/local/prepare/inputs/tests/main.nf.test` | `PREPARE_INPUTS` |
 | `modules/local/tracy/{align,decompose,assemble}/tests/main.nf.test` | `TRACY_ALIGN`, `TRACY_DECOMPOSE`, `TRACY_ASSEMBLE` |
-| `modules/local/tracy/render_visualisations/tests/main.nf.test` | `TRACY_RENDER_VISUALISATIONS`, for a tracy align JSON, an assembly alignment and a tracy assemble JSON |
+| `modules/local/tracy/render_visualisations/tests/main.nf.test` | `TRACY_RENDER_VISUALISATIONS` |
 | `modules/local/vuegen/prepare_tree/tests/main.nf.test` | `VUEGEN_PREPARE_TREE` |
 | `modules/nf-core/vuegen/tests/main.nf.test` | `VUEGEN` |
 

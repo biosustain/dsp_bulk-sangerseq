@@ -1,5 +1,5 @@
 process TRACY_RENDER_VISUALISATIONS {
-    tag "${viewer_id} (${section})"
+    tag "${viewer_name} (${section})"
 
     container "${params.visualisation_image}"
     // Azure Batch's TaskContainerSettings validation rejects the
@@ -8,17 +8,17 @@ process TRACY_RENDER_VISUALISATIONS {
     // docker.runOptions for local (e.g. Apple Silicon) runs instead.
     //containerOptions "--platform ${params.container_platform}"
 
-    // `viewer_id` is the output basename, not necessarily a sample id: a
-    // section rendering more than one viewer per input distinguishes them
-    // here, because every viewer of a section is published to one directory.
     input:
-    tuple val(viewer_id), val(section), path(data_file)
+    // `tracy_output` is either a tracy JSON or a gapped multi-FASTA
+    // alignment; `tracy-vis` picks the viewer from the file's content
+    // (Sage / Indigo / Pearl for JSON, Sabre for FASTA).
+    tuple val(viewer_name), val(section), path(tracy_output)
 
     output:
-    tuple val(section), path("${viewer_id}.html"), emit: html_viewer
+    tuple val(section), path("${viewer_name}.html"), emit: html_viewer
 
     script:
     """
-    tracy-vis ${data_file} ${viewer_id}.html
+    tracy-vis ${tracy_output} ${viewer_name}.html
     """
 }
