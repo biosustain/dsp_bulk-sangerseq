@@ -113,6 +113,10 @@
           "description": "VueGen report type to render.",
           "enum": ["html", "streamlit", "pdf", "docx", "revealjs", "pptx", "jupyter"],
           "default": "html"
+        },
+        "indigo_link_base": {
+          "type": "string",
+          "description": "Base URL of the published Indigo viewers, used for the link column of the mutation tables. Defaults to `<outdir>/decompose` (a `file://` URL for a local output directory)."
         }
       }
     },

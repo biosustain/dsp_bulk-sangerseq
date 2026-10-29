@@ -83,6 +83,13 @@ should be identical.
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `--vuegen_report_type` | VueGen report type: `html`, `streamlit`, `pdf`, `docx`, `revealjs`, `pptx`, `jupyter`. | `html` |
+| `--indigo_link_base` | Base URL the mutation tables' `indigo_visualisation` links are built from. | `file://<outdir>/decompose` |
+
+`--indigo_link_base` only needs setting when the published results are reached
+through something other than the filesystem they were written to, for example a
+web server or a mounted network share. See
+[output.md](output.md#mutation-tables) for what the links look like and how to
+open a set of them at once.
 
 The report is rendered by the [nf-core VUEGEN
 module](https://nf-co.re/modules/vuegen/) (`modules/nf-core/vuegen`), whose
