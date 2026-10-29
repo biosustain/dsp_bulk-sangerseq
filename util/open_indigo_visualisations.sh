@@ -3,7 +3,14 @@
 # Open the Indigo visualisation of every mutation called for one sample.
 #
 # Usage:
-#   util/open_indigo_visualisations.sh sample_1 [results_combined.csv]
+#   util/open_indigo_visualisations.sh <sample_name> [results_csv]
+#
+# The results CSV is optional and defaults to outdir/results_combined.csv.
+# Type the path without brackets: zsh treats a literal [..] as a glob and
+# fails with "no matches found".
+#
+#   util/open_indigo_visualisations.sh sample_1
+#   util/open_indigo_visualisations.sh sample_1 outdir/results_combined.csv
 #
 # Each row of the results CSV carries one variant and one visualisation URL,
 # and a single sample can run to hundreds of variants. The URLs are therefore
