@@ -1,3 +1,9 @@
 work/
 .nextflow*
 outdir/
+email_template.html
+bin/
+.nf-test/
+ro-crate-metadata.json
+modules/nf-core/
+subworkflows/nf-core/
