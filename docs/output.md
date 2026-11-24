@@ -52,7 +52,7 @@ cannot be clicked inside the VueGen report. Filter the table down to the
 mutations of interest, copy their `indigo_visualisation` values and paste them
 into a bulk URL opener such as the
 [Bulk URL Opener](https://chromewebstore.google.com/detail/bulk-url-opener-tab-manag/nipkhjpemhflobkeegjpflbfmplpndje)
-Chrome extension (which needs *Allow access to file URLs* enabled).
+Chrome extension (which needs _Allow access to file URLs_ enabled).
 
 ## `align/`
 
@@ -125,7 +125,7 @@ is a single file with no server to save back to.
 
 The alignment browser colours each column by **consensus across the rows**,
 not against the reference — the reference is simply another row in the count.
-So where several reads agree against the reference it is the *reference* base
+So where several reads agree against the reference it is the _reference_ base
 that is marked as the mismatch, and where a single read disagrees with the
 reference the resulting 1-1 tie is shown as an ambiguous consensus rather
 than a mismatch. This is the opposite of `align/`, which is anchored on the

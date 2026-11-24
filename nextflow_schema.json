@@ -37,12 +37,7 @@
           "description": "Output directory for published results."
         }
       },
-      "required": [
-        "data_dir",
-        "samplesheet",
-        "reference_fasta",
-        "outdir"
-      ]
+      "required": ["data_dir", "samplesheet", "reference_fasta", "outdir"]
     },
     "trimming_options": {
       "title": "Trimming options",

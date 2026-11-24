@@ -2,7 +2,20 @@ repository_type: pipeline
 
 nf_core_version: 4.1.0
 
-lint: {}
+# This pipeline is not an nf-core pipeline: it has its own name, entry point,
+# parameters and container setup.
+# Each test below fails by design, so it is skipped rather than satisfied.
+lint:
+  files_exist:
+    - assets/nf-core-dsp_bulk-sangerseq_logo_light.png
+    - docs/images/nf-core-dsp_bulk-sangerseq_logo_light.png
+    - docs/images/nf-core-dsp_bulk-sangerseq_logo_dark.png
+  nextflow_config: false
+  nf_test_content: false
+  actions_nf_test: false
+  schema_params: false
+  multiqc_config: false
+  container_configs: false
 
 template:
   org: nf-core
