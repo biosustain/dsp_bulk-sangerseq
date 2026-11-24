@@ -1,0 +1,16 @@
+repository_type: pipeline
+
+nf_core_version: 4.1.0
+
+lint: {}
+
+template:
+  org: nf-core
+  name: sangerseq
+  description: Pipeline for bulk processing and quality control of Sanger sequencing
+    (ab1) reads
+  author: Sebastian Schulz, Dominik Maszczyk
+  version: "3"
+  force: true
+  outdir: .
+  is_nfcore: true
