@@ -34,12 +34,12 @@ required.
 
 The pipeline is driven by a CSV samplesheet with the following columns:
 
-| Column | Description |
-|--------|-------------|
-| `sample_id` | Unique sample name. |
-| `ab1_file` | Name of the `.ab1` sequencing file (located in `--data_dir`). |
+| Column           | Description                                                                                          |
+| ---------------- | ---------------------------------------------------------------------------------------------------- |
+| `sample_id`      | Unique sample name.                                                                                  |
+| `ab1_file`       | Name of the `.ab1` sequencing file (located in `--data_dir`).                                        |
 | `assembly_group` | Group id (e.g. `1`, `2`) for reference-guided assembly; leave blank to skip assembly for the sample. |
-| `reference_id` | Reference name, which **must** match a FASTA header in `--reference_fasta`. |
+| `reference_id`   | Reference name, which **must** match a FASTA header in `--reference_fasta`.                          |
 
 Samples that share an `assembly_group` are assembled together (a minimum of two
 sequences is required). Forward/reverse orientation is detected automatically by
@@ -55,12 +55,12 @@ are defined in [`nextflow_schema.json`](../nextflow_schema.json).
 
 ### Input/output
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `--data_dir` | Directory containing the `.ab1` files. | `data/test_data_1` |
-| `--samplesheet` | Path to the samplesheet `.csv`. | see schema |
-| `--reference_fasta` | Path to the multi-fasta reference file. | see schema |
-| `--outdir` | Output directory for published results. **Required.** | *(none)* |
+| Parameter           | Description                                           | Default            |
+| ------------------- | ----------------------------------------------------- | ------------------ |
+| `--data_dir`        | Directory containing the `.ab1` files.                | `data/test_data_1` |
+| `--samplesheet`     | Path to the samplesheet `.csv`.                       | see schema         |
+| `--reference_fasta` | Path to the multi-fasta reference file.               | see schema         |
+| `--outdir`          | Output directory for published results. **Required.** | _(none)_           |
 
 ### Tracy trimming
 
@@ -70,20 +70,20 @@ trimming length automatically from sequencing quality, and is set separately per
 Tracy command. For standard workflows the `decompose` and `align` stringencies
 should be identical.
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `--trim_left` | Bases to trim at the 5'-end. | `50` |
-| `--trim_right` | Bases to trim at the 3'-end. | `50` |
-| `--trim_stringency_decompose` | Trim stringency for `decompose` (0-9). | `0` |
-| `--trim_stringency_align` | Trim stringency for `align` (0-9). | `0` |
-| `--trim_stringency_assemble` | Trim stringency for `assemble` (0-9). | `4` |
+| Parameter                     | Description                            | Default |
+| ----------------------------- | -------------------------------------- | ------- |
+| `--trim_left`                 | Bases to trim at the 5'-end.           | `50`    |
+| `--trim_right`                | Bases to trim at the 3'-end.           | `50`    |
+| `--trim_stringency_decompose` | Trim stringency for `decompose` (0-9). | `0`     |
+| `--trim_stringency_align`     | Trim stringency for `align` (0-9).     | `0`     |
+| `--trim_stringency_assemble`  | Trim stringency for `assemble` (0-9).  | `4`     |
 
 ### Report
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `--vuegen_report_type` | VueGen report type: `html`, `streamlit`, `pdf`, `docx`, `revealjs`, `pptx`, `jupyter`. | `html` |
-| `--indigo_link_base` | Base URL the mutation tables' `indigo_visualisation` links are built from. | `file://<outdir>/decompose` |
+| Parameter              | Description                                                                            | Default                     |
+| ---------------------- | -------------------------------------------------------------------------------------- | --------------------------- |
+| `--vuegen_report_type` | VueGen report type: `html`, `streamlit`, `pdf`, `docx`, `revealjs`, `pptx`, `jupyter`. | `html`                      |
+| `--indigo_link_base`   | Base URL the mutation tables' `indigo_visualisation` links are built from.             | `file://<outdir>/decompose` |
 
 `--indigo_link_base` only needs setting when the published results are reached
 through something other than the filesystem they were written to, for example a

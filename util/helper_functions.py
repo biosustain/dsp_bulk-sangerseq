@@ -24,27 +24,27 @@ def copy_files_extension(src_dir: str, dest_dir: str, file_ext: tuple):
 
 
 
-def convert_files_to_markdown_read_write(src_dir_path: str, 
-                                        src_file_ext: str | tuple[str, ...], 
+def convert_files_to_markdown_read_write(src_dir_path: str,
+                                        src_file_ext: str | tuple[str, ...],
                                         dest_dir_path: str
                                         ):
     """
     Read file with specified file type from source directory, convert to markdown and save to a destination directory.
-    
+
     Args:
         src_dir_path: path to source directory holding files to be converted
         src_file_ext: extension of files to be converted, e.g. '.align1' or ('.align1', '.align2', '.align3')
         dest_dir_path: path to sdestination directory the .md files will be saved to
     """
 
-    try: 
+    try:
         if len(os.listdir(src_dir_path)) > 0:    #check if directory contains files
             for file in os.listdir(src_dir_path):
                 if file.endswith(src_file_ext):
-                
+
                     #create file path
                     filepath = os.path.join(src_dir_path, file)
-                
+
                     #read file content
                     with open(filepath, 'r', encoding='utf-8') as f:
                         content = f.read()
@@ -56,6 +56,6 @@ def convert_files_to_markdown_read_write(src_dir_path: str,
                     #write wrapped content
                     with open(dest_filepath, 'w', encoding='utf-8') as f:
                         f.write('```\n' + content + '\n```')
-    
+
     except FileNotFoundError:
         print(f'Directory not found: {src_dir_path}')

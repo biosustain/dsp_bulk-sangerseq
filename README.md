@@ -1,17 +1,20 @@
 # Prototype Sanger sequencing tool for bulk analysis
 
 ## Background
-Sanger sequencing ([Sanger *et al.*, 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the increase of throughput in biological experimentation like in microbial genome engineering campaigns in industrial biotechnology, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.
-This **Bulk Sanger Sequencing Tool** was developed to reduce this time investment while maintaining a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [Tracy](https://github.com/gear-genomics/tracy), [Sage](https://github.com/gear-genomics/sage) and [Indigo](https://github.com/gear-genomics/indigo) are used for the analysis and visualisation of Sanger sequencing data ([Rausch *et al.*, 2020](https://doi.org/10.1186/s12864-020-6635-8)). An analysis report is generated automatically with [VueGen](https://github.com/Multiomics-Analytics-Group/vuegen) ([Ayala-Ruano *et al.*, 2025](https://doi.org/10.1093/bioadv/vbaf149))
+
+Sanger sequencing ([Sanger _et al._, 1977](https://doi.org/10.1073/pnas.74.12.5463)) remains an important approach for targeted DNA sequencing in molecular biology. With the increase of throughput in biological experimentation like in microbial genome engineering campaigns in industrial biotechnology, the manual evaluation of Sanger sequencing results becomes a very time-consuming task.
+This **Bulk Sanger Sequencing Tool** was developed to reduce this time investment while maintaining a high quality of results evaluation. The tool uses established software that is specifically arranged to handle Sanger sequencing data in bulk. At its core, [Tracy](https://github.com/gear-genomics/tracy), [Sage](https://github.com/gear-genomics/sage) and [Indigo](https://github.com/gear-genomics/indigo) are used for the analysis and visualisation of Sanger sequencing data ([Rausch _et al._, 2020](https://doi.org/10.1186/s12864-020-6635-8)). An analysis report is generated automatically with [VueGen](https://github.com/Multiomics-Analytics-Group/vuegen) ([Ayala-Ruano _et al._, 2025](https://doi.org/10.1093/bioadv/vbaf149))
 
 ## Applicability of the dsp_bulk_sangerseq tool
+
 Using this prototype tool, Sanger sequencing results with one or multiple sequencing files can be analysed. This can be either forward or reverse sequencing. For reverse sequencing, the reference sequence is automatically reverse-complemented by tracy without the need of manual intervention (in the alignment file output, the fasta header of the reference sequence indicates if it was used in forward direction or reverse-complemented for the alignment).
 Combined analyses by assembling forward and reverse sequencing results is possible. A summary of all tracy functionalities can be found [here](https://www.gear-genomics.com/docs/tracy/cli/).
 Currently, the tool supports only sequential analysis of multiple Sanger sequencing samples.
 
 ## Installing required software
+
 Installation instructions are specifically described for Linux users.
-Windows users should first install ```Windows Subsystem for Linux (WSL)``` and ```git``` on their system. Installing a code editor like ```VS Code``` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).
+Windows users should first install `Windows Subsystem for Linux (WSL)` and `git` on their system. Installing a code editor like `VS Code` is optional but recommended. For installation details for the above, see this [description](docs/installation_prerequisites.md).
 
 All the following steps assume you have Ubuntu-24.04 (noble) installed. Certain installation details might be different on other Ubuntu releases.
 
@@ -22,7 +25,8 @@ install on the host is **Java**, **Nextflow** and **Docker**. There is no need t
 install Python or any Python dependencies manually.
 
 ### Install Java
-Nextflow requires Java 17 or later. Update the ```apt-get``` package manager and
+
+Nextflow requires Java 17 or later. Update the `apt-get` package manager and
 install a JDK:
 
 ```
@@ -30,9 +34,10 @@ sudo apt-get update
 sudo apt-get install default-jdk
 ```
 
-Verify the installation with ```java -version```.
+Verify the installation with `java -version`.
 
 ### Install Nextflow
+
 Version 23.10.0 or later is required. Follow the [official installation
 instructions](https://www.nextflow.io/docs/latest/install.html) or run:
 
@@ -40,163 +45,175 @@ instructions](https://www.nextflow.io/docs/latest/install.html) or run:
 curl -s https://get.nextflow.io | bash
 ```
 
-Move the resulting ```nextflow``` binary onto your ```PATH``` (e.g.
-```sudo mv nextflow /usr/local/bin/```) and verify with ```nextflow info```.
+Move the resulting `nextflow` binary onto your `PATH` (e.g.
+`sudo mv nextflow /usr/local/bin/`) and verify with `nextflow info`.
 
 ### Install Docker
+
 The tool makes use of Docker images for containerization of software applications. Follow the [installation instructions](https://docs.docker.com/engine/install/ubuntu/).
 
-
-
 ## Cloning the dsp_bulk_sangerseq repository from GitHub
+
 Open the terminal and perform the following steps consecutively:
 
-1. Change to the desired directory using ```cd </absolute/path/to/project/folder>```.
+1. Change to the desired directory using `cd </absolute/path/to/project/folder>`.
 
 2. Clone the github repository:
-To clone the latest version of the repository, use
+   To clone the latest version of the repository, use
+
 ```
 git clone https://github.com/biosustain/dsp_bulk-sangerseq.git
 ```
-If a specific release version of the code is intended to be used, use the below commands consecutively from within the local code repository ```dsp_bulk-sangerseq```.
+
+If a specific release version of the code is intended to be used, use the below commands consecutively from within the local code repository `dsp_bulk-sangerseq`.
+
 ```
 git pull
 ```
+
 and
+
 ```
 git checkout <release-tag>
 ```
-Replace <release-tag> by the desired release tag, e.g. ```v1```.
+
+Replace <release-tag> by the desired release tag, e.g. `v1`.
 
 3. Change to the project directory using
+
 ```
 cd dsp_bulk-sangerseq/
 ```
 
 No further installation is required. On the first run Nextflow automatically
-pulls the Docker images used by the pipeline (```geargenomics/tracy```,
-```ghcr.io/biosustain/tracy-visualisations``` and ```python:3.12```), so there
+pulls the Docker images used by the pipeline (`geargenomics/tracy`,
+`ghcr.io/biosustain/tracy-visualisations` and `python:3.12`), so there
 is no manual Python or dependency setup step.
 
 ## Using the dsp_bulk_sangerseq tool
 
 ### Prepare data and a samplesheet
+
 The tool requires Sanger sequencing (.ab1) and reference files stored in a multifasta file (.fa) files.
 
 Deposit all .ab1 files and the multifasta file into the folder **data**.
 
-Prepare a **samplesheet** according to the template below and save it as .csv file. It is recommended to deposit the samplesheet.csv in the **data** folder. Here you can also find three templates in subfolder ```data/test_data_1```. The path to the samplesheet is passed to the pipeline with the ```--samplesheet``` parameter (see the run instructions below).
+Prepare a **samplesheet** according to the template below and save it as .csv file. It is recommended to deposit the samplesheet.csv in the **data** folder. Here you can also find three templates in subfolder `data/test_data_1`. The path to the samplesheet is passed to the pipeline with the `--samplesheet` parameter (see the run instructions below).
 **Note**:
-The tool analyses samples that were sequenced in either forward or reverse direction. Reverse sequencing is **automatically** detected by the tracy software, *i.e.* any input sequences do **not** need to be reverse-complemented prior to analysis. The output files will indicate if reverse-complementation was performed.
+The tool analyses samples that were sequenced in either forward or reverse direction. Reverse sequencing is **automatically** detected by the tracy software, _i.e._ any input sequences do **not** need to be reverse-complemented prior to analysis. The output files will indicate if reverse-complementation was performed.
 
-In the ```sample_id``` column, fill in the sample names. In the ```ab1_file``` column, fill in the name of the sequencing file including the .ab1 file extension.
-The tool uses references stored in a multifasta file. Fill the ```reference_id``` column with reference names which **must be the fasta header in the provided multifasta file**.
+In the `sample_id` column, fill in the sample names. In the `ab1_file` column, fill in the name of the sequencing file including the .ab1 file extension.
+The tool uses references stored in a multifasta file. Fill the `reference_id` column with reference names which **must be the fasta header in the provided multifasta file**.
 
-The path to the samplesheet is passed to the pipeline with the ```--samplesheet``` parameter (see the run instructions below).
+The path to the samplesheet is passed to the pipeline with the `--samplesheet` parameter (see the run instructions below).
 
-The ```assembly_group``` column is used for sequence assembly, e.g. assembling DNA sequencing from forward and reverse sequencing of a gene of interest. A minimum of two sequences can be assembled, however, assembling more sequences is possible. Currently, only reference-guided assembly is implemented, *i.e.* a reference file must be provided. In the ```assembly_group```column the user has to specify which sequences should be assembled. This is done here using a ```1``` or ```2```. In the example below, samples_3 and sample_4 (assembly_group 1) will be assembled using reference_C whereas sample_5 and sample_6 (assembly_group 2) will be assembled separately using reference_D.
-If no assmebly of samples is desired, the fields in the ```assembly_group``` column have to be left blank (see sample_1 and sample_2 in below example).
+The `assembly_group` column is used for sequence assembly, e.g. assembling DNA sequencing from forward and reverse sequencing of a gene of interest. A minimum of two sequences can be assembled, however, assembling more sequences is possible. Currently, only reference-guided assembly is implemented, _i.e._ a reference file must be provided. In the `assembly_group`column the user has to specify which sequences should be assembled. This is done here using a `1` or `2`. In the example below, samples_3 and sample_4 (assembly_group 1) will be assembled using reference_C whereas sample_5 and sample_6 (assembly_group 2) will be assembled separately using reference_D.
+If no assmebly of samples is desired, the fields in the `assembly_group` column have to be left blank (see sample_1 and sample_2 in below example).
 
-| sample_id       | ab1_file     | assembly_group  | reference_id  |
-|-----------------|--------------|-----------------|---------------|
-| sample_name_1   | file_1.ab1   |                 | reference_A   |
-| sample_name_2   | file_2.ab1   |                 | reference_B   |
-| sample_name_3   | file_3.ab1   | 1               | reference_C   |
-| sample_name_4   | file_4.ab1   | 1               | reference_C   |
-| sample_name_5   | file_5.ab1   | 2               | reference_D   |
-| sample_name_6   | file_6.ab1   | 2               | reference_D   |
+| sample_id     | ab1_file   | assembly_group | reference_id |
+| ------------- | ---------- | -------------- | ------------ |
+| sample_name_1 | file_1.ab1 |                | reference_A  |
+| sample_name_2 | file_2.ab1 |                | reference_B  |
+| sample_name_3 | file_3.ab1 | 1              | reference_C  |
+| sample_name_4 | file_4.ab1 | 1              | reference_C  |
+| sample_name_5 | file_5.ab1 | 2              | reference_D  |
+| sample_name_6 | file_6.ab1 | 2              | reference_D  |
 
 ### Configure the analysis (pipeline parameters)
 
 The pipeline is configured through Nextflow parameters rather than a configuration
-file. Parameters can be passed on the command line as ```--<parameter> <value>```
-or collected in a ```-params-file params.yaml```. Their defaults, types and
+file. Parameters can be passed on the command line as `--<parameter> <value>`
+or collected in a `-params-file params.yaml`. Their defaults, types and
 validation rules are defined in [nextflow_schema.json](nextflow_schema.json).
 
 **Input/output paths.** Relative or absolute paths can be used.
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| ```--data_dir``` | Directory containing the ```.ab1``` files. | ```data/test_data_1``` |
-| ```--samplesheet``` | Path to the samplesheet ```.csv```. | (see schema) |
-| ```--reference_fasta``` | Path to the multi-fasta reference file. | (see schema) |
-| ```--outdir``` | Output directory for published results. **Required.** | *(none)* |
+| Parameter           | Description                                           | Default            |
+| ------------------- | ----------------------------------------------------- | ------------------ |
+| `--data_dir`        | Directory containing the `.ab1` files.                | `data/test_data_1` |
+| `--samplesheet`     | Path to the samplesheet `.csv`.                       | (see schema)       |
+| `--reference_fasta` | Path to the multi-fasta reference file.               | (see schema)       |
+| `--outdir`          | Output directory for published results. **Required.** | _(none)_           |
 
 **Tracy trimming parameters.**
 
-```trim_left``` and ```trim_right``` set the number of DNA bases to trim at the
+`trim_left` and `trim_right` set the number of DNA bases to trim at the
 5'-end and 3'-end respectively. Trimming stringency can be used in combination
 with them to determine the trimming length automatically based on the sequencing
-quality. Stringency ranges from 1 (lowest) to 9 (highest); ```0``` disables it.
-It is handled separately for each of the tracy commands ```decompose```,
-```align``` and ```assemble```. For standard analysis workflows the stringency
-for ```decompose``` and ```align``` should be identical.
+quality. Stringency ranges from 1 (lowest) to 9 (highest); `0` disables it.
+It is handled separately for each of the tracy commands `decompose`,
+`align` and `assemble`. For standard analysis workflows the stringency
+for `decompose` and `align` should be identical.
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| ```--trim_left``` | Bases to trim at the 5'-end. | ```50``` |
-| ```--trim_right``` | Bases to trim at the 3'-end. | ```50``` |
-| ```--trim_stringency_decompose``` | Trim stringency for ```decompose``` (0-9). | ```0``` |
-| ```--trim_stringency_align``` | Trim stringency for ```align``` (0-9). | ```0``` |
-| ```--trim_stringency_assemble``` | Trim stringency for ```assemble``` (0-9). | ```4``` |
+| Parameter                     | Description                            | Default |
+| ----------------------------- | -------------------------------------- | ------- |
+| `--trim_left`                 | Bases to trim at the 5'-end.           | `50`    |
+| `--trim_right`                | Bases to trim at the 3'-end.           | `50`    |
+| `--trim_stringency_decompose` | Trim stringency for `decompose` (0-9). | `0`     |
+| `--trim_stringency_align`     | Trim stringency for `align` (0-9).     | `0`     |
+| `--trim_stringency_assemble`  | Trim stringency for `assemble` (0-9).  | `4`     |
 
-**Note**, that other ```tracy``` command line parameters are not accessible yet, which will be implemented in future.
+**Note**, that other `tracy` command line parameters are not accessible yet, which will be implemented in future.
 
 **Indigo visualisation links.**
 
-```--indigo_link_base``` sets the base URL that the ```indigo_visualisation```
+`--indigo_link_base` sets the base URL that the `indigo_visualisation`
 column of the mutation tables is built from (see
 [Mutation tables and Indigo visualisation links](#mutation-tables-and-indigo-visualisation-links)
-below). By default it is derived from ```--outdir``` as ```<outdir>/decompose```,
-written as a ```file://``` URL so the links open straight off the filesystem. Set
+below). By default it is derived from `--outdir` as `<outdir>/decompose`,
+written as a `file://` URL so the links open straight off the filesystem. Set
 it explicitly when the results are reached through something else, for example a
 web server or a mounted network share.
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| ```--indigo_link_base``` | Base URL of the published ```Indigo``` visualisations. | ```file://<outdir>/decompose``` |
+| Parameter            | Description                                        | Default                     |
+| -------------------- | -------------------------------------------------- | --------------------------- |
+| `--indigo_link_base` | Base URL of the published `Indigo` visualisations. | `file://<outdir>/decompose` |
 
 **VueGen report type.**
 
-```--vuegen_report_type``` selects the type of report generated with VueGen
-(default ```html```). Supported values are ```html```, ```streamlit```, ```pdf```,
-```docx```, ```revealjs```, ```pptx``` and ```jupyter```. For the ```pdf``` report
-type ```tinytex``` is required (installed with ```quarto install tinytex```).
+`--vuegen_report_type` selects the type of report generated with VueGen
+(default `html`). Supported values are `html`, `streamlit`, `pdf`,
+`docx`, `revealjs`, `pptx` and `jupyter`. For the `pdf` report
+type `tinytex` is required (installed with `quarto install tinytex`).
 Further details can be found in the [vuegen documentation](https://github.com/Multiomics-Analytics-Group/vuegen).
-
 
 ### Run the dsp_bulk_sangerseq tool
 
-If you use VS code, open the Ubuntu terminal, ```cd``` into the project directory and open VS code from the direcory using command
+If you use VS code, open the Ubuntu terminal, `cd` into the project directory and open VS code from the direcory using command
+
 ```
 code .
 ```
-Make sure VS code is connected to WSL by selecting ```Connect to WSL``` from the bottom left button in VS Code. If connected, ```WSL:Ubuntu-24.04``` should be displayed.
 
+Make sure VS code is connected to WSL by selecting `Connect to WSL` from the bottom left button in VS Code. If connected, `WSL:Ubuntu-24.04` should be displayed.
 
 Perform the following steps consecutively.
 
 0. Add user to the docker group (only required once)
-Sequence analysis using ```tracy``` is done in Docker containers. To execute python scripts without ```sudo``` preceeding commands (which can lead to other issues like accessed python installation), add your user to the docker group using command
+   Sequence analysis using `tracy` is done in Docker containers. To execute python scripts without `sudo` preceeding commands (which can lead to other issues like accessed python installation), add your user to the docker group using command
+
 ```
 sudo usermod -aG docker $USER
 ```
+
 **IMPORTANT: Close the terminal and open a new one to let the change take effect.**
 
 1. Start the Docker daemon
-To use the tool, the Docker daemon has to be started using the following command (here ```sudo``` preceeding the command is still required). Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).
+   To use the tool, the Docker daemon has to be started using the following command (here `sudo` preceeding the command is still required). Further information can be found in the [docker documentation](https://docs.docker.com/engine/daemon/start/).
 
 ```
 sudo systemctl start docker
 ```
 
-2. Run the pipeline from the project directory with the ```docker``` profile.
-To run against the bundled test dataset, use the ```test``` profile:
+2. Run the pipeline from the project directory with the `docker` profile.
+   To run against the bundled test dataset, use the `test` profile:
+
 ```
 nextflow run . -profile docker,test
 ```
 
-To run on your own data, pass the input paths and the required ```--outdir```:
+To run on your own data, pass the input paths and the required `--outdir`:
+
 ```
 nextflow run . -profile docker \
   --data_dir data/test_data_1 \
@@ -206,15 +223,16 @@ nextflow run . -profile docker \
 ```
 
 Add any of the configuration parameters described above (e.g.
-```--trim_left```, ```--vuegen_report_type```) to the same command to override
+`--trim_left`, `--vuegen_report_type`) to the same command to override
 their defaults.
 
 Once the analysis has completed, all results are written to the directory given by
-```--outdir```, including the VueGen report under ```vuegen_report/``` (see below).
+`--outdir`, including the VueGen report under `vuegen_report/` (see below).
 
 ## Output of the tool
 
 ### Structure of the output directory
+
 ```
 outdir
 ├── align
@@ -226,18 +244,19 @@ outdir
 ├── sample_2.csv
 └── vuegen_report
 ```
-- ```align```: directory with results from the ```tracy align``` process  (sequence alignment of Sanger sequencing result against a reference)
-- ```assemble```: directory with results from the ```tracy assemble``` process (reference-guided asssembly of overlapping DNA sequences)
--  ```decompose```: directory with results from the ```tracy decompose``` process (detection of mutations and decomposition of double-peaks)
-- ```sample_1.csv``` and ```sample_2.csv```: mutation detection results from ```tracy decompose``` process per sample
-- ```results_combined.csv```: consolidated mutation detection results from all samples (here ```sample_1.csv``` and ```sample_2.csv```)
-- ```pipeline_info```: Nextflow execution reports (timeline, report, trace and DAG) for the run
 
-#### Mutation tables and ```Indigo``` visualisation links
+- `align`: directory with results from the `tracy align` process (sequence alignment of Sanger sequencing result against a reference)
+- `assemble`: directory with results from the `tracy assemble` process (reference-guided asssembly of overlapping DNA sequences)
+- `decompose`: directory with results from the `tracy decompose` process (detection of mutations and decomposition of double-peaks)
+- `sample_1.csv` and `sample_2.csv`: mutation detection results from `tracy decompose` process per sample
+- `results_combined.csv`: consolidated mutation detection results from all samples (here `sample_1.csv` and `sample_2.csv`)
+- `pipeline_info`: Nextflow execution reports (timeline, report, trace and DAG) for the run
+
+#### Mutation tables and `Indigo` visualisation links
 
 Every row of a mutation table is a single mutation, so one sample can occupy
-several rows. Each row carries an ```indigo_visualisation``` column linking to
-that sample's ```Indigo``` visualisation in
+several rows. Each row carries an `indigo_visualisation` column linking to
+that sample's `Indigo` visualisation in
 [outdir/decompose](#structure-of-the-decompose-subdirectory), opened on that
 row's mutation instead of the arbitrary region the visualisation otherwise
 opens at:
@@ -246,7 +265,7 @@ opens at:
 file:///path/to/outdir/decompose/sample_1.html?variants-table=0
 ```
 
-The ```?variants-table=<n>``` parameter is the position of the mutation within
+The `?variants-table=<n>` parameter is the position of the mutation within
 that sample's variant list; the visualisation reads it from the URL and shows
 the mutation in the trace viewer, which otherwise has to be found by clicking
 the row's chart icon by hand. Clicking a row writes the same parameter back into
@@ -254,17 +273,18 @@ the URL, so the address bar can be copied as a link to whatever is on screen,
 and the browser's back and forward buttons step through the mutations that were
 looked at.
 
-Browsers refuse to follow ```file://``` links out of a rendered page, so the
+Browsers refuse to follow `file://` links out of a rendered page, so the
 links cannot be clicked inside the VueGen report — they have to be copied. Sort
-or filter the table (for example on ```successfully_edited```) down to the
-mutations of interest, copy their ```indigo_visualisation``` values, and paste
+or filter the table (for example on `successfully_edited`) down to the
+mutations of interest, copy their `indigo_visualisation` values, and paste
 them into a bulk URL opener such as the
 [Bulk URL Opener](https://chromewebstore.google.com/detail/bulk-url-opener-tab-manag/nipkhjpemhflobkeegjpflbfmplpndje)
-Chrome extension to open them all at once (which needs *Allow access to file
-URLs* enabled in the extension's Chrome settings). A single link can also be
+Chrome extension to open them all at once (which needs _Allow access to file
+URLs_ enabled in the extension's Chrome settings). A single link can also be
 pasted straight into the browser's address bar.
 
-#### Structure of the ```align``` subdirectory
+#### Structure of the `align` subdirectory
+
 ```
 outdir/align
 ├── sample_1.abif
@@ -279,12 +299,13 @@ outdir/align
 └── sample_2.txt
 ```
 
-- ```.align.fa```: pairwise sequence alignment file (Sanger sequencing result against reference sequence)
-- ```.txt```: pairwise sequence alignment (Sanger sequencing result against reference sequence)
-- ```.html```: visualisation of Sanger sequencing result using ```Sage```
-- ```.json```: all output from ```tracy align```process
+- `.align.fa`: pairwise sequence alignment file (Sanger sequencing result against reference sequence)
+- `.txt`: pairwise sequence alignment (Sanger sequencing result against reference sequence)
+- `.html`: visualisation of Sanger sequencing result using `Sage`
+- `.json`: all output from `tracy align`process
 
-#### Structure of the ```decompose``` subdirectory
+#### Structure of the `decompose` subdirectory
+
 ```
 outdir/decompose
 ├── sample_1.abif
@@ -306,14 +327,16 @@ outdir/decompose
 ├── sample_2.html
 └── sample_2.json
 ```
-- ```.align1.fa```: pairwise sequence alignment file of main signal against reference sequence
-- ```.align2.fa```: pairwise sequence alignment file of minor signal against reference sequence
-- ```.align3.fa```: pairwise sequence alignment file of major against minor signal
-- ```.html```: visualisation of Sanger sequeencing result using ```Indigo```; accepts a ```?variants-table=<n>``` URL parameter to open on a specific mutation (see [Mutation tables and Indigo visualisation links](#mutation-tables-and-indigo-visualisation-links))
-- ```.bcf```: binary call format file; binary version of the variant calling file (VCF); can be converted to VCF using [bcftools](https://github.com/samtools/bcftools)
-- ```.json```: all output from ```tracy decompose``` process
 
-#### Structure of the ```assemble``` subdirectory
+- `.align1.fa`: pairwise sequence alignment file of main signal against reference sequence
+- `.align2.fa`: pairwise sequence alignment file of minor signal against reference sequence
+- `.align3.fa`: pairwise sequence alignment file of major against minor signal
+- `.html`: visualisation of Sanger sequeencing result using `Indigo`; accepts a `?variants-table=<n>` URL parameter to open on a specific mutation (see [Mutation tables and Indigo visualisation links](#mutation-tables-and-indigo-visualisation-links))
+- `.bcf`: binary call format file; binary version of the variant calling file (VCF); can be converted to VCF using [bcftools](https://github.com/samtools/bcftools)
+- `.json`: all output from `tracy decompose` process
+
+#### Structure of the `assemble` subdirectory
+
 ```
 outdir/assemble
 ├── sample_1_sample_2.align.fa
@@ -323,14 +346,16 @@ outdir/assemble
 ├── sample_1_sample_2.msa.html
 └── sample_1_sample_2.vertical
 ```
-- ```.align.fa```: multiple sequence alignment file of Sanger sequencing results against the reference sequence
-- ```.assembly.html```: editable assembly viewer rendered from ```.json``` with ```Pearl```; consensus track colour-coded by agreement, "jump to next conflict", and the electropherograms of every read covering the current position
-- ```.cons.fa```: consensus sequence generated from ```tracy assemble```
-- ```.json```: all output from ```tracy assemble``` process
-- ```.msa.html```: browsable multiple sequence alignment of the reads against the reference, rendered from ```.align.fa``` with ```Sabre```
-- ```.vertical```: column-wise dump of the multiple sequence alignment
 
-#### Structure of the ```vuegen_report``` subdirectory
+- `.align.fa`: multiple sequence alignment file of Sanger sequencing results against the reference sequence
+- `.assembly.html`: editable assembly viewer rendered from `.json` with `Pearl`; consensus track colour-coded by agreement, "jump to next conflict", and the electropherograms of every read covering the current position
+- `.cons.fa`: consensus sequence generated from `tracy assemble`
+- `.json`: all output from `tracy assemble` process
+- `.msa.html`: browsable multiple sequence alignment of the reads against the reference, rendered from `.align.fa` with `Sabre`
+- `.vertical`: column-wise dump of the multiple sequence alignment
+
+#### Structure of the `vuegen_report` subdirectory
+
 ```
 outdir/vuegen_report
 ├── 01_Mutation_tables_decompose
@@ -437,14 +462,14 @@ Run the full suite, or a single test file:
 
 The suite consists of:
 
-| Test | Scope |
-| --- | --- |
-| `tests/default.nf.test` | End-to-end pipeline run on the test dataset |
-| `workflows/tests/dsp_bulk_sangerseq.nf.test` | `DSP_BULK_SANGERSEQ` workflow, including input-validation failure cases |
-| `modules/local/prepare/inputs/tests/main.nf.test` | `PREPARE_INPUTS` |
-| `modules/local/tracy/{align,decompose,assemble}/tests/main.nf.test` | `TRACY_ALIGN`, `TRACY_DECOMPOSE`, `TRACY_ASSEMBLE` |
-| `modules/local/tracy/render_visualisations/tests/main.nf.test` | `TRACY_RENDER_VISUALISATIONS`, for a tracy align JSON, an assembly alignment and a tracy assemble JSON |
-| `modules/local/vuegen/prepare_tree/tests/main.nf.test` | `VUEGEN_PREPARE_TREE` |
-| `modules/nf-core/vuegen/tests/main.nf.test` | `VUEGEN` |
+| Test                                                                | Scope                                                                                                  |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `tests/default.nf.test`                                             | End-to-end pipeline run on the test dataset                                                            |
+| `workflows/tests/dsp_bulk_sangerseq.nf.test`                        | `DSP_BULK_SANGERSEQ` workflow, including input-validation failure cases                                |
+| `modules/local/prepare/inputs/tests/main.nf.test`                   | `PREPARE_INPUTS`                                                                                       |
+| `modules/local/tracy/{align,decompose,assemble}/tests/main.nf.test` | `TRACY_ALIGN`, `TRACY_DECOMPOSE`, `TRACY_ASSEMBLE`                                                     |
+| `modules/local/tracy/render_visualisations/tests/main.nf.test`      | `TRACY_RENDER_VISUALISATIONS`, for a tracy align JSON, an assembly alignment and a tracy assemble JSON |
+| `modules/local/vuegen/prepare_tree/tests/main.nf.test`              | `VUEGEN_PREPARE_TREE`                                                                                  |
+| `modules/nf-core/vuegen/tests/main.nf.test`                         | `VUEGEN`                                                                                               |
 
 Test configuration lives in `nf-test.config` (profiles, work dir) and `tests/nextflow.config`; the test dataset paths are defined once in `conf/test.config`.
